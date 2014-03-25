@@ -6,8 +6,7 @@
 #define ROWS 11
 #define COLS 10
 
-//Test commit
-//Second commit
+
 int main(){
     int d;
     Game_View v= Game_View();
