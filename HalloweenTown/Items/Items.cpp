@@ -1,8 +1,8 @@
-#include <Items.h>
+#include "Items.h"
 Items::Items(){
 }
 
-int Items::getClipSize(string s){
+int Items::ZgetClipSize(string s){
    if(s=="pistol")
     {
         return pistolClipSize;
@@ -14,7 +14,7 @@ int Items::getClipSize(string s){
 }
 
 
-int Items::getDieFace(string s){
+int Items::ZgetDieFace(string s){
     if(s=="pistol")
     {
         return pistolDieFace;
@@ -25,7 +25,7 @@ int Items::getDieFace(string s){
     }
 }
 
-int Items::getDieNumber(string s){
+int Items::ZgetDieNumber(string s){
     if(s=="pistol")
     {
         return pistolDieNumber;

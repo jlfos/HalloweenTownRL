@@ -4,14 +4,15 @@
 #include "Hero.h"
 #include "Monster.h"
 #include "Game_View.h"
-#include<iostream>
-#include<fstream>
-
+#include "Items/Pistol.h"
+#include <iostream>
+#include <fstream>
+#include <string>
 #pragma once
 
 #define ROWS 11
 #define COLS 10
-
+using namespace std;
 class Game_Model {
     private:
         int aimX,aimY;

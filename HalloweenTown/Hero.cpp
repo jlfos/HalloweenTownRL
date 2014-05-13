@@ -1,4 +1,4 @@
-#include <Hero.h>
+#include "Hero.h"
 
 Action Hero::nextAction(TMap m){
     int move;

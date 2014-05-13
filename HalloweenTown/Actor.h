@@ -52,6 +52,7 @@ class Actor{
         int getLvl();
 
         virtual Action nextAction(TMap m);
+
 };
 
 

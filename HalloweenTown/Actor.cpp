@@ -1,4 +1,4 @@
-#include <Actor.h>
+#include "Actor.h"
 #include "ColorChar.h"
 Actor::Actor(){
 }
@@ -7,7 +7,7 @@ Actor::Actor(int charId){
     reference = charId;
     if( reference == 0){
 
-        lvl = 1; //Default: 1
+        lvl = 1; //Default- 1
         exp = 0;
         range = 1; //determined by weapon; Default: 1
 
@@ -56,7 +56,7 @@ diceCount - number of dice being rolled
 returns summation of dice rolls*/
 int Actor::diceRoll(int face, int diceCount){
         srand(time(NULL));
-        int r = 1;
+        int r = 0;
         for(int i = 0; i<diceCount; i ++){
             r += (rand() % face);
         }
@@ -77,7 +77,7 @@ int Actor::incomingAttack(int chance, int damage){
     if (hp<=0)
         return -1;
     else
-        return 0;//*/
+        return 0;
 }
 
 

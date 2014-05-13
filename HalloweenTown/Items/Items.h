@@ -1,6 +1,8 @@
 #include <string>
+#pragma once
 using namespace std;
 class Items{
+
     private:
         //Pistol stats
         const static int pistolDieFace = 6;
@@ -14,9 +16,12 @@ class Items{
 
 
     public:
+        typedef enum ItemType {
+        	FIREARM
+        };
         Items();
-        int getClipSize(string s);
-        int getDieFace(string s);
-        int getDieNumber(string s);
+        int ZgetClipSize(string s);
+        int ZgetDieFace(string s);
+        int ZgetDieNumber(string s);
 
 };

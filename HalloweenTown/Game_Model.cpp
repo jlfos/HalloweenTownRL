@@ -10,6 +10,7 @@ it updates the hero coordinates accordingly
 */
 Game_Model::Game_Model(char *filePath)
 {
+	Pistol p = Pistol();
     gameMap = TMap(filePath);
     characterActorSync();
     monstersMove = true;
@@ -74,6 +75,7 @@ return - a string indicating the result of the attempted action
 */
 string Game_Model::interpretAction(int charId, Action a)
 {
+
     switch (a.getType())
     {
     case 0:
@@ -84,13 +86,17 @@ string Game_Model::interpretAction(int charId, Action a)
     }
     break;
     case 1:
-    {   int attack;
+
+    {
+    	Pistol p = Pistol();
+    	int damage = p.GetDamage();
+    	int attack;
         monstersMove=true;
         if(a.getTarget()==0){
             attack = theHero.incomingAttack(5,5);
         }
         else
-            attack =(monsterList.at(a.getTarget())).incomingAttack(5, 5);
+            attack =(monsterList.at(a.getTarget())).incomingAttack(5, damage);
 
         if (attack==1)
         {

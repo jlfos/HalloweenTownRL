@@ -1,13 +1,23 @@
-#include <Game_View.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include "Game_View.h"
+
+
+
 
 Game_View::Game_View(){
-    for(int i =0;i<MESSAGESIZE;i++){
+
+
+
+	for(int i =0;i<MESSAGESIZE;i++){
         messages[i]="";
     }
 
     heroHp = 1337;
     heroLvl = 7138;
-    scrn = initscr();
+
+
+     scrn = initscr();
     noecho();
     keypad(scrn, 1);
     mousemask(ALL_MOUSE_EVENTS, NULL);
@@ -111,10 +121,10 @@ void Game_View::displayMessages(){
 
 
 void Game_View::displayHeroStats(){
-
+	Pistol p = Pistol();
     mvprintw(0,0, "Player Name");
     mvprintw(1,0, "Health: %i", heroHp);
-    mvprintw(2,0, "Weapon: shotgun(2d4)");
+    mvprintw(2,0, "Weapon: %s(%id%i)", p.GetDescription().c_str(), p.GetDieCount(), p.GetDieFace());
     mvprintw(3,0, "Ammo: 7/8");
     mvprintw(4,0, "Exp: %i/81%", heroLvl);
 }

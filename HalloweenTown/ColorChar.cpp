@@ -1,4 +1,4 @@
-#include <ColorChar.h>
+#include "ColorChar.h"
 #include <ncurses.h>
 ColorChar::ColorChar(char c, int i){
     character=c;

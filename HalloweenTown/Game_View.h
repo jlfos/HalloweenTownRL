@@ -2,6 +2,7 @@
 #include<vector>
 #include "ColorChar.h"
 #include "Hero.h"
+#include "Items/Pistol.h"
 #define MESSAGESIZE 6
 
 #pragma once
