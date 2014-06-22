@@ -1,8 +1,6 @@
 #include<ncurses.h>
 #include<vector>
-#include "ColorChar.h"
-#include "Hero.h"
-#include "Items/Pistol.h"
+//#include "Driver.hpp"
 #define MESSAGESIZE 6
 
 #pragma once

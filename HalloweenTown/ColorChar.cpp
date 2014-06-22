@@ -1,4 +1,4 @@
-#include "ColorChar.h"
+#include "Driver.hpp"
 #include <ncurses.h>
 ColorChar::ColorChar(char c, int i){
     character=c;

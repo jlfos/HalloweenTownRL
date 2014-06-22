@@ -1,4 +1,4 @@
-#include "Hero.h"
+#include "Driver.hpp"
 
 Action Hero::nextAction(TMap m){
     int move;

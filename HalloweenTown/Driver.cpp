@@ -1,8 +1,6 @@
 #include<ncurses.h>
 #include<string>
-#include "Game_View.h"
-#include "Tile.h"
-#include "Game_Model.h"
+#include "Driver.hpp"
 #define ROWS 11
 #define COLS 10
 

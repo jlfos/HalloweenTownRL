@@ -1,6 +1,4 @@
 #include <time.h>
-#include "Action.h"
-#include "TMap.h"
 #include <stdio.h>
 #include <curses.h>
 

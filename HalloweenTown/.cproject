@@ -62,8 +62,8 @@
 		<cconfiguration id="cdt.managedbuild.config.gnu.exe.release.362194461">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.exe.release.362194461" moduleId="org.eclipse.cdt.core.settings" name="Release">
 				<macros>
-					<stringMacro name="NCurses" type="VALUE_TEXT" value="-lncurses"/>
 					<stringMacro name="C++11" type="VALUE_TEXT" value="-std=c++11"/>
+					<stringMacro name="NCurses" type="VALUE_TEXT" value="-lncurses"/>
 				</macros>
 				<externalSettings/>
 				<extensions>
