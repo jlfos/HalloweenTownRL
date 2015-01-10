@@ -11,7 +11,7 @@ Destructible::Destructible(float maxHp, float defense, const char *corpseName) :
 
 Destructible *Destructible::create(TCODZip &zip){
 	DestructibleType type = (DestructibleType)zip.getInt();
-	Destructible *destructible = NULL;
+	Destructible *destructible = nullptr;
 	switch(type){
 		case MONSTER: destructible = new MonsterDestructible(0,0,NULL); break;
 		case PLAYER: destructible = new PlayerDestructible(0,0, NULL); break;

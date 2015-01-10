@@ -73,7 +73,7 @@ Actor *PlayerAi::choseFromInventory(Actor *owner){
 			return owner->container->inventory.get(actorIndex);
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 void PlayerAi::handleActionKey(Actor *owner, int ascii) {

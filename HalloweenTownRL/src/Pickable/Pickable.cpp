@@ -21,7 +21,7 @@ bool Pickable::use(Actor *owner, Actor *wearer){
 
 Pickable *Pickable::create(TCODZip &zip){
 	PickableType type = (PickableType)zip.getInt();
-	Pickable *pickable=NULL;
+	Pickable *pickable=nullptr;
 	switch(type){
 		case HEALER: pickable = new Healer(0); break;
 	}

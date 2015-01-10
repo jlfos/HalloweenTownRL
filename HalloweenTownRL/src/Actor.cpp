@@ -2,8 +2,8 @@
 #include "main.hpp"
 Actor::Actor(int x, int y, int ch, const char *name, const TCODColor &col) :
     x(x),y(y),ch(ch),col(col), name(name),
-    blocks(true), attacker(NULL), destructible(NULL), ai(NULL),
-    pickable(NULL), container(NULL){
+    blocks(true), attacker(nullptr), destructible(nullptr), ai(nullptr),
+    pickable(nullptr), container(nullptr){
 }
  
 Actor::~Actor(){
@@ -29,11 +29,11 @@ void Actor::save(TCODZip &zip){
 	zip.putColor(&col);
 	zip.putString(name);
 	zip.putInt(blocks);
-	zip.putInt(attacker != NULL);
-	zip.putInt(destructible != NULL);
-	zip.putInt(ai != NULL);
-	zip.putInt(pickable != NULL);
-	zip.putInt(container != NULL);
+	zip.putInt(attacker !=  nullptr);
+	zip.putInt(destructible != nullptr);
+	zip.putInt(ai != nullptr);
+	zip.putInt(pickable != nullptr);
+	zip.putInt(container != nullptr);
 	if(attacker) attacker->save(zip);
 	if(destructible) destructible->save(zip);
 	if(ai)ai->save(zip);

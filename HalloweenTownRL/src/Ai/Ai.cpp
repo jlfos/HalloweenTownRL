@@ -5,7 +5,7 @@
 
 Ai *Ai::create(TCODZip &zip){
 	AiType type = (AiType)zip.getInt();
-	Ai *ai = NULL;
+	Ai *ai = nullptr;
 	switch(type){
 		case PLAYER : ai = new PlayerAi(); break;
 		case MONSTER: ai = new MonsterAi(); break;

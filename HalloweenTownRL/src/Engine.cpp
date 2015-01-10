@@ -58,12 +58,12 @@ void Engine::load(){
 		map = new Map(width, height);
 		map->load(zip);
 
-		player = new Actor(0,0,0,NULL, TCODColor::white);
+		player = new Actor(0,0,0,nullptr, TCODColor::white);
 		player->load(zip);
 		actors.push(player);
 		int nbActors = zip.getInt();
 		while(nbActors > 0){
-			Actor *actor = new Actor(0,0,0,NULL, TCODColor::white);
+			Actor *actor = new Actor(0,0,0,nullptr, TCODColor::white);
 			actor->load(zip);
 			actors.push(actor);
 			nbActors--;
