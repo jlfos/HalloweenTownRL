@@ -14,4 +14,6 @@ class Actor;
 #include "Actor.hpp"
 #include "Maps/Map.hpp"
 #include "Gui.hpp"
+#include "UI/Menu.hpp"
 #include "Engine.hpp"
+
