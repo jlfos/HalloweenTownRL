@@ -10,6 +10,10 @@ void PlayerAi::update(Actor *owner){
     case TCODK_DOWN : dy=1; break;
     case TCODK_LEFT : dx=-1; break;
     case TCODK_RIGHT : dx=1; break;
+    case TCODK_ESCAPE :
+    	engine.save();
+    	engine.load();
+    	break;
     case TCODK_CHAR : handleActionKey(owner, engine.lastKey.c); break;
     	default:break;
     }
