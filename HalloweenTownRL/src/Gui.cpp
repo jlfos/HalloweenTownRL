@@ -66,6 +66,10 @@ void Gui::renderBar(int x, int y, int width, const char *name,
 		"%s : %g/%g", name, value, maxValue);
 }
 
+void Gui::clear(){
+	log.clearAndDelete();
+}
+
 Gui::Message::Message(const char *text, const TCODColor &col) :
 	text(strdup(text)),col(col) {
 }

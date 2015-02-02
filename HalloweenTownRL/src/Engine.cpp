@@ -9,6 +9,8 @@ Engine::Engine(int screenWidth, int screenHeight) : gameStatus(STARTUP),fovRadiu
     gui = new Gui();
 }
 
+
+
 void Engine::init(){
 	player = new Actor(40,25,'@',"player",TCODColor::white);
     player->destructible=new PlayerDestructible(30,2,"your cadaver");
@@ -20,6 +22,14 @@ void Engine::init(){
     actors.push(player);
     gui->message(TCODColor::red,
 	  "Welcome stranger!\nPrepare to perish in the Tombs of the Ancient Kings.");
+    gameStatus = STARTUP;
+}
+
+void Engine::term(){
+	actors.clearAndDelete();
+	if( map )
+		delete map;
+	gui->clear();
 }
 
 void Engine::save(){
@@ -48,7 +58,25 @@ void Engine::save(){
 }
 
 void Engine::load(){
+	engine.gui->menu.clear();
+	engine.gui->menu.addItem(Menu::NEW_GAME, "New Game");
+
 	if(TCODSystem::fileExists("game.sav")){
+		engine.gui->menu.addItem(Menu::CONTINUE, "Continue");
+	}
+
+	engine.gui->menu.addItem(Menu::EXIT, "Exit");
+
+	Menu::MenuItemCode menuItem = engine.gui->menu.pick();
+
+	if(menuItem == Menu::EXIT || menuItem == Menu::NONE){
+		exit(0);
+	}
+	else if(menuItem == Menu::NEW_GAME){
+		engine.term();
+		engine.init();
+	}
+	else{
 		TCODZip zip;
 		zip.loadFromFile("game.sav");
 
@@ -70,10 +98,10 @@ void Engine::load(){
 		}
 
 		gui->load(zip);
+
+		gameStatus = STARTUP;
 	}
-	else{
-		engine.init();
-	}
+
 }
 
 Engine::~Engine() {

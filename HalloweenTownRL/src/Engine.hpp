@@ -26,6 +26,7 @@ public :
     void update();
     void render();
     void init();
+    void term();
     void load();
     void save();
     void sendToBack(Actor *actor);

@@ -13,7 +13,7 @@ class Actor;
 #include "Ai/PlayerAi.hpp"
 #include "Actor.hpp"
 #include "Maps/Map.hpp"
-#include "Gui.hpp"
 #include "UI/Menu.hpp"
+#include "Gui.hpp"
 #include "Engine.hpp"
 
