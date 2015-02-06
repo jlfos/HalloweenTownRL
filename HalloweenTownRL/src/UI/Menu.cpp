@@ -8,6 +8,15 @@ void Menu::clear(){
 	items.clearAndDelete();
 }
 
+void Menu::populateMenu(bool saveGameExists){
+	clear();
+	addItem(MenuItemCode::NEW_GAME, "New Game");
+	if(saveGameExists){
+		addItem(MenuItemCode::CONTINUE, "Continue");
+	}
+	addItem(MenuItemCode::EXIT, "Exit");
+}
+
 void Menu::addItem(MenuItemCode code, const char *label){
 	MenuItem *item = new MenuItem();
 	item->code = code;

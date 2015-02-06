@@ -4,27 +4,51 @@ void PlayerAi::update(Actor *owner){
 	if(owner->destructible && owner->destructible->isDead()){
 		return;
 	}
-	int dx=0,dy=0;
     switch(engine.lastKey.vk) {
-    case TCODK_UP : dy=-1; break;
-    case TCODK_DOWN : dy=1; break;
-    case TCODK_LEFT : dx=-1; break;
-    case TCODK_RIGHT : dx=1; break;
-    case TCODK_ESCAPE :
-    	engine.save();
-    	engine.load();
-    	break;
+    case TCODK_UP : MoveUp(owner); break;
+    case TCODK_DOWN : MoveDown(owner); break;
+    case TCODK_LEFT : MoveLeft(owner); break;
+    case TCODK_RIGHT : MoveRight(owner); break;
+    case TCODK_ESCAPE :LoadMenu(); break;
     case TCODK_CHAR : handleActionKey(owner, engine.lastKey.c); break;
     	default:break;
     }
-    if (dx != 0 || dy != 0) {
-        engine.gameStatus=Engine::NEW_TURN;
-        if (moveOrAttack(owner, owner->x+dx,owner->y+dy)) {
-            engine.map->computeFov();
-        }
+}
+
+
+void PlayerAi::MoveLeft(Actor *owner){
+    engine.gameStatus=Engine::NEW_TURN;
+    if (moveOrAttack(owner, owner->x-1,owner->y)) {
+        engine.map->computeFov();
     }
 }
 
+void PlayerAi::MoveDown(Actor *owner){
+    engine.gameStatus=Engine::NEW_TURN;
+    if (moveOrAttack(owner, owner->x,owner->y+1)) {
+        engine.map->computeFov();
+    }
+}
+
+
+void PlayerAi::MoveRight(Actor *owner){
+    engine.gameStatus=Engine::NEW_TURN;
+    if (moveOrAttack(owner, owner->x+1,owner->y)) {
+        engine.map->computeFov();
+    }
+}
+
+void PlayerAi::MoveUp(Actor *owner){
+    engine.gameStatus=Engine::NEW_TURN;
+    if (moveOrAttack(owner, owner->x,owner->y-1)) {
+        engine.map->computeFov();
+    }
+}
+
+void PlayerAi::LoadMenu(){
+	engine.save();
+	engine.load();
+}
 bool PlayerAi::moveOrAttack(Actor *owner, int targetX, int targetY){
 	if(engine.map->isWall(targetX, targetY)) return false;
 

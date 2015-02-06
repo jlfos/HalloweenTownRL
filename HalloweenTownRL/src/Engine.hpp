@@ -30,6 +30,13 @@ public :
     void load();
     void save();
     void sendToBack(Actor *actor);
+private:
+	void exitGame();
+	void newGame();
+	void continueGame();
+
 };
  
+
+
 extern Engine engine;

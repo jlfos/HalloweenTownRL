@@ -1,5 +1,8 @@
+#include <iostream>
 #include <math.h>
 #include "../main.hpp"
+
+using namespace std;
 
 static const int TRACKING_TURNS=3;
 
@@ -8,6 +11,7 @@ MonsterAi::MonsterAi() : moveCount(0) {
 
 void MonsterAi::update(Actor *owner){
     if ( owner->destructible && owner->destructible->isDead() ) {
+    	cout << "Some dead thing tried to move" << endl;
         return;
     }
     if ( engine.map->isInFov(owner->x,owner->y) ) {

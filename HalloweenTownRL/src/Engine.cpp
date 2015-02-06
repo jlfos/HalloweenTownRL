@@ -58,50 +58,59 @@ void Engine::save(){
 }
 
 void Engine::load(){
-	engine.gui->menu.clear();
-	engine.gui->menu.addItem(Menu::NEW_GAME, "New Game");
-
+	bool saveGameExists;
 	if(TCODSystem::fileExists("game.sav")){
-		engine.gui->menu.addItem(Menu::CONTINUE, "Continue");
+		saveGameExists = true;;
 	}
-
-	engine.gui->menu.addItem(Menu::EXIT, "Exit");
+	engine.gui->menu.populateMenu(saveGameExists);
 
 	Menu::MenuItemCode menuItem = engine.gui->menu.pick();
 
 	if(menuItem == Menu::EXIT || menuItem == Menu::NONE){
-		exit(0);
+		exitGame();
 	}
 	else if(menuItem == Menu::NEW_GAME){
-		engine.term();
-		engine.init();
+		newGame();
 	}
-	else{
-		TCODZip zip;
-		zip.loadFromFile("game.sav");
+	else if(menuItem == Menu::CONTINUE){
+		continueGame();
+	}
+}
 
-		int width = zip.getInt();
-		int height = zip.getInt();
+void Engine::exitGame(){
+	exit(0);
+}
 
-		map = new Map(width, height);
-		map->load(zip);
+void Engine::newGame(){
+	engine.term();
+	engine.init();
+}
 
-		player = new Actor(0,0,0,nullptr, TCODColor::white);
-		player->load(zip);
-		actors.push(player);
-		int nbActors = zip.getInt();
-		while(nbActors > 0){
-			Actor *actor = new Actor(0,0,0,nullptr, TCODColor::white);
-			actor->load(zip);
-			actors.push(actor);
-			nbActors--;
-		}
+void Engine::continueGame(){
+	term();
+	TCODZip zip;
+	zip.loadFromFile("game.sav");
 
-		gui->load(zip);
+	int width = zip.getInt();
+	int height = zip.getInt();
 
-		gameStatus = STARTUP;
+	map = new Map(width, height);
+	map->load(zip);
+
+	player = new Actor(0,0,0,nullptr, TCODColor::white);
+	player->load(zip);
+	actors.push(player);
+	int nbActors = zip.getInt();
+	while(nbActors > 0){
+		Actor *actor = new Actor(0,0,0,nullptr, TCODColor::white);
+		actor->load(zip);
+		actors.push(actor);
+		nbActors--;
 	}
 
+	gui->load(zip);
+
+	gameStatus = STARTUP;
 }
 
 Engine::~Engine() {

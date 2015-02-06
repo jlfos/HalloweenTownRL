@@ -10,11 +10,12 @@ public:
 		CONTINUE,
 		EXIT
 	};
-
-	void clear();
-	void addItem(MenuItemCode code, const char *label);
+	void populateMenu(bool saveGameExists);
 	MenuItemCode pick();
 	~Menu();
+private:
+	void clear();
+	void addItem(MenuItemCode code, const char *label);
 protected:
 
 	struct MenuItem{
