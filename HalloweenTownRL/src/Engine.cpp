@@ -12,11 +12,7 @@ Engine::Engine(int screenWidth, int screenHeight) : gameStatus(STARTUP),fovRadiu
 
 
 void Engine::init(){
-	player = new Actor(40,25,'@',"player",TCODColor::white);
-    player->destructible=new PlayerDestructible(30,2,"your cadaver");
-    player->attacker=new Attacker(5);
-    player->ai = new PlayerAi();
-    player->container= new Container(26);
+	player = ActorFactory::CreateHero();//new Actor(40,25,'@',"player",TCODColor::white);;
     map = new Map(80,43);
     map->init(true);
     actors.push(player);

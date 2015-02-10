@@ -12,6 +12,7 @@ class Actor;
 #include "Ai/MonsterAi.hpp"
 #include "Ai/PlayerAi.hpp"
 #include "Actor.hpp"
+#include "Actor/ActorFactory.hpp"
 #include "Maps/Map.hpp"
 #include "UI/Menu.hpp"
 #include "Gui.hpp"
