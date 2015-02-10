@@ -22,12 +22,11 @@ public :
 protected :
     Tile *tiles;
     TCODMap *map;
-    friend class BspListener;
     long seed;
     TCODRandom *rng;
-
+    void addMonster(int x, int y);
+private:
     void dig(int x1, int y1, int x2, int y2);
     void createRoom(bool first, int x1, int y1, int x2, int y2, bool withActors);
-    void addMonster(int x, int y);
-
+    friend class BspListener;
 };
