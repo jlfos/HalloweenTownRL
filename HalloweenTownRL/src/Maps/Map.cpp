@@ -56,11 +56,17 @@ void Map::init(bool withActors) {
 	try{
 		rng = new TCODRandom(seed, TCOD_RNG_MT);
 		tiles = new Tile[width * height];
-		map = new TCODMap(width, height);
-		TCODBsp bsp(0, 0, width, height);
-		bsp.splitRecursive(rng, 8, ROOM_MAX_SIZE, ROOM_MAX_SIZE, 1.5f, 1.5f);
-		BspListener listener(*this);
-		bsp.traverseInvertedLevelOrder(&listener, (void *) withActors);
+		EmptyMapGenerator* gen = new EmptyMapGenerator();
+		if(gen == nullptr){
+			map = new TCODMap(width, height);
+			TCODBsp bsp(0, 0, width, height);
+			bsp.splitRecursive(rng, 8, ROOM_MAX_SIZE, ROOM_MAX_SIZE, 1.5f, 1.5f);
+			BspListener listener(*this);
+			bsp.traverseInvertedLevelOrder(&listener, (void *) withActors);
+		}
+		else{
+			map = gen->Generate(width, height);
+		}
 	}
 	catch(...){
 		cerr << "An error occurred with Map::init"  << endl;
