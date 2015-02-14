@@ -56,7 +56,7 @@ void Map::init(bool withActors) {
 	try{
 		rng = new TCODRandom(seed, TCOD_RNG_MT);
 		tiles = new Tile[width * height];
-		EmptyMapGenerator* gen = new EmptyMapGenerator();
+		EmptyMapGenerator* gen = nullptr;//new EmptyMapGenerator();
 		if(gen == nullptr){
 			map = new TCODMap(width, height);
 			TCODBsp bsp(0, 0, width, height);
@@ -209,9 +209,21 @@ void Map::createRoom(bool first, int x1, int y1, int x2, int y2,
 	}
 }
 
-bool Map::isWall(int x, int y) const {
+Map::TileType Map::getTileType(int x, int y) const {
 	try{
-		return !map->isWalkable(x, y);
+
+		if(!map->isWalkable(x, y)){
+			bool isNotInMap = false;
+			if(isNotInMap){
+				return TileType::MAP_EDGE;
+			}
+			else{
+				return TileType::WALL;
+			}
+		}
+		else{
+			return TileType::GROUND;
+		}
 	}
 	catch(...){
 		cerr << "An error occurred with Map::isWall"  << endl;
@@ -221,8 +233,9 @@ bool Map::isWall(int x, int y) const {
 
 bool Map::canWalk(int x, int y) const {
 	try{
-		if (isWall(x, y)) {
-			// this is a wall
+		TileType type = getTileType(x, y);
+		if(type == TileType::WALL || type == TileType::MAP_EDGE){
+			// this is a wall or edge
 			return false;
 		}
 		for (Actor *actor : engine.actors) {
@@ -287,22 +300,23 @@ void Map::render() const {
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
+				TileType type = getTileType(x, y);
 				if (isInFov(x, y)) {
-					if(isWall(x, y)){
+					if(type == TileType::WALL){
 						TCODConsole::root->setChar(x,y,'#');
 						TCODConsole::root->setCharForeground(x,y,lightWall);
 					}
-					else{
+					else if(type == TileType::GROUND){
 						TCODConsole::root->setChar(x,y,'.');
 						TCODConsole::root->setCharForeground(x,y,lightGround);
 					}
 				}
 				else if (isExplored(x, y)) {
-					if(isWall(x, y)){
+					if(type == TileType::WALL){
 						TCODConsole::root->setChar(x,y,'#');
 						TCODConsole::root->setCharForeground(x,y,darkWall);
 					}
-					else{
+					else if(type == TileType::GROUND){
 						TCODConsole::root->setChar(x,y,'.');
 						TCODConsole::root->setCharForeground(x,y,darkGround);
 					}
