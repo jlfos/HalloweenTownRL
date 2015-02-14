@@ -1,4 +1,7 @@
 #include "../main.hpp"
+#include <iostream>
+
+using namespace std;
 
 static const int ROOM_MAX_SIZE = 14;
 static const int ROOM_MIN_SIZE = 8;
@@ -40,176 +43,270 @@ public:
 
 Map::Map(int width, int height) :
 		width(width), height(height) {
-	seed = TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);
+	try{
+		seed = TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);
+	}
+	catch(...){
+		cerr << "An error occurred with Map::Map"  << endl;
+		throw 0;
+	}
 }
 
 void Map::init(bool withActors) {
-	rng = new TCODRandom(seed, TCOD_RNG_MT);
-	tiles = new Tile[width * height];
-	map = new TCODMap(width, height);
-	TCODBsp bsp(0, 0, width, height);
-	bsp.splitRecursive(rng, 8, ROOM_MAX_SIZE, ROOM_MAX_SIZE, 1.5f, 1.5f);
-	BspListener listener(*this);
-	bsp.traverseInvertedLevelOrder(&listener, (void *) withActors);
+	try{
+		rng = new TCODRandom(seed, TCOD_RNG_MT);
+		tiles = new Tile[width * height];
+		map = new TCODMap(width, height);
+		TCODBsp bsp(0, 0, width, height);
+		bsp.splitRecursive(rng, 8, ROOM_MAX_SIZE, ROOM_MAX_SIZE, 1.5f, 1.5f);
+		BspListener listener(*this);
+		bsp.traverseInvertedLevelOrder(&listener, (void *) withActors);
+	}
+	catch(...){
+		cerr << "An error occurred with Map::init"  << endl;
+		throw 0;
+	}
 }
 
 void Map::save(TCODZip &zip) {
-	zip.putInt(seed);
-	for (int i = 0; i < width * height; i++) {
-		zip.putInt(tiles[i].explored);
+	try{
+		zip.putInt(seed);
+		for (int i = 0; i < width * height; i++) {
+			zip.putInt(tiles[i].explored);
+		}
+	}
+	catch(...){
+		cerr << "An error occurred with Map::save"  << endl;
+		throw 0;
 	}
 }
 
 void Map::load(TCODZip &zip) {
-	seed = zip.getInt();
-	init(false);
-	for (int i = 0; i < width * height; i++) {
-		tiles[i].explored = zip.getInt();
+	try{
+		seed = zip.getInt();
+		init(false);
+		for (int i = 0; i < width * height; i++) {
+			tiles[i].explored = zip.getInt();
+		}
+	}
+	catch(...){
+		cerr << "An error occurred with Map::load"  << endl;
+		throw 0;
 	}
 }
 
 Map::~Map() {
-	delete[] tiles;
-	delete map;
+	try{
+		delete[] tiles;
+		delete map;
+	}
+	catch(...){
+		cerr << "An error occurred with Map::~Map"  << endl;
+		throw 0;
+	}
 }
 
 void Map::dig(int x1, int y1, int x2, int y2) {
-	if (x2 < x1) {
-		int tmp = x2;
-		x2 = x1;
-		x1 = tmp;
-	}
-	if (y2 < y1) {
-		int tmp = y2;
-		y2 = y1;
-		y1 = tmp;
-	}
-	for (int tilex = x1; tilex <= x2; tilex++) {
-		for (int tiley = y1; tiley <= y2; tiley++) {
-			map->setProperties(tilex, tiley, true, true);
+	try{
+		if (x2 < x1) {
+
+			int tmp = x2;
+			x2 = x1;
+			x1 = tmp;
 		}
+		if (y2 < y1) {
+			int tmp = y2;
+			y2 = y1;
+			y1 = tmp;
+		}
+		for (int tilex = x1; tilex <= x2; tilex++) {
+			for (int tiley = y1; tiley <= y2; tiley++) {
+				map->setProperties(tilex, tiley, true, true);
+			}
+		}
+	}
+	catch(...){
+		cerr << "An error occurred with Map::dig"  << endl;
+		throw 0;
 	}
 }
 
 void Map::addItem(int x, int y) {
-	Actor *healthPotion = ActorFactory::CreatePotion(x, y);
-	engine.actors.push(healthPotion);
+	try{
+		Actor *healthPotion = ActorFactory::CreatePotion(x, y);
+		engine.actors.push(healthPotion);
+	}
+	catch(...){
+		cerr << "An error occurred with Map::addItem"  << endl;
+		throw 0;
+	}
 }
 
 void Map::addMonster(int x, int y) {
-	TCODRandom *rng = TCODRandom::getInstance();
-	if (rng->getInt(0, 100) < 80) {
-		// create an orc
-		Actor *orc = ActorFactory::CreateOrc(x, y);
-		engine.actors.push(orc);
-	} else {
-		// create a troll
-		Actor *troll = ActorFactory::CreateTroll(x, y);
+	try{
+		TCODRandom *rng = TCODRandom::getInstance();
+		if (rng->getInt(0, 100) < 80) {
+			// create an orc
+			Actor *orc = ActorFactory::CreateOrc(x, y);
+			engine.actors.push(orc);
+		} else {
+			// create a troll
+			Actor *troll = ActorFactory::CreateTroll(x, y);
 
-		engine.actors.push(troll);
+			engine.actors.push(troll);
+		}
+	}
+	catch(...){
+		cerr << "An error occurred with Map::addMonster"  << endl;
+		throw 0;
 	}
 }
 
 void Map::createRoom(bool first, int x1, int y1, int x2, int y2,
 		bool withActors) {
-	dig(x1, y1, x2, y2);
-	if (!withActors) {
-		return;
+	try{
+		dig(x1, y1, x2, y2);
+		if (!withActors) {
+			return;
+		}
+
+		if (first) {
+			// put the player in the first room
+			engine.player->x = (x1 + x2) / 2;
+			engine.player->y = (y1 + y2) / 2;
+		} else {
+			TCODRandom *rng = TCODRandom::getInstance();
+			int nbMonsters = rng->getInt(0, MAX_ROOM_MONSTERS);
+			while (nbMonsters > 0) {
+				int x = rng->getInt(x1, x2);
+				int y = rng->getInt(y1, y2);
+				if (canWalk(x, y)) {
+					addMonster(x, y);
+				}
+				nbMonsters--;
+			}
+
+			int nbItems = rng->getInt(0, MAX_ROOM_ITEMS);
+			while (nbItems > 0) {
+				int x = rng->getInt(x1, x2);
+				int y = rng->getInt(y1, y2);
+				if (canWalk(x, y)) {
+					addItem(x, y);
+				}
+				nbItems--;
+			}
+		}
 	}
-
-	if (first) {
-		// put the player in the first room
-		engine.player->x = (x1 + x2) / 2;
-		engine.player->y = (y1 + y2) / 2;
-	} else {
-		TCODRandom *rng = TCODRandom::getInstance();
-		int nbMonsters = rng->getInt(0, MAX_ROOM_MONSTERS);
-		while (nbMonsters > 0) {
-			int x = rng->getInt(x1, x2);
-			int y = rng->getInt(y1, y2);
-			if (canWalk(x, y)) {
-				addMonster(x, y);
-			}
-			nbMonsters--;
-		}
-
-		int nbItems = rng->getInt(0, MAX_ROOM_ITEMS);
-		while (nbItems > 0) {
-			int x = rng->getInt(x1, x2);
-			int y = rng->getInt(y1, y2);
-			if (canWalk(x, y)) {
-				addItem(x, y);
-			}
-			nbItems--;
-		}
+	catch(...){
+		cerr << "An error occurred with Map::createRoom"  << endl;
+		throw 0;
 	}
 }
 
 bool Map::isWall(int x, int y) const {
-	return !map->isWalkable(x, y);
+	try{
+		return !map->isWalkable(x, y);
+	}
+	catch(...){
+		cerr << "An error occurred with Map::isWall"  << endl;
+		throw 0;
+	}
 }
 
 bool Map::canWalk(int x, int y) const {
-	if (isWall(x, y)) {
-		// this is a wall
-		return false;
-	}
-	for (Actor *actor : engine.actors) {
-		if (actor->blocks && actor->x == x && actor->y == y) {
-			// there is a blocking actor here. cannot walk
+	try{
+		if (isWall(x, y)) {
+			// this is a wall
 			return false;
 		}
+		for (Actor *actor : engine.actors) {
+			if (actor->blocks && actor->x == x && actor->y == y) {
+				// there is a blocking actor here. cannot walk
+				return false;
+			}
+		}
+		return true;
 	}
-	return true;
+	catch(...){
+		cerr << "An error occurred with Map::canWalk"  << endl;
+		throw 0;
+	}
 }
 
 bool Map::isExplored(int x, int y) const {
-	return tiles[x + y * width].explored;
+	try{
+		return tiles[x + y * width].explored;
+	}
+	catch(...){
+		cerr << "An error occurred with Map::isExplored"  << endl;
+		throw 0;
+	}
+
 }
 
 bool Map::isInFov(int x, int y) const {
-	if (x < 0 || x >= width || y < 0 || y >= height) {
+	try{
+		if (x < 0 || x >= width || y < 0 || y >= height) {
+			return false;
+		}
+		if (map->isInFov(x, y)) {
+			tiles[x + y * width].explored = true;
+			return true;
+		}
 		return false;
 	}
-	if (map->isInFov(x, y)) {
-		tiles[x + y * width].explored = true;
-		return true;
+	catch(...){
+		cerr << "An error occurred with Map::isInFov"  << endl;
+		throw 0;
 	}
-	return false;
+
 }
 
 void Map::computeFov() {
+	try{
 	map->computeFov(engine.player->x, engine.player->y, engine.fovRadius);
+	}
+	catch(...){
+		cerr << "An error occurred with Map::computeFov"  << endl;
+		throw 0;
+	}
 }
 
 void Map::render() const {
-	static const TCODColor darkWall(0, 0, 100);
-	static const TCODColor darkGround(50, 50, 150);
-	static const TCODColor lightWall(130, 110, 50);
-	static const TCODColor lightGround(200, 180, 50);
+	try{
+		static const TCODColor darkWall(0, 0, 100);
+		static const TCODColor darkGround(50, 50, 150);
+		static const TCODColor lightWall(130, 110, 50);
+		static const TCODColor lightGround(200, 180, 50);
 
-	for (int x = 0; x < width; x++) {
-		for (int y = 0; y < height; y++) {
-			if (isInFov(x, y)) {
-				if(isWall(x, y)){
-				    TCODConsole::root->setChar(x,y,'#');
-				    TCODConsole::root->setCharForeground(x,y,lightWall);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (isInFov(x, y)) {
+					if(isWall(x, y)){
+						TCODConsole::root->setChar(x,y,'#');
+						TCODConsole::root->setCharForeground(x,y,lightWall);
+					}
+					else{
+						TCODConsole::root->setChar(x,y,'.');
+						TCODConsole::root->setCharForeground(x,y,lightGround);
+					}
 				}
-				else{
-				    TCODConsole::root->setChar(x,y,'.');
-				    TCODConsole::root->setCharForeground(x,y,lightGround);
-				}
-			}
-			else if (isExplored(x, y)) {
-				if(isWall(x, y)){
-				    TCODConsole::root->setChar(x,y,'#');
-				    TCODConsole::root->setCharForeground(x,y,darkWall);
-				}
-				else{
-				    TCODConsole::root->setChar(x,y,'.');
-				    TCODConsole::root->setCharForeground(x,y,darkGround);
+				else if (isExplored(x, y)) {
+					if(isWall(x, y)){
+						TCODConsole::root->setChar(x,y,'#');
+						TCODConsole::root->setCharForeground(x,y,darkWall);
+					}
+					else{
+						TCODConsole::root->setChar(x,y,'.');
+						TCODConsole::root->setCharForeground(x,y,darkGround);
+					}
 				}
 			}
 		}
 	}
+	catch(...){
+		cerr << "An error occurred with Map::computeFov"  << endl;
+		throw 0;
+	}
+
 }
