@@ -92,8 +92,14 @@ void PlayerAi::LoadMenu(){
 bool PlayerAi::moveOrAttack(Actor *owner, int targetX, int targetY){
 	try{
 		Map::TileType type = engine.map->getTileType(targetX, targetY);
-		if(type == Map::TileType::WALL || type == Map::TileType::MAP_EDGE) return false;
-
+		if(type == Map::TileType::WALL)  return false;
+		else if(type == Map::TileType::TOP_EDGE ||
+				type == Map::TileType::RIGHT_EDGE ||
+				type == Map::TileType::BOTTOM_EDGE ||
+				type == Map::TileType::LEFT_EDGE) {
+				engine.nextLevel(type);
+				return false;
+		}
 		for(Actor* actor : engine.actors){
 			if(actor->destructible && !actor->destructible->isDead() &&
 					actor->x == targetX && actor->y == targetY){

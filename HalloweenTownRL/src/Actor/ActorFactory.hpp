@@ -10,7 +10,7 @@
 
 class ActorFactory {
 	public:
-		static Actor *CreateHero();
+		static Actor *CreateHero(int x, int y);
 		static Actor *CreateOrc(int x, int y);
 		static Actor *CreateTroll(int x, int y);
 		static Actor *CreatePotion(int x, int y);

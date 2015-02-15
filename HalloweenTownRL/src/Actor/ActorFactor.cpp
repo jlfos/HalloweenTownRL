@@ -3,9 +3,9 @@
 
 using namespace std;
 
-Actor *ActorFactory::CreateHero(){
+Actor *ActorFactory::CreateHero(int x, int y){
 	try{
-		Actor *player = new Actor(40,25,'@',"player",TCODColor::white);
+		Actor *player = new Actor(x, y,'@',"player",TCODColor::white);
 		player->destructible=new PlayerDestructible(30,2,"your cadaver");
 		player->attacker=new Attacker(5);
 		player->ai = new PlayerAi();

@@ -56,7 +56,7 @@ void Map::init(bool withActors) {
 	try{
 		rng = new TCODRandom(seed, TCOD_RNG_MT);
 		tiles = new Tile[width * height];
-		EmptyMapGenerator* gen = nullptr;//new EmptyMapGenerator();
+		EmptyMapGenerator* gen = new EmptyMapGenerator();
 		if(gen == nullptr){
 			map = new TCODMap(width, height);
 			TCODBsp bsp(0, 0, width, height);
@@ -209,14 +209,20 @@ void Map::createRoom(bool first, int x1, int y1, int x2, int y2,
 	}
 }
 
+
+
 Map::TileType Map::getTileType(int x, int y) const {
 	try{
 
 		if(!map->isWalkable(x, y)){
-			bool isNotInMap = false;
-			if(isNotInMap){
-				return TileType::MAP_EDGE;
-			}
+			if(y<0)
+				return TileType::TOP_EDGE;
+			else if(x >= width)
+				return TileType::RIGHT_EDGE;
+			else if(y >= height)
+				return TileType::BOTTOM_EDGE;
+			else if(x<0)
+				return TileType::LEFT_EDGE;
 			else{
 				return TileType::WALL;
 			}
@@ -234,7 +240,7 @@ Map::TileType Map::getTileType(int x, int y) const {
 bool Map::canWalk(int x, int y) const {
 	try{
 		TileType type = getTileType(x, y);
-		if(type == TileType::WALL || type == TileType::MAP_EDGE){
+		if(type != TileType::GROUND){
 			// this is a wall or edge
 			return false;
 		}

@@ -7,7 +7,7 @@ using namespace std;
 Engine::Engine(int screenWidth, int screenHeight) : gameStatus(STARTUP),fovRadius(10),
 	screenWidth(screenWidth),screenHeight(screenHeight) {
 	try{
-		TCODConsole::initRoot(screenWidth,screenHeight,"libtcod C++ tutorial",false);
+		TCODConsole::initRoot(screenWidth,screenHeight,"HalloweenTown",false);
 
 		gui = new Gui();
 	}
@@ -21,8 +21,8 @@ Engine::Engine(int screenWidth, int screenHeight) : gameStatus(STARTUP),fovRadiu
 
 void Engine::init(){
 	try{
-		player = ActorFactory::CreateHero();//new Actor(40,25,'@',"player",TCODColor::white);;
-		map = new Map(80,43);
+		player = ActorFactory::CreateHero(DEFAULT_PLAYER_START_X, DEFAULT_PLAYER_START_Y);
+		map = new Map(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT);
 		map->init(true);
 		actors.push(player);
 		gui->message(TCODColor::red,
@@ -187,6 +187,41 @@ void Engine::update() {
 	}
 	catch(...){
 		cerr << "An error occurred with Engine::update"  << endl;
+		throw 0;
+	}
+}
+
+
+void Engine::nextLevel(Map::TileType type){
+	try{
+		int heroX = DEFAULT_PLAYER_START_X;
+		int heroY = DEFAULT_PLAYER_START_Y;
+		if(type == Map::TileType::TOP_EDGE){
+			heroX = player->x;
+			heroY = DEFAULT_MAP_HEIGHT-1;
+		}
+		if(type == Map::TileType::RIGHT_EDGE){
+			heroX = 0;
+			heroY = player->y;
+		}
+		if(type == Map::TileType::BOTTOM_EDGE){
+			heroX = player->x;
+			heroY = 0;
+		}
+		if(type == Map::TileType::LEFT_EDGE){
+			heroX = DEFAULT_MAP_WIDTH-1;
+			heroY = player->y;
+		}
+		term();
+		player = ActorFactory::CreateHero(heroX, heroY);
+		map = new Map(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT);
+		map->init(true);
+		actors.push(player);
+		gameStatus = STARTUP;
+		update();
+	}
+	catch(...){
+		cerr << "An error occurred with Engine::nextLevel" << endl;
 		throw 0;
 	}
 }

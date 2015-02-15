@@ -30,11 +30,15 @@ public :
     void load();
     void save();
     void sendToBack(Actor *actor);
+    void nextLevel(Map::TileType type);
 private:
 	void exitGame();
 	void newGame();
 	void continueGame();
-
+	const int DEFAULT_MAP_WIDTH = 80;
+	const int DEFAULT_MAP_HEIGHT = 43;
+	const int DEFAULT_PLAYER_START_X = 40;
+	const int DEFAULT_PLAYER_START_Y = 25;
 };
  
 
