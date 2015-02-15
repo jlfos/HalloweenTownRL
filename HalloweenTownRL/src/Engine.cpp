@@ -22,8 +22,8 @@ Engine::Engine(int screenWidth, int screenHeight) : gameStatus(STARTUP),fovRadiu
 void Engine::init(){
 	try{
 		player = ActorFactory::CreateHero(DEFAULT_PLAYER_START_X, DEFAULT_PLAYER_START_Y);
-		map = new Map(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT);
-		map->init(true);
+		map = new Map(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, new EmptyMapGenerator());
+		map->init();
 		actors.push(player);
 		gui->message(TCODColor::red,
 		  "Welcome stranger!\nPrepare to perish in the Tombs of the Ancient Kings.");
@@ -214,8 +214,8 @@ void Engine::nextLevel(Map::TileType type){
 		}
 		term();
 		player = ActorFactory::CreateHero(heroX, heroY);
-		map = new Map(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT);
-		map->init(true);
+		map = new Map(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, new EmptyMapGenerator());
+		map->init();
 		actors.push(player);
 		gameStatus = STARTUP;
 		update();

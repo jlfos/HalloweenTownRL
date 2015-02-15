@@ -8,38 +8,6 @@ static const int ROOM_MIN_SIZE = 8;
 static const int MAX_ROOM_MONSTERS = 4;
 static const int MAX_ROOM_ITEMS = 2;
 
-class BspListener: public ITCODBspCallback {
-private:
-	Map &map; // a map to dig
-	int roomNum; // room number
-	int lastx, lasty; // center of the last room
-public:
-	BspListener(Map &map) :
-			map(map), roomNum(0) {
-	}
-	bool visitNode(TCODBsp *node, void *userData) {
-		if (node->isLeaf()) {
-			int x, y, w, h;
-			// dig a room
-			bool withActors = (bool) userData;
-			w = map.rng->getInt(ROOM_MIN_SIZE, node->w - 2);
-			h = map.rng->getInt(ROOM_MIN_SIZE, node->h - 2);
-			x = map.rng->getInt(node->x + 1, node->x + node->w - w - 1);
-			y = map.rng->getInt(node->y + 1, node->y + node->h - h - 1);
-			map.createRoom(roomNum == 0, x, y, x + w - 1, y + h - 1,
-					withActors);
-			if (roomNum != 0) {
-				// dig a corridor from last room
-				map.dig(lastx, lasty, x + w / 2, lasty);
-				map.dig(x + w / 2, lasty, x + w / 2, y + h / 2);
-			}
-			lastx = x + w / 2;
-			lasty = y + h / 2;
-			roomNum++;
-		}
-		return true;
-	}
-};
 
 Map::Map(int width, int height) :
 		width(width), height(height) {
@@ -47,25 +15,32 @@ Map::Map(int width, int height) :
 		seed = TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);
 	}
 	catch(...){
-		cerr << "An error occurred with Map::Map"  << endl;
+		cerr << "An error occurred with Map::Map(int, int)"  << endl;
 		throw 0;
 	}
 }
 
-void Map::init(bool withActors) {
+Map::Map(int width, int height, MapGenerator* generator):
+		width(width), height(height), generator(generator){
+	try{
+		seed = TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);
+	}
+	catch(...){
+		cerr << "An error occurred with Map::Map(int, int, MapGenerator)"  << endl;
+		throw 0;
+	}
+
+}
+
+void Map::init() {
 	try{
 		rng = new TCODRandom(seed, TCOD_RNG_MT);
 		tiles = new Tile[width * height];
-		EmptyMapGenerator* gen = new EmptyMapGenerator();
-		if(gen == nullptr){
-			map = new TCODMap(width, height);
-			TCODBsp bsp(0, 0, width, height);
-			bsp.splitRecursive(rng, 8, ROOM_MAX_SIZE, ROOM_MAX_SIZE, 1.5f, 1.5f);
-			BspListener listener(*this);
-			bsp.traverseInvertedLevelOrder(&listener, (void *) withActors);
+		if(generator == nullptr){
+			throw 0;
 		}
 		else{
-			map = gen->Generate(width, height);
+			map = generator->Generate(width, height);
 		}
 	}
 	catch(...){
@@ -90,7 +65,7 @@ void Map::save(TCODZip &zip) {
 void Map::load(TCODZip &zip) {
 	try{
 		seed = zip.getInt();
-		init(false);
+		init();
 		for (int i = 0; i < width * height; i++) {
 			tiles[i].explored = zip.getInt();
 		}
@@ -111,105 +86,6 @@ Map::~Map() {
 		throw 0;
 	}
 }
-
-void Map::dig(int x1, int y1, int x2, int y2) {
-	try{
-		if (x2 < x1) {
-
-			int tmp = x2;
-			x2 = x1;
-			x1 = tmp;
-		}
-		if (y2 < y1) {
-			int tmp = y2;
-			y2 = y1;
-			y1 = tmp;
-		}
-		for (int tilex = x1; tilex <= x2; tilex++) {
-			for (int tiley = y1; tiley <= y2; tiley++) {
-				map->setProperties(tilex, tiley, true, true);
-			}
-		}
-	}
-	catch(...){
-		cerr << "An error occurred with Map::dig"  << endl;
-		throw 0;
-	}
-}
-
-void Map::addItem(int x, int y) {
-	try{
-		Actor *healthPotion = ActorFactory::CreatePotion(x, y);
-		engine.actors.push(healthPotion);
-	}
-	catch(...){
-		cerr << "An error occurred with Map::addItem"  << endl;
-		throw 0;
-	}
-}
-
-void Map::addMonster(int x, int y) {
-	try{
-		TCODRandom *rng = TCODRandom::getInstance();
-		if (rng->getInt(0, 100) < 80) {
-			// create an orc
-			Actor *orc = ActorFactory::CreateOrc(x, y);
-			engine.actors.push(orc);
-		} else {
-			// create a troll
-			Actor *troll = ActorFactory::CreateTroll(x, y);
-
-			engine.actors.push(troll);
-		}
-	}
-	catch(...){
-		cerr << "An error occurred with Map::addMonster"  << endl;
-		throw 0;
-	}
-}
-
-void Map::createRoom(bool first, int x1, int y1, int x2, int y2,
-		bool withActors) {
-	try{
-		dig(x1, y1, x2, y2);
-		if (!withActors) {
-			return;
-		}
-
-		if (first) {
-			// put the player in the first room
-			engine.player->x = (x1 + x2) / 2;
-			engine.player->y = (y1 + y2) / 2;
-		} else {
-			TCODRandom *rng = TCODRandom::getInstance();
-			int nbMonsters = rng->getInt(0, MAX_ROOM_MONSTERS);
-			while (nbMonsters > 0) {
-				int x = rng->getInt(x1, x2);
-				int y = rng->getInt(y1, y2);
-				if (canWalk(x, y)) {
-					addMonster(x, y);
-				}
-				nbMonsters--;
-			}
-
-			int nbItems = rng->getInt(0, MAX_ROOM_ITEMS);
-			while (nbItems > 0) {
-				int x = rng->getInt(x1, x2);
-				int y = rng->getInt(y1, y2);
-				if (canWalk(x, y)) {
-					addItem(x, y);
-				}
-				nbItems--;
-			}
-		}
-	}
-	catch(...){
-		cerr << "An error occurred with Map::createRoom"  << endl;
-		throw 0;
-	}
-}
-
-
 
 Map::TileType Map::getTileType(int x, int y) const {
 	try{

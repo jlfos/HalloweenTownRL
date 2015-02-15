@@ -6,8 +6,8 @@ using namespace std;
 Actor *ActorFactory::CreateHero(int x, int y){
 	try{
 		Actor *player = new Actor(x, y,'@',"player",TCODColor::white);
-		player->destructible=new PlayerDestructible(30,2,"your cadaver");
-		player->attacker=new Attacker(5);
+		player->destructible=new PlayerDestructible(60,2,"your cadaver");
+		player->attacker=new Attacker(10);
 		player->ai = new PlayerAi();
 		player->container= new Container(26);
 		return player;
