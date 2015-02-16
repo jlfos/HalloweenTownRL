@@ -44,6 +44,10 @@ private:
 	const int DEFAULT_MAP_HEIGHT = 43;
 	const int DEFAULT_PLAYER_START_X = 40;
 	const int DEFAULT_PLAYER_START_Y = 25;
+	const int DEFAULT_MAP_X = 2;
+	const int DEFAULT_MAP_Y = 2;
+	const int WORLD_SIZE_LATITUDE = 3;
+	const int WORLD_SIZE_LONGITUDE = 3;
 	vector<vector<Map*>> *CreateMaps();
 	int mapX;
 	int mapY;

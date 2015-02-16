@@ -8,12 +8,13 @@
 #ifndef MOSTLYEMPTYMAPGENERATOR_HPP_
 #define MOSTLYEMPTYMAPGENERATOR_HPP_
 
+class Map;
 
 class MostlyEmptyMapGenerator : public MapGenerator{
 	public:
-		TCODMap* Generate(int width, int height);
+		TCODMap* Generate(Map* map);
 	private:
-		void AddItem(int x, int y);
+		void AddItem(Map* map, int x, int y);
 };
 
 

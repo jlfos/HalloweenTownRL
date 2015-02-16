@@ -52,16 +52,16 @@ public:
 
 
 
-TCODMap* ExampleMapGenerator::Generate(int width, int height){
+TCODMap* ExampleMapGenerator::Generate(Map* map){
 	bool withActors = true;
 	long seed = TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);
 	rng = new TCODRandom(seed, TCOD_RNG_MT);
-	map = new TCODMap(width, height);
-	TCODBsp bsp(0, 0, width, height);
+	TCODMap* tcodMap = new TCODMap(map->width, map->height);
+	TCODBsp bsp(0, 0, map->width, map->height);
 	bsp.splitRecursive(rng, 8, ROOM_MAX_SIZE, ROOM_MAX_SIZE, 1.5f, 1.5f);
 	BspListener listener(*this);
 	bsp.traverseInvertedLevelOrder(&listener, (void *) withActors);
-	return map;
+	return tcodMap;
 }
 
 

@@ -13,6 +13,7 @@ public :
     Map(int width, int height);
     Map(int width, int height, MapGenerator* generator);
     ~Map();
+    TCODList<Actor*> actors;
     enum class TileType {GROUND, WALL, LEFT_EDGE, RIGHT_EDGE, TOP_EDGE, BOTTOM_EDGE};
     TileType getTileType(int x, int y) const;
 	bool isInFov(int x, int y) const;

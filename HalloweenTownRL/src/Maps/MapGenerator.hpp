@@ -9,11 +9,12 @@
 
 #ifndef MAPGENERATOR_HPP_
 #define MAPGENERATOR_HPP_
+class Map;
 
 class MapGenerator{
 	public:
 
-		virtual TCODMap* Generate(int width, int height) = 0;
+		virtual TCODMap* Generate(Map* map) = 0;
 };
 
 

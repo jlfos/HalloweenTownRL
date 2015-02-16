@@ -24,10 +24,11 @@ void Engine::init(){
 	try{
 		player = ActorFactory::CreateHero(DEFAULT_PLAYER_START_X, DEFAULT_PLAYER_START_Y);
 		maps = CreateMaps();
-		mapX = 2;
-		mapY = 2;
+		mapX = DEFAULT_MAP_X;
+		mapY = DEFAULT_MAP_Y;
 		currentMap = (*maps)[mapX][mapY];
 		currentMap->init();
+		actors = currentMap->actors;
 		actors.push(player);
 		gui->message(TCODColor::red,
 		  "Welcome stranger!\nPrepare to perish in the Tombs of the Ancient Kings.");
@@ -41,11 +42,11 @@ void Engine::init(){
 
 vector<vector<Map*>> *Engine::CreateMaps(){
 	try{
-	vector<vector<Map*>> *maps = new vector<vector<Map*>>(3);
+	vector<vector<Map*>> *maps = new vector<vector<Map*>>(WORLD_SIZE_LATITUDE);
 
 	TCODRandom *rng = TCODRandom::getInstance();
-	for(int i = 0; i<3; i++){
-		for(int j = 0; j<3; j++){
+	for(int i = 0; i<WORLD_SIZE_LATITUDE; i++){
+		for(int j = 0; j<WORLD_SIZE_LONGITUDE; j++){
 			int rand = rng->getInt(0, 100);
 			MapGenerator* tempMap = nullptr;
 			if(rand%2==0){
@@ -192,8 +193,14 @@ void Engine::continueGame(){
 Engine::~Engine() {
 	try{
 		actors.clearAndDelete();
-		delete currentMap;
 		delete gui;
+
+		for(int i =0; i<WORLD_SIZE_LATITUDE; i++){
+			for(int j=0; j<WORLD_SIZE_LONGITUDE; j++){
+				delete (*maps)[i][j];
+			}
+		}
+		delete maps;
 	}
 	catch(...){
 		cerr << "An error occurred with Engine::~Engine"  << endl;
@@ -267,10 +274,11 @@ void Engine::nextLevel(Map::TileType type){
 				mapX = 2;
 			}
 		}
-		actors.clearAndDelete();
+		actors.remove(player);
 		gui->clear();
 		player = ActorFactory::CreateHero(heroX, heroY);
 		currentMap = (*maps)[mapX][mapY];
+		actors = currentMap->actors;
 		actors.push(player);
 		gameStatus = STARTUP;
 		update();

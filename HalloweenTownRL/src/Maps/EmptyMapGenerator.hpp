@@ -13,10 +13,10 @@
 class EmptyMapGenerator : public MapGenerator{
 
 	public:
-		TCODMap* Generate(int width, int height);
+		TCODMap* Generate(Map* map);
 
 	private:
-		void AddItem(int x, int y);
+		void AddItem(Map* map, int x, int y);
 };
 
 

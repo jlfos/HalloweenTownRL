@@ -6,8 +6,6 @@ using namespace std;
 void PlayerAi::update(Actor *owner){
 	try{
 
-		cout << "PlayerUpdate" << endl;
-
 		if(owner->destructible && owner->destructible->isDead()){
 			return;
 		}

@@ -7,10 +7,11 @@
 
 #ifndef EXAMPLEMAPGENERATOR_HPP_
 #define EXAMPLEMAPGENERATOR_HPP_
+class Map;
 
 class ExampleMapGenerator : public MapGenerator{
 	public:
-		TCODMap* Generate(int width, int height);
+		TCODMap* Generate(Map* map);
 		 void createRoom(bool first, int x1, int y1, int x2, int y2, bool withActors);
 		 void dig(int x1, int y1, int x2, int y2);
 		 void addMonster(int x, int y);

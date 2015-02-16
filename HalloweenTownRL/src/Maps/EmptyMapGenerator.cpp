@@ -7,23 +7,23 @@
 #include "../main.hpp"
 
 
-TCODMap* EmptyMapGenerator::Generate(int width, int height){
-	TCODMap* emptyMap = new TCODMap(width, height);
-	for (int tilex = 0; tilex < width; tilex++) {
-		for (int tiley = 0; tiley < height; tiley++) {
+TCODMap* EmptyMapGenerator::Generate(Map* map){
+	TCODMap* emptyMap = new TCODMap(map->width, map->height);
+	for (int tilex = 0; tilex < map->width; tilex++) {
+		for (int tiley = 0; tiley < map->height; tiley++) {
 			emptyMap->setProperties(tilex, tiley, true, true);
 			TCODRandom *rng = TCODRandom::getInstance();
 			int rand = rng->getInt(0, 200);
 			if(rand%100==0)
-				AddItem(tilex, tiley);
+				AddItem(map, tilex, tiley);
 		}
 	}
 	return emptyMap;
 }
 
-void EmptyMapGenerator::AddItem(int x, int y){
+void EmptyMapGenerator::AddItem(Map* map, int x, int y){
 	Actor* item = ActorFactory::CreatePotion(x, y);
-	engine.actors.push(item);
+	map->actors.push(item);
 }
 
 

@@ -13,6 +13,7 @@ Map::Map(int width, int height) :
 		width(width), height(height) {
 	try{
 		seed = TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);
+		actors = new TCODList<Actor>();
 	}
 	catch(...){
 		cerr << "An error occurred with Map::Map(int, int)"  << endl;
@@ -24,6 +25,7 @@ Map::Map(int width, int height, MapGenerator* generator):
 		width(width), height(height), generator(generator){
 	try{
 		seed = TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);
+		actors = new TCODList<Actor>();
 	}
 	catch(...){
 		cerr << "An error occurred with Map::Map(int, int, MapGenerator)"  << endl;
@@ -40,7 +42,7 @@ void Map::init() {
 			throw 0;
 		}
 		else{
-			map = generator->Generate(width, height);
+			map = generator->Generate(this);
 		}
 	}
 	catch(...){
@@ -80,6 +82,9 @@ Map::~Map() {
 	try{
 		delete[] tiles;
 		delete map;
+		for(Actor* actor : actors){
+			delete actor;
+		}
 	}
 	catch(...){
 		cerr << "An error occurred with Map::~Map"  << endl;
