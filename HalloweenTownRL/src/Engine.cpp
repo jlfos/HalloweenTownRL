@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "libtcod.hpp"
 #include "main.hpp"
 
@@ -22,8 +23,11 @@ Engine::Engine(int screenWidth, int screenHeight) : gameStatus(STARTUP),fovRadiu
 void Engine::init(){
 	try{
 		player = ActorFactory::CreateHero(DEFAULT_PLAYER_START_X, DEFAULT_PLAYER_START_Y);
-		map = new Map(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, new EmptyMapGenerator());
-		map->init();
+		maps = CreateMaps();
+		mapX = 2;
+		mapY = 2;
+		currentMap = (*maps)[mapX][mapY];
+		currentMap->init();
 		actors.push(player);
 		gui->message(TCODColor::red,
 		  "Welcome stranger!\nPrepare to perish in the Tombs of the Ancient Kings.");
@@ -35,11 +39,37 @@ void Engine::init(){
 	}
 }
 
+vector<vector<Map*>> *Engine::CreateMaps(){
+	try{
+	vector<vector<Map*>> *maps = new vector<vector<Map*>>(3);
+
+	TCODRandom *rng = TCODRandom::getInstance();
+	for(int i = 0; i<3; i++){
+		for(int j = 0; j<3; j++){
+			int rand = rng->getInt(0, 100);
+			MapGenerator* tempMap = nullptr;
+			if(rand%2==0){
+				maps->at(i).push_back(new Map(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, new EmptyMapGenerator()));
+			}
+			else{
+				maps->at(i).push_back(new Map(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, new MostlyEmptyMapGenerator()));
+			}
+			(*maps)[i][j]->init();
+		}
+	}
+	return maps;
+	}
+	catch(...){
+		cerr << "An error occurred in Engine::CreateMaps" << endl;
+	}
+}
+
 void Engine::term(){
+
 	try{
 		actors.clearAndDelete();
-		if( map )
-			delete map;
+		if( currentMap )
+			delete currentMap;
 		gui->clear();
 	}
 	catch(...){
@@ -56,9 +86,9 @@ void Engine::save(){
 		else{
 			TCODZip zip;
 			//save the map first
-			zip.putInt(map->width);
-			zip.putInt(map->height);
-			map->save(zip);
+			zip.putInt(currentMap->width);
+			zip.putInt(currentMap->height);
+			currentMap->save(zip);
 
 			player->save(zip);
 
@@ -135,8 +165,8 @@ void Engine::continueGame(){
 		int width = zip.getInt();
 		int height = zip.getInt();
 
-		map = new Map(width, height);
-		map->load(zip);
+		currentMap = new Map(width, height);
+		currentMap->load(zip);
 
 		player = new Actor(0,0,0,nullptr, TCODColor::white);
 		player->load(zip);
@@ -162,7 +192,7 @@ void Engine::continueGame(){
 Engine::~Engine() {
 	try{
 		actors.clearAndDelete();
-		delete map;
+		delete currentMap;
 		delete gui;
 	}
 	catch(...){
@@ -173,7 +203,7 @@ Engine::~Engine() {
 
 void Engine::update() {
 	try{
-		if(gameStatus == STARTUP) map->computeFov();
+		if(gameStatus == STARTUP) currentMap->computeFov();
 		gameStatus=IDLE;
 		TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS,&lastKey,NULL);
 		player->update();
@@ -199,23 +229,48 @@ void Engine::nextLevel(Map::TileType type){
 		if(type == Map::TileType::TOP_EDGE){
 			heroX = player->x;
 			heroY = DEFAULT_MAP_HEIGHT-1;
+			if(mapY<2){
+				mapY++;
+			}
+			else{
+				mapY = 0;
+			}
 		}
 		if(type == Map::TileType::RIGHT_EDGE){
 			heroX = 0;
 			heroY = player->y;
+			if(mapX<2){
+				mapX++;
+			}
+			else{
+				mapX = 0;
+			}
 		}
 		if(type == Map::TileType::BOTTOM_EDGE){
 			heroX = player->x;
 			heroY = 0;
+			if(mapY>0){
+				mapY--;
+			}
+			else
+			{
+				mapY=2;
+			}
 		}
 		if(type == Map::TileType::LEFT_EDGE){
 			heroX = DEFAULT_MAP_WIDTH-1;
 			heroY = player->y;
+			if(mapX>0){
+				mapX--;
+			}
+			else{
+				mapX = 2;
+			}
 		}
-		term();
+		actors.clearAndDelete();
+		gui->clear();
 		player = ActorFactory::CreateHero(heroX, heroY);
-		map = new Map(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, new EmptyMapGenerator());
-		map->init();
+		currentMap = (*maps)[mapX][mapY];
 		actors.push(player);
 		gameStatus = STARTUP;
 		update();
@@ -241,14 +296,14 @@ void Engine::render() {
 	try{
 		TCODConsole::root->clear();
 		// draw the map
-		map->render();
+		currentMap->render();
 		gui->render();
 		TCODConsole::root->print(1, screenHeight-2, "HP: %d/%d",
 				(int)player->destructible->hp, (int)player->destructible->maxHp);
 
 		// draw the actors
 		for (Actor *actor : actors) {
-			if( map ->isInFov(actor->x, actor->y)){
+			if( currentMap ->isInFov(actor->x, actor->y)){
 				actor->render();
 			}
 		}

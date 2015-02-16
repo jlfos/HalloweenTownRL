@@ -149,7 +149,7 @@ Gui::Message::~Message() {
 
 void Gui::renderMouseLook() {
 	try{
-		if (! engine.map->isInFov(engine.mouse.cx, engine.mouse.cy)) {
+		if (! engine.currentMap->isInFov(engine.mouse.cx, engine.mouse.cy)) {
 			// if mouse is out of fov, nothing to render
 			return;
 		}

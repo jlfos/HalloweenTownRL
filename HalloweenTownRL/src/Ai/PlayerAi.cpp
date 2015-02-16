@@ -5,6 +5,9 @@ using namespace std;
 
 void PlayerAi::update(Actor *owner){
 	try{
+
+		cout << "PlayerUpdate" << endl;
+
 		if(owner->destructible && owner->destructible->isDead()){
 			return;
 		}
@@ -30,7 +33,7 @@ void PlayerAi::MoveLeft(Actor *owner){
 	try{
 		engine.gameStatus=Engine::NEW_TURN;
 		if (moveOrAttack(owner, owner->x-1,owner->y)) {
-			engine.map->computeFov();
+			engine.currentMap->computeFov();
 		}
 	}
 	catch(...){
@@ -43,7 +46,7 @@ void PlayerAi::MoveDown(Actor *owner){
     try{
 		engine.gameStatus=Engine::NEW_TURN;
 		if (moveOrAttack(owner, owner->x,owner->y+1)) {
-			engine.map->computeFov();
+			engine.currentMap->computeFov();
 		}
     }
     catch(...){
@@ -57,7 +60,7 @@ void PlayerAi::MoveRight(Actor *owner){
 	try{
 		engine.gameStatus=Engine::NEW_TURN;
 		if (moveOrAttack(owner, owner->x+1,owner->y)) {
-			engine.map->computeFov();
+			engine.currentMap->computeFov();
 		}
 	}
 	catch(...){
@@ -70,7 +73,7 @@ void PlayerAi::MoveUp(Actor *owner){
 	try{
 		engine.gameStatus=Engine::NEW_TURN;
 		if (moveOrAttack(owner, owner->x,owner->y-1)) {
-			engine.map->computeFov();
+			engine.currentMap->computeFov();
 		}
 	}
 	catch(...){
@@ -91,7 +94,7 @@ void PlayerAi::LoadMenu(){
 }
 bool PlayerAi::moveOrAttack(Actor *owner, int targetX, int targetY){
 	try{
-		Map::TileType type = engine.map->getTileType(targetX, targetY);
+		Map::TileType type = engine.currentMap->getTileType(targetX, targetY);
 		if(type == Map::TileType::WALL)  return false;
 		else if(type == Map::TileType::TOP_EDGE ||
 				type == Map::TileType::RIGHT_EDGE ||

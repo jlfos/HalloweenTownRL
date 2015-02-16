@@ -1,3 +1,7 @@
+#include <vector>
+
+using namespace std;
+
 class Engine {
 
 private:
@@ -13,7 +17,8 @@ public :
 
     TCODList<Actor*> actors;
     Actor *player;
-    Map *map;
+    Map *currentMap;
+    vector<vector<Map*>> *maps;
     int fovRadius;
     int screenWidth;
     int screenHeight;
@@ -39,6 +44,9 @@ private:
 	const int DEFAULT_MAP_HEIGHT = 43;
 	const int DEFAULT_PLAYER_START_X = 40;
 	const int DEFAULT_PLAYER_START_Y = 25;
+	vector<vector<Map*>> *CreateMaps();
+	int mapX;
+	int mapY;
 };
  
 

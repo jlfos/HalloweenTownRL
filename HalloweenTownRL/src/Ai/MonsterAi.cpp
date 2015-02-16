@@ -14,7 +14,7 @@ void MonsterAi::update(Actor *owner){
 		if ( owner->destructible && owner->destructible->isDead() ) {
 			return;
 		}
-		if ( engine.map->isInFov(owner->x,owner->y) ) {
+		if ( engine.currentMap->isInFov(owner->x,owner->y) ) {
 			// we can see the player. move towards him
 			moveCount=TRACKING_TURNS;
 		}
@@ -41,14 +41,14 @@ void MonsterAi::moveOrAttack(Actor *owner, int targetX, int targetY){
 		if(distance >=2){
 			dx = (int)(round(dx/distance));
 			dy = (int)(round(dy/distance));
-			if(engine.map->canWalk(owner->x+dx, owner->y+dy)){
+			if(engine.currentMap->canWalk(owner->x+dx, owner->y+dy)){
 				owner->x += dx;
 				owner->y += dy;
 			}
-			else if ( engine.map->canWalk(owner->x+stepdx,owner->y) ) {
+			else if ( engine.currentMap->canWalk(owner->x+stepdx,owner->y) ) {
 				owner->x += stepdx;
 			}
-			else if ( engine.map->canWalk(owner->x,owner->y+stepdy) ) {
+			else if ( engine.currentMap->canWalk(owner->x,owner->y+stepdy) ) {
 				owner->y += stepdy;
 			}
 		}
