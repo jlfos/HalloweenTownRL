@@ -12,7 +12,7 @@ class Map;
 
 class MostlyEmptyMapGenerator : public MapGenerator{
 	public:
-		TCODMap* Generate(Map* map);
+		TCODMap* Generate(Map* map, bool generateActors);
 	private:
 		void AddItem(Map* map, int x, int y);
 };

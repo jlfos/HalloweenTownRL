@@ -51,8 +51,12 @@ public:
 };
 
 
+ExampleMapGenerator::ExampleMapGenerator(){
+	rng = nullptr;
+	map = nullptr;
+}
 
-TCODMap* ExampleMapGenerator::Generate(Map* map){
+TCODMap* ExampleMapGenerator::Generate(Map* map, bool generateActors){
 	bool withActors = true;
 	long seed = TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);
 	rng = new TCODRandom(seed, TCOD_RNG_MT);

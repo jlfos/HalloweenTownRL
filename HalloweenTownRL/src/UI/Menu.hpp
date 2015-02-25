@@ -12,9 +12,10 @@ public:
 	};
 	void populateMenu(bool saveGameExists);
 	MenuItemCode pick();
+	Menu();
 	~Menu();
-private:
 	void clear();
+private:
 	void addItem(MenuItemCode code, const char *label);
 protected:
 

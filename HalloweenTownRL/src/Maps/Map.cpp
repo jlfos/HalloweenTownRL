@@ -1,5 +1,7 @@
-#include "../main.hpp"
 #include <iostream>
+#include <string>
+#include "../main.hpp"
+
 
 using namespace std;
 
@@ -12,6 +14,9 @@ static const int MAX_ROOM_ITEMS = 2;
 Map::Map(int width, int height) :
 		width(width), height(height) {
 	try{
+		map = nullptr;
+		tiles = nullptr;
+		rng = nullptr;
 		seed = TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);
 		actors = new TCODList<Actor>();
 	}
@@ -22,8 +27,12 @@ Map::Map(int width, int height) :
 }
 
 Map::Map(int width, int height, MapGenerator* generator):
-		width(width), height(height), generator(generator){
+		width(width), height(height), generator(generator)
+		{
 	try{
+		map = nullptr;
+		tiles = nullptr;
+		rng = nullptr;
 		seed = TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);
 		actors = new TCODList<Actor>();
 	}
@@ -36,13 +45,19 @@ Map::Map(int width, int height, MapGenerator* generator):
 
 void Map::init() {
 	try{
-		rng = new TCODRandom(seed, TCOD_RNG_MT);
-		tiles = new Tile[width * height];
+
+		if(rng== nullptr)
+			rng = new TCODRandom(seed, TCOD_RNG_MT);
+
+		if(tiles == nullptr){
+			tiles = new Tile[width * height];
+		}
+
 		if(generator == nullptr){
 			throw 0;
 		}
-		else{
-			map = generator->Generate(this);
+		else if(map == nullptr){
+			map = generator->Generate(this, true);
 		}
 	}
 	catch(...){
@@ -57,6 +72,11 @@ void Map::save(TCODZip &zip) {
 		for (int i = 0; i < width * height; i++) {
 			zip.putInt(tiles[i].explored);
 		}
+		int size = actors.size();
+		zip.putInt(size);
+		for(Actor *it : actors){
+			(it)->save(zip);
+		}
 	}
 	catch(...){
 		cerr << "An error occurred with Map::save"  << endl;
@@ -66,10 +86,21 @@ void Map::save(TCODZip &zip) {
 
 void Map::load(TCODZip &zip) {
 	try{
+
 		seed = zip.getInt();
-		init();
+		rng = new TCODRandom(seed, TCOD_RNG_MT);
+		tiles = new Tile[width * height];
+		generator = new EmptyMapGenerator();
+		map = generator->Generate(this, false);
 		for (int i = 0; i < width * height; i++) {
 			tiles[i].explored = zip.getInt();
+		}
+		int nbActors = zip.getInt();
+		while(nbActors > 0){
+			Actor *actor = new Actor(0,0,0,nullptr, TCODColor::white);
+			actor->load(zip);
+			actors.push(actor);
+			nbActors--;
 		}
 	}
 	catch(...){
@@ -80,11 +111,28 @@ void Map::load(TCODZip &zip) {
 
 Map::~Map() {
 	try{
-		delete[] tiles;
-		delete map;
-		for(Actor* actor : actors){
-			delete actor;
+
+		if(tiles != nullptr){
+			delete[] tiles;
+			tiles = nullptr;
 		}
+
+		if(map != nullptr){
+			delete map;
+			map = nullptr;
+		}
+
+		if(rng != nullptr){
+			delete rng;
+			rng = nullptr;
+		}
+//	for(Actor actor: actors){
+//		if(actor != nullptr){
+//			delete actor;
+//			actor = nullptr;
+//		}
+//	}
+		actors.clearAndDelete();
 	}
 	catch(...){
 		cerr << "An error occurred with Map::~Map"  << endl;
@@ -147,14 +195,15 @@ bool Map::isExplored(int x, int y) const {
 		cerr << "An error occurred with Map::isExplored"  << endl;
 		throw 0;
 	}
-
 }
 
 bool Map::isInFov(int x, int y) const {
 	try{
+
 		if (x < 0 || x >= width || y < 0 || y >= height) {
 			return false;
 		}
+
 		if (map->isInFov(x, y)) {
 			tiles[x + y * width].explored = true;
 			return true;
@@ -170,7 +219,7 @@ bool Map::isInFov(int x, int y) const {
 
 void Map::computeFov() {
 	try{
-	map->computeFov(engine.player->x, engine.player->y, engine.fovRadius);
+		map->computeFov(engine.player->x, engine.player->y, engine.fovRadius);
 	}
 	catch(...){
 		cerr << "An error occurred with Map::computeFov"  << endl;
@@ -184,7 +233,6 @@ void Map::render() const {
 		static const TCODColor darkGround(50, 50, 150);
 		static const TCODColor lightWall(130, 110, 50);
 		static const TCODColor lightGround(200, 180, 50);
-
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				TileType type = getTileType(x, y);

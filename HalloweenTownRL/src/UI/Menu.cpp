@@ -3,6 +3,16 @@
 
 using namespace std;
 
+Menu::Menu(){
+	try{
+
+	}
+	catch(...){
+		cerr << "An error occurred with Menu::Menu" << endl;
+		throw 0;
+	}
+}
+
 Menu::~Menu(){
 	try{
 		clear();
@@ -31,6 +41,7 @@ void Menu::populateMenu(bool saveGameExists){
 			addItem(MenuItemCode::CONTINUE, "Continue");
 		}
 		addItem(MenuItemCode::EXIT, "Exit");
+
 	}
 	catch(...){
 		cerr << "An error occurred with Menu::populateMenu"  << endl;

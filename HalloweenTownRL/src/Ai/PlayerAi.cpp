@@ -82,7 +82,7 @@ void PlayerAi::MoveUp(Actor *owner){
 
 void PlayerAi::LoadMenu(){
 	try{
-		engine.save();
+		//engine.save();
 		engine.load();
 	}
 	catch(...){

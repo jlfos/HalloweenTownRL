@@ -14,7 +14,7 @@ class Map;
 class MapGenerator{
 	public:
 
-		virtual TCODMap* Generate(Map* map) = 0;
+		virtual TCODMap* Generate(Map* map, bool generateActors) = 0;
 };
 
 

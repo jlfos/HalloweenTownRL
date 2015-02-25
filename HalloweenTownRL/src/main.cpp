@@ -11,11 +11,12 @@ int main() {
 		while ( !TCODConsole::isWindowClosed() ) {
 
 			engine.update();
+
 			engine.render();
 			TCODConsole::flush();
 
 		}
-		engine.save();
+		//engine.save();
 		return 0;
 	}
 	catch(...){

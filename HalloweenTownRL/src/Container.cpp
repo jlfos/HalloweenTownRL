@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Container::Container(int size): size(size){
+Container::Container(int size): size(size), inventory(0){
 	try{
 
 	}
