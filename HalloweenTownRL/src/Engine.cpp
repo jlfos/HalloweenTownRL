@@ -232,7 +232,6 @@ void Engine::continueGame() {
 
 Engine::~Engine() {
 	try {
-		actors.clearAndDelete();
 		if (gui != nullptr) {
 			delete gui;
 			gui = nullptr;

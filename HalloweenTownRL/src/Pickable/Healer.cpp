@@ -7,6 +7,10 @@ Healer::Healer(float amount) : amount(amount){
 
 }
 
+Healer::~Healer(){
+
+}
+
 bool Healer::use(Actor *owner, Actor *wearer){
 	try{
 		if(wearer->destructible){

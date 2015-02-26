@@ -3,6 +3,7 @@ public :
 	float amount; // how many hp
 
 	Healer(float amount);
+	~Healer();
 	bool use(Actor *owner, Actor *wearer);
 	void load(TCODZip &zip);
 	void save(TCODZip &zip);

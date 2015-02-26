@@ -117,6 +117,7 @@ Map::~Map() {
 			tiles = nullptr;
 		}
 
+
 		if(map != nullptr){
 			delete map;
 			map = nullptr;
@@ -126,12 +127,16 @@ Map::~Map() {
 			delete rng;
 			rng = nullptr;
 		}
-//	for(Actor actor: actors){
-//		if(actor != nullptr){
-//			delete actor;
-//			actor = nullptr;
+//		for(int i = 0; i<actors.size(); i++){
+//			delete actors.get(i);
+//
 //		}
-//	}
+//		for(Actor* actor: actors){
+//			if(actor != nullptr){
+//				delete actor;
+//				actor = nullptr;
+//			}
+//		}
 		actors.clearAndDelete();
 	}
 	catch(...){
