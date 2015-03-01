@@ -13,11 +13,18 @@ TCODMap* MostlyEmptyMapGenerator::Generate(Map* map, bool generateActors){
 		for (int tiley = 0; tiley < map->height; tiley++) {
 			TCODRandom *rng = TCODRandom::getInstance();
 			int rand = rng->getInt(0, 200);
-			if(rand%200==0)
+			if(rand%200==0){
 				emptyMap->setProperties(tilex, tiley, true, false);
-			else
+				map->tiles[tilex+tiley*(map->width)].visibleColor = TCODColor::lighterRed;
+				map->tiles[tilex+tiley*(map->width)].fogColor = TCODColor::darkRed;
+				map->tiles[tilex+tiley*(map->width)].character = 35;
+			}
+			else{
 				emptyMap->setProperties(tilex, tiley, true, true);
-
+				map->tiles[tilex+tiley*(map->width)].visibleColor = TCODColor::lighterRed;
+				map->tiles[tilex+tiley*(map->width)].fogColor = TCODColor::darkRed;
+				map->tiles[tilex+tiley*(map->width)].character = 46;
+			}
 				if(rand%100==0 && generateActors)
 					AddItem(map, tilex, tiley);
 		}

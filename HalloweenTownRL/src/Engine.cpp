@@ -51,11 +51,9 @@ vector<vector<Map*>> *Engine::CreateMaps() {
 		TCODRandom *rng = TCODRandom::getInstance();
 		for (int i = 0; i < WORLD_SIZE_LATITUDE; i++) {
 			for (int j = 0; j < WORLD_SIZE_LONGITUDE; j++) {
-
-				int rand = rng->getInt(0, 100);
-				if (rand % 2 == 0) {
+				if (i  == 1) {
 					Map* temp = new Map(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT,
-							new EmptyMapGenerator());
+							new RoadMapGenerator());
 					if (temp) {
 						maps->at(i).push_back(temp);
 					}

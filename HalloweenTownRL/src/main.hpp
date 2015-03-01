@@ -17,6 +17,7 @@ class Actor;
 #include "Maps/EmptyMapGenerator.hpp"
 #include "Maps/ExampleMapGenerator.hpp"
 #include "Maps/MostlyEmptyMapGenerator.hpp"
+#include "Maps/RoadMapGenerator.hpp"
 #include "Maps/Map.hpp"
 #include "UI/Menu.hpp"
 #include "Gui.hpp"
