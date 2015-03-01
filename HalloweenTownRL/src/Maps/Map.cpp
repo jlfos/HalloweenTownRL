@@ -240,26 +240,14 @@ void Map::render() const {
 		static const TCODColor lightGround(200, 180, 50);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				TileType type = getTileType(x, y);
+//				TileType type = getTileType(x, y);
 				if (isInFov(x, y)) {
-					if(type == TileType::WALL){
-						TCODConsole::root->setChar(x,y,'#');
-						TCODConsole::root->setCharForeground(x,y,lightWall);
-					}
-					else if(type == TileType::GROUND){
-						TCODConsole::root->setChar(x,y,'.');
-						TCODConsole::root->setCharForeground(x,y,lightGround);
-					}
+					TCODConsole::root->setChar(x,y, tiles[x+y*width].character);
+					TCODConsole::root->setCharForeground(x,y,tiles[x+y*width].visibleColor);
 				}
 				else if (isExplored(x, y)) {
-					if(type == TileType::WALL){
-						TCODConsole::root->setChar(x,y,'#');
-						TCODConsole::root->setCharForeground(x,y,darkWall);
-					}
-					else if(type == TileType::GROUND){
-						TCODConsole::root->setChar(x,y,'.');
-						TCODConsole::root->setCharForeground(x,y,darkGround);
-					}
+					TCODConsole::root->setChar(x,y, tiles[x+y*width].character);
+					TCODConsole::root->setCharForeground(x,y,tiles[x+y*width].fogColor);
 				}
 			}
 		}

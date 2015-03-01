@@ -6,7 +6,7 @@
 using namespace std;
 
 Engine::Engine(int screenWidth, int screenHeight) :
-		gameStatus(STARTUP), fovRadius(50), screenWidth(screenWidth), screenHeight(screenHeight) {
+		gameStatus(STARTUP), fovRadius(15), screenWidth(screenWidth), screenHeight(screenHeight) {
 	try {
 		currentMap = nullptr;
 		maps = nullptr;
@@ -259,16 +259,12 @@ Engine::~Engine() {
 
 void Engine::update() {
 	try {
-		cout << "update 0" << endl;
 		if (gameStatus == STARTUP)
 			currentMap->computeFov();
 		gameStatus = IDLE;
-		cout << "update 1" << endl;
 		TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
 		player->update();
-		cout << "update 2" << endl;
 		if (gameStatus == NEW_TURN) {
-			cout << "update 3" << endl;
 			for (Actor *actor : actors) {
 				if (actor != player) {
 					actor->update();

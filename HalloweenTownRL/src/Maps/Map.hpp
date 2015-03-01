@@ -1,6 +1,9 @@
 struct Tile {
     bool explored; // has the player already seen this tile ?
     Tile() : explored(false) {}
+    TCODColor visibleColor;
+    TCODColor fogColor;
+    int character;
 };
  
 class Map : public Persistent{
@@ -9,7 +12,7 @@ private:
     MapGenerator* generator;
 public :
     int width,height;
- 
+    Tile *tiles;
     Map(int width, int height);
     Map(int width, int height, MapGenerator* generator);
     ~Map();
@@ -25,7 +28,6 @@ public :
     void load(TCODZip &zip);
     void save(TCODZip &zip);
 protected :
-    Tile *tiles;
     TCODMap *map;
     long seed;
     TCODRandom *rng;
