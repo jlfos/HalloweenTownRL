@@ -59,7 +59,7 @@ vector<vector<Map*>> *Engine::CreateMaps() {
 					}
 				} else {
 					Map* temp = new Map(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT,
-							new EmptyMapGenerator());
+							new ForestMapGenerator());
 					if (temp) {
 						maps->at(i).push_back(temp);
 					}

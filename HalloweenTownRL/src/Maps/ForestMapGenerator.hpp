@@ -5,12 +5,12 @@
  *      Author: josh
  */
 
-#ifndef MOSTLYEMPTYMAPGENERATOR_HPP_
-#define MOSTLYEMPTYMAPGENERATOR_HPP_
+#ifndef FORESTMAPGENERATOR_HPP_
+#define FORESTMAPGENERATOR_HPP_
 
 class Map;
 
-class MostlyEmptyMapGenerator : public MapGenerator{
+class ForestMapGenerator : public MapGenerator{
 	public:
 		TCODMap* Generate(Map* map, bool generateActors);
 	private:
