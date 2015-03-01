@@ -18,6 +18,7 @@ class Actor;
 #include "Maps/ExampleMapGenerator.hpp"
 #include "Maps/ForestMapGenerator.hpp"
 #include "Maps/RoadMapGenerator.hpp"
+#include "Maps/CityMapGenerator.hpp"
 #include "Maps/Map.hpp"
 #include "UI/Menu.hpp"
 #include "Gui.hpp"

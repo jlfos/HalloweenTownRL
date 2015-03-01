@@ -24,8 +24,8 @@ TCODMap* RoadMapGenerator::Generate(Map* map, bool generateActors){
 			}
 			else{
 				emptyMap->setProperties(tilex, tiley, true, true);
-				map->tiles[tilex+tiley*(map->width)].visibleColor = TCODColor::green;
-				map->tiles[tilex+tiley*(map->width)].fogColor = TCODColor::darkerGreen;
+				map->tiles[tilex+tiley*(map->width)].visibleColor = TCODColor::darkGreen;
+				map->tiles[tilex+tiley*(map->width)].fogColor = TCODColor::darkestGreen;
 				map->tiles[tilex+tiley*(map->width)].character = 46;
 			}
 		}
