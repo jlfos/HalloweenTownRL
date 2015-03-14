@@ -21,6 +21,7 @@ class Actor;
 #include "Maps/CityMapGenerator.hpp"
 #include "Maps/Map.hpp"
 #include "UI/Menu.hpp"
+#include "Time.hpp"
 #include "Gui.hpp"
 #include "Engine.hpp"
 

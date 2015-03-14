@@ -1,12 +1,15 @@
 #include <iostream>
+#include <chrono>
 #include <vector>
+#include <time.h>
 #include "libtcod.hpp"
 #include "main.hpp"
 
 using namespace std;
 
 Engine::Engine(int screenWidth, int screenHeight) :
-		gameStatus(STARTUP), fovRadius(15), screenWidth(screenWidth), screenHeight(screenHeight) {
+		gameStatus(STARTUP), fovRadius(15), screenWidth(screenWidth), screenHeight(screenHeight),
+		currentTime(11, 30){
 	try {
 		currentMap = nullptr;
 		maps = nullptr;
@@ -16,6 +19,7 @@ Engine::Engine(int screenWidth, int screenHeight) :
 				false);
 
 		gui = new Gui();
+
 	} catch (...) {
 		cerr << "An error occurred with Engine::Engine" << endl;
 		throw 0;
@@ -279,6 +283,7 @@ void Engine::nextLevel(Map::TileType type) {
 	try {
 		int heroX = DEFAULT_PLAYER_START_X;
 		int heroY = DEFAULT_PLAYER_START_Y;
+
 		if (type == Map::TileType::TOP_EDGE) {
 			heroX = player->x;
 			heroY = DEFAULT_MAP_HEIGHT - 1;
@@ -347,9 +352,13 @@ void Engine::render() {
 
 		gui->render();
 
+
+
 		TCODConsole::root->print(1, screenHeight - 2, "HP: %d/%d",
 				(int) player->destructible->hp,
 				(int) player->destructible->maxHp);
+
+
 
 		// draw the actors
 		for (Actor *actor : actors) {

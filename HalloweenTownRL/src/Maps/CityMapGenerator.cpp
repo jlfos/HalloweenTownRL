@@ -19,14 +19,6 @@ TCODMap* CityMapGenerator::Generate(Map* map, bool generateActors){
 	TCODMap* cityMap = new TCODMap(map->width, map->height);
 	int width = map->width;
 	int height = map->height;
-	for (int tilex = 0; tilex < map->width; tilex++) {
-		for (int tiley = 0; tiley < map->height; tiley++) {
-				cityMap->setProperties(tilex, tiley, true, true);
-				map->tiles[tilex+tiley*(map->width)].visibleColor = TCODColor::lighterGrey;
-				map->tiles[tilex+tiley*(map->width)].fogColor = TCODColor::grey;
-				map->tiles[tilex+tiley*(map->width)].character = 46;
-		}
-	}
 	TCODRandom *rng = TCODRandom::getInstance();
 	int buildingSize = 5;
 
@@ -36,6 +28,20 @@ TCODMap* CityMapGenerator::Generate(Map* map, bool generateActors){
 										 0+(northSouthStreet*j)+(buildingSize*(j-1)));
 		}
 	}
+
+	for (int tilex = 0; tilex < map->width; tilex++) {
+		for (int tiley = 0; tiley < map->height; tiley++) {
+				if(map->tiles[tilex+tiley*(map->width)].character==0){
+					cityMap->setProperties(tilex, tiley, true, true);
+					map->tiles[tilex+tiley*(map->width)].visibleColor = TCODColor::lighterGrey;
+					map->tiles[tilex+tiley*(map->width)].fogColor = TCODColor::grey;
+					map->tiles[tilex+tiley*(map->width)].character = 46;
+				}
+		}
+	}
+
+
+
 
 	return cityMap;
 }
@@ -65,7 +71,20 @@ void CityMapGenerator::CreateBuilding(Map* map, TCODMap* cityMap, int startX, in
 			cityMap->setProperties(tilex, tiley, false, false);
 			map->tiles[tilex+tiley*(map->width)].visibleColor = visible;
 			map->tiles[tilex+tiley*(map->width)].fogColor = fog;
-			map->tiles[tilex+tiley*(map->width)].character = 35;
+			if(tilex==startX && tiley==startY)
+				map->tiles[tilex+tiley*(map->width)].character = 201;
+			else if(tilex==startX && tiley == startY+sizeY-1)
+				map->tiles[tilex+tiley*(map->width)].character = 200;
+			else if(tilex==startX+sizeX-1 && tiley==startY)
+				map->tiles[tilex+tiley*(map->width)].character = 187;
+			else if(tilex==startX+sizeX-1 && tiley==startY+sizeY-1)
+				map->tiles[tilex+tiley*(map->width)].character = 188;
+			else if(tilex==startX || tilex==startX+sizeX-1)
+				map->tiles[tilex+tiley*(map->width)].character = 186;
+			else if(tiley==startY || tiley == startY+sizeY-1)
+				map->tiles[tilex+tiley*(map->width)].character = 205;
+			else
+				map->tiles[tilex+tiley*(map->width)].character = 35;
 		}
 	}
 }

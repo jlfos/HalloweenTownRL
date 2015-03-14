@@ -1,5 +1,6 @@
 #include <stdarg.h>
 #include <iostream>
+#include <fstream>
 #include "main.hpp"
 
 using namespace std;
@@ -31,6 +32,7 @@ Gui::~Gui() {
 	}
 }
 
+
 void Gui::render() {
 	try{
 		// clear the GUI console
@@ -41,6 +43,8 @@ void Gui::render() {
 		renderBar(1,1,BAR_WIDTH,"HP",engine.player->destructible->hp,
 			engine.player->destructible->maxHp,
 			TCODColor::lightRed,TCODColor::darkerRed);
+
+		con->print(2,2, engine.currentTime.c_str());
 
 		// draw the message log
 		int y=1;
@@ -57,9 +61,12 @@ void Gui::render() {
 		// mouse look
 		renderMouseLook();
 
+
+
 		// blit the GUI console on the root console
 		TCODConsole::blit(con,0,0,engine.screenWidth,PANEL_HEIGHT,
 			TCODConsole::root,0,engine.screenHeight-PANEL_HEIGHT);
+
 	}
 	catch(...){
 		cerr << "An error occurred with Gui::render"  << endl;

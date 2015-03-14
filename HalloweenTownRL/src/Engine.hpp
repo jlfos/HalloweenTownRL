@@ -36,6 +36,7 @@ public :
     void save();
     void sendToBack(Actor *actor);
     void nextLevel(Map::TileType type);
+	Time currentTime;
 private:
 	void exitGame();
 	void newGame();

@@ -116,6 +116,7 @@ bool PlayerAi::moveOrAttack(Actor *owner, int targetX, int targetY){
 			}
 		}
 
+		engine.currentTime.incrementMinutes();
 		owner->x=targetX;
 		owner->y=targetY;
 		return true;
