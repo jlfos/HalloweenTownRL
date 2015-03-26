@@ -8,8 +8,8 @@
 using namespace std;
 
 Engine::Engine(int screenWidth, int screenHeight) :
-		gameStatus(STARTUP), fovRadius(15), screenWidth(screenWidth), screenHeight(screenHeight),
-		currentTime(11, 30){
+		gameStatus(STARTUP), fovRadius(60), screenWidth(screenWidth), screenHeight(screenHeight),
+		currentTime(6, 00){
 	try {
 		currentMap = nullptr;
 		maps = nullptr;
@@ -324,6 +324,7 @@ void Engine::nextLevel(Map::TileType type) {
 		gui->clear();
 		player = ActorFactory::CreateHero(heroX, heroY);
 		currentMap = (*maps)[mapX][mapY];
+		currentMap->populateActors();
 		actors = currentMap->actors;
 		actors.push(player);
 		gameStatus = STARTUP;

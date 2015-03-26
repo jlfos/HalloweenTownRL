@@ -14,6 +14,7 @@ class Map;
 class RoadMapGenerator : public MapGenerator{
 	public:
 		TCODMap* Generate(Map* map, bool generateActors);
+		void PopulateActors(Map* map);
 	private:
 		void AddItem(Map* map, int x, int y);
 };

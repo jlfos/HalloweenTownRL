@@ -175,13 +175,13 @@ void ExampleMapGenerator::addMonster(int x, int y) {
 		TCODRandom *rng = TCODRandom::getInstance();
 		if (rng->getInt(0, 100) < 80) {
 			// create an orc
-			Actor *orc = ActorFactory::CreateOrc(x, y);
-			engine.actors.push(orc);
+////			Actor *orc = ActorFactory::CreateOrc(x, y);
+//			engine.actors.push(orc);
 		} else {
 			// create a troll
-			Actor *troll = ActorFactory::CreateTroll(x, y);
-
-			engine.actors.push(troll);
+//			Actor *troll = ActorFactory::CreateTroll(x, y);
+//
+//			engine.actors.push(troll);
 		}
 	}
 	catch(...){

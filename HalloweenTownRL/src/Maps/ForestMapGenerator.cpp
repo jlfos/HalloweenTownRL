@@ -37,6 +37,10 @@ TCODMap* ForestMapGenerator::Generate(Map* map, bool generateActors){
 	return emptyMap;
 }
 
+void ForestMapGenerator::PopulateActors(Map* map){
+
+}
+
 void ForestMapGenerator::AddItem(Map* map, int x, int y){
 	Actor* item = ActorFactory::CreatePotion(x, y);
 	map->actors.push(item);

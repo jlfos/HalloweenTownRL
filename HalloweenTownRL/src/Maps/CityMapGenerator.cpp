@@ -4,9 +4,10 @@
  *  Created on: Mar 1, 2015
  *      Author: josh
  */
-
-
+#include <iostream>
 #include "../main.hpp"
+
+using namespace std;
 
 CityMapGenerator::CityMapGenerator(){
 	TCODRandom *rng = TCODRandom::getInstance();
@@ -21,7 +22,7 @@ TCODMap* CityMapGenerator::Generate(Map* map, bool generateActors){
 	int height = map->height;
 	TCODRandom *rng = TCODRandom::getInstance();
 	int buildingSize = 5;
-
+	int tilesTillNextSpawn = 0;
 	for(int j =1;(eastWestStreet*j)+(buildingSize*(j-1))<height;j++){
 		for(int i = 1;(northSouthStreet*i)+(buildingSize*(i-1))<width; i++){
 			CreateBuilding(map, cityMap, 0+(eastWestStreet*i)+(buildingSize*(i-1)),
@@ -36,14 +37,42 @@ TCODMap* CityMapGenerator::Generate(Map* map, bool generateActors){
 					map->tiles[tilex+tiley*(map->width)].visibleColor = TCODColor::lighterGrey;
 					map->tiles[tilex+tiley*(map->width)].fogColor = TCODColor::grey;
 					map->tiles[tilex+tiley*(map->width)].character = 46;
+					if(tilesTillNextSpawn==0){
+						tilesTillNextSpawn =rng->getInt(5, 50);
+						Point spawn;
+						spawn.x = tilex;
+						spawn.y = tiley;
+						map->spawnLocations.push_back(spawn);
+						//map->actors.push(ActorFactory::CreateImp(tilex, tiley));
+					}
+					tilesTillNextSpawn--;
 				}
 		}
 	}
 
-
-
-
 	return cityMap;
+}
+
+void CityMapGenerator::PopulateActors(Map* map){
+	try{
+		TCODRandom *rng = TCODRandom::getInstance();
+		map->actors.clear();
+		int nextSpawn = rng->getInt(5, 15);
+		ActorFactory::EnemyDifficulty difficulty = map->GetDifficulty();
+		for(Point spawn : map->spawnLocations){
+			nextSpawn--;
+			if(nextSpawn==0){
+				map->actors.push(ActorFactory::CreateMonster(spawn.x,
+															 spawn.y,
+															 difficulty,
+															 ActorFactory::MapType::CITY));
+				nextSpawn = rng->getInt(5, 10);
+			}
+		}
+	}
+	catch(...){
+		cerr << "An error occurred in CityMapGenerator::PopulateActors()" << endl;
+	}
 }
 
 
@@ -68,7 +97,7 @@ void CityMapGenerator::CreateBuilding(Map* map, TCODMap* cityMap, int startX, in
 	}
 	for(int tilex = startX; tilex < startX+sizeX && tilex < map->width-1; tilex++ ){
 		for(int tiley = startY; tiley < startY+sizeY && tiley < map->height-1; tiley++){
-			cityMap->setProperties(tilex, tiley, false, false);
+			cityMap->setProperties(tilex, tiley, true, false);
 			map->tiles[tilex+tiley*(map->width)].visibleColor = visible;
 			map->tiles[tilex+tiley*(map->width)].fogColor = fog;
 			if(tilex==startX && tiley==startY)

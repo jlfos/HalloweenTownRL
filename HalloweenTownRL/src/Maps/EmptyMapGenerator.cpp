@@ -37,6 +37,10 @@ TCODMap* EmptyMapGenerator::Generate(Map* map, bool generateActors){
 	return emptyMap;
 }
 
+void EmptyMapGenerator::PopulateActors(Map* map){
+
+}
+
 void EmptyMapGenerator::AddItem(Map* map, int x, int y){
 	Actor* item = ActorFactory::CreatePotion(x, y);
 	map->actors.push(item);

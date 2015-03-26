@@ -43,6 +43,10 @@ Map::Map(int width, int height, MapGenerator* generator):
 
 }
 
+void Map::populateActors(){
+	generator->PopulateActors(this);
+}
+
 void Map::init() {
 	try{
 
@@ -64,6 +68,32 @@ void Map::init() {
 		cerr << "An error occurred with Map::init"  << endl;
 		throw 0;
 	}
+}
+
+ActorFactory::EnemyDifficulty Map::GetDifficulty(){
+	ActorFactory::EnemyDifficulty current;
+	int hour = engine.currentTime.getHour();
+
+		if(hour == 6 || hour == 7){
+			current = ActorFactory::EnemyDifficulty::EASY;
+		}
+		if(hour == 8 || hour == 9){
+			current = ActorFactory::EnemyDifficulty::MEDIUM;
+		}
+		if(hour == 10 || hour == 11){
+			current = ActorFactory::EnemyDifficulty::HARD;
+		}
+		if(hour == 12 || hour == 1){
+			current = ActorFactory::EnemyDifficulty::VERY_HARD;
+		}
+		if(hour == 2 || hour == 3){
+			current = ActorFactory::EnemyDifficulty::INSANE;
+		}
+		if(hour == 4 || hour == 5){
+			current = ActorFactory::EnemyDifficulty::NIGHTMARE;
+		}
+		return current;
+
 }
 
 void Map::save(TCODZip &zip) {

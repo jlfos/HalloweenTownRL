@@ -1,3 +1,7 @@
+#include <vector>
+
+using namespace std;
+
 struct Tile {
     bool explored; // has the player already seen this tile ?
     Tile() : explored(false) {}
@@ -5,7 +9,11 @@ struct Tile {
     TCODColor fogColor;
     int character;
 };
- 
+
+struct Point {
+	int x;
+	int y;
+};
 class Map : public Persistent{
 private:
     bool notOnMap(int x, int y) const;
@@ -27,6 +35,9 @@ public :
     void init();
     void load(TCODZip &zip);
     void save(TCODZip &zip);
+    void populateActors();
+    vector<Point> spawnLocations;
+    ActorFactory::EnemyDifficulty GetDifficulty();
 protected :
     TCODMap *map;
     long seed;

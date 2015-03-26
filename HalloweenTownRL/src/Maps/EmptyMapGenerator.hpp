@@ -16,7 +16,7 @@ class EmptyMapGenerator : public MapGenerator{
 		EmptyMapGenerator();
 		EmptyMapGenerator(int seed);
 		TCODMap* Generate(Map* map, bool generateActors);
-
+		void PopulateActors(Map* map);
 	private:
 		void AddItem(Map* map, int x, int y);
 		long seed;

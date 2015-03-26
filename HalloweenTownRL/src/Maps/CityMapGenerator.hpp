@@ -4,6 +4,9 @@
  *  Created on: Mar 1, 2015
  *      Author: josh
  */
+#include <vector>
+
+using namespace std;
 
 #ifndef CITYMAPGENERATOR_HPP_
 #define CITYMAPGENERATOR_HPP_
@@ -14,6 +17,7 @@ class CityMapGenerator : public MapGenerator{
 	public:
 		TCODMap* Generate(Map* map, bool generateActors);
 		CityMapGenerator();
+		void PopulateActors(Map* map);
 	private:
 		void CreateBuilding(Map* map, TCODMap* cityMap, int x, int y);
 		int eastWestStreet;
