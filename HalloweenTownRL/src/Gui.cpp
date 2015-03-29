@@ -1,6 +1,7 @@
 #include <stdarg.h>
 #include <iostream>
 #include <fstream>
+#include <string>
 #include "main.hpp"
 
 using namespace std;
@@ -44,7 +45,12 @@ void Gui::render() {
 			engine.player->destructible->maxHp,
 			TCODColor::lightRed,TCODColor::darkerRed);
 
-		con->print(2,2, engine.currentTime.c_str());
+		con->print(1, 2, engine.currentTime.c_str());
+
+		PlayerAi *playerAi = (PlayerAi*)engine.player->ai;
+		string levelText = "Level: ";
+		levelText += to_string(playerAi->getLevel());
+		con->print(1, 3, levelText.c_str());
 
 		// draw the message log
 		int y=1;

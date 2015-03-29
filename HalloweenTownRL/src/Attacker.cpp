@@ -9,10 +9,10 @@ Attacker::Attacker(float power) :power(power){
 void Attacker::attack(Actor *owner, Actor *target){
 	try{
 		if(target->destructible && ! target->destructible->isDead()){
-			if(power - target->destructible->defense>0){
+			if(power - target->destructible->getDefense()>0){
 				engine.gui->message(owner==engine.player ? TCODColor::red : TCODColor::lightGrey,
 					"%s attacks %s for %g hit points.", owner->name, target->name,
-					power - target->destructible->defense);
+					power - target->destructible->getDefense());
 			}
 			else{
 				engine.gui->message(TCODColor::lightGrey,
@@ -22,7 +22,7 @@ void Attacker::attack(Actor *owner, Actor *target){
 		}
 		else{
 			engine.gui->message(TCODColor::lightGrey,
-				"%s attacks %s in vain.",owner->name,target->name);
+				"%s attacks %s in vain.",owner->name, target->name);
 		}
 	}
 	catch(...){
@@ -39,6 +39,14 @@ void Attacker::load(TCODZip &zip){
 		cerr << "An error occurred with Attacker::load"  << endl;
 		throw 0;
 	}
+}
+
+void Attacker::setPower(float power){
+	this->power = power;
+}
+
+float Attacker::getPower(){
+	return power;
 }
 
 void Attacker::save(TCODZip &zip){

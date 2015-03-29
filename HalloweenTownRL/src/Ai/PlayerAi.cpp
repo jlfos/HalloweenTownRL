@@ -3,6 +3,13 @@
 
 using namespace std;
 
+const int LEVEL_UP_BASE=1;
+const int LEVEL_UP_INCREASE=20;
+
+PlayerAi::PlayerAi() :experienceLevel(1), currentExperience(0), currentLevelGoal(LEVEL_UP_BASE) {
+
+}
+
 void PlayerAi::update(Actor *owner){
 	try{
 
@@ -105,6 +112,12 @@ bool PlayerAi::moveOrAttack(Actor *owner, int targetX, int targetY){
 			if(actor->destructible && !actor->destructible->isDead() &&
 					actor->x == targetX && actor->y == targetY){
 				owner->attacker->attack(owner, actor);
+				if(actor->destructible->isDead()){
+					currentExperience += actor->destructible->getExperienceReward();
+					if(levelUpOccurred()){
+						levelUpPlayer(owner);
+					}
+				}
 				return false;
 			}
 		}
@@ -125,6 +138,36 @@ bool PlayerAi::moveOrAttack(Actor *owner, int targetX, int targetY){
 		cerr << "An error occurred in PlayerAi::moveOrAttack" << endl;
 		throw 0;
 	}
+}
+
+int PlayerAi::getLevel(){
+	return experienceLevel;
+}
+
+void PlayerAi::levelUpPlayer(Actor* player){
+	try{
+		experienceLevel += 1;
+		currentLevelGoal += LEVEL_UP_INCREASE;
+		LevelUpMenu levelUpMenu;
+		string result = levelUpMenu.pick();
+
+		if(result == "Strength")
+			player->attacker->setPower(player->attacker->getPower()+3 );
+
+		else if(result == "Agility")
+			player->destructible->setDefense(player->destructible->getDefense()+1 );
+
+		else if(result == "Constitution")
+			player->destructible->increaseTotalHealth(10);
+	}
+	catch(...){
+		cerr << "An error occured in PlayerAi::levelUpPlayer" << endl;
+	}
+
+}
+
+bool PlayerAi::levelUpOccurred(){
+	return currentExperience > currentLevelGoal;
 }
 
 Actor *PlayerAi::choseFromInventory(Actor *owner){

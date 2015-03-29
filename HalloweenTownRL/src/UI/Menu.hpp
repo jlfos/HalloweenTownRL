@@ -1,30 +1,31 @@
-//#ifndef MENU_HPP_
-//#define MENU_HPP_
+#ifndef MENU_HPP_
+#define MENU_HPP_
 
+#include <string>
+
+using namespace std;
 
 class Menu{
 public:
-	enum MenuItemCode {
+	enum class PauseMenuItemCode {
 		NONE,
 		NEW_GAME,
 		CONTINUE,
 		EXIT
 	};
-	void populateMenu(bool saveGameExists);
-	MenuItemCode pick();
+	virtual void populateMenu(bool saveGameExists) = 0;
+	string pick();
 	Menu();
 	~Menu();
 	void clear();
-private:
-	void addItem(MenuItemCode code, const char *label);
-protected:
 
-	struct MenuItem{
-		MenuItemCode code;
-		const char *label;
-	};
-	TCODList<MenuItem *> items;
+protected:
+	void addItem(string item);
+	void setHeader(string header);
+private:
+	string header;
+	TCODList<string> items;
 };
 
-//
-//#endif
+
+#endif

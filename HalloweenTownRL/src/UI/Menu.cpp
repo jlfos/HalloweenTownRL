@@ -25,7 +25,7 @@ Menu::~Menu(){
 
 void Menu::clear(){
 	try{
-		items.clearAndDelete();
+		items.clear();
 	}
 	catch(...){
 		cerr << "An error occurred with Menu::clear"  << endl;
@@ -33,27 +33,9 @@ void Menu::clear(){
 	}
 }
 
-void Menu::populateMenu(bool saveGameExists){
-	try{
-		clear();
-		addItem(MenuItemCode::NEW_GAME, "New Game");
-		if(saveGameExists){
-			addItem(MenuItemCode::CONTINUE, "Continue");
-		}
-		addItem(MenuItemCode::EXIT, "Exit");
 
-	}
-	catch(...){
-		cerr << "An error occurred with Menu::populateMenu"  << endl;
-		throw 0;
-	}
-}
-
-void Menu::addItem(MenuItemCode code, const char *label){
+void Menu::addItem(string item){
 	try{
-		MenuItem *item = new MenuItem();
-		item->code = code;
-		item->label = label;
 		items.push(item);
 	}
 	catch(...){
@@ -62,21 +44,28 @@ void Menu::addItem(MenuItemCode code, const char *label){
 	}
 }
 
-Menu::MenuItemCode Menu::pick(){
+void Menu::setHeader(string header){
+	this->header = header;
+}
+
+string Menu::pick(){
 	try{
-		static TCODImage img("temp.png");
+//		static TCODImage img("tree.png");
 		int selectedItem = 0;
-		while(!TCODConsole::isWindowClosed() ){
-			img.blit2x(TCODConsole::root, 0, 0);
+		TCODConsole::root->clear();
+		TCODConsole::root->setDefaultForeground(TCODColor::darkOrange);
+		TCODConsole::root->printEx(10, 6, TCOD_bkgnd_flag_t::TCOD_BKGND_COLOR_BURN, TCOD_alignment_t::TCOD_LEFT, header.c_str());
+		while(!TCODConsole::isWindowClosed()){
+//			img.blit2x(TCODConsole::root, 0, 0);
 			int currentItem = 0;
-			for(MenuItem* it: items){
+			for(string it: items){
 				if(currentItem == selectedItem){
 					TCODConsole::root->setDefaultForeground(TCODColor::lighterOrange);
 				}
 				else{
 					TCODConsole::root->setDefaultForeground(TCODColor::lightGrey);
 				}
-				TCODConsole::root->print(10, 10+currentItem*3, (it)->label);
+				TCODConsole::root->print(10, 15+currentItem*3, it.c_str());
 				currentItem++;
 				TCODConsole::flush();
 
@@ -93,7 +82,7 @@ Menu::MenuItemCode Menu::pick(){
 						selectedItem = (selectedItem + 1) % items.size();
 						break;
 					case TCODK_ENTER :
-						return items.get(selectedItem)->code;
+						return items.get(selectedItem);
 					default:
 						break;
 
@@ -101,7 +90,7 @@ Menu::MenuItemCode Menu::pick(){
 
 			}
 		}
-		return NONE;
+		return "NONE";
 	}
 	catch(...){
 		cerr << "An error occurred with Menu::pick"  << endl;

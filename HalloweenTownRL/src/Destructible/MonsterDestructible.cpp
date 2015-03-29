@@ -3,8 +3,8 @@
 
 using namespace std;
 
-MonsterDestructible::MonsterDestructible(float maxHp, float defense, const char *corpseName) :
-    Destructible(maxHp,defense,corpseName) {
+MonsterDestructible::MonsterDestructible(float maxHp, float defense, int experienceReward, const char *corpseName) :
+    Destructible(maxHp, defense, experienceReward, corpseName) {
 }
 
 

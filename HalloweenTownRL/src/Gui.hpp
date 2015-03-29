@@ -4,7 +4,7 @@ using namespace std;
 
 class Gui : public Persistent {
 public :
-	Menu menu;
+	PauseMenu menu;
 	Gui();
 	~Gui();
 	void render();

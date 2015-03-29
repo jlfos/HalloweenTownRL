@@ -4,8 +4,8 @@
 
 using namespace std;
 
-Destructible::Destructible(float maxHp, float defense, const char *corpseName) :
-	maxHp(maxHp), hp(maxHp), defense(defense), corpseName(corpseName){
+Destructible::Destructible(float maxHp, float defense, int experienceReward, const char *corpseName) :
+	maxHp(maxHp), hp(maxHp), defense(defense), experienceReward(experienceReward), corpseName(corpseName){
 }
 
 
@@ -15,7 +15,7 @@ Destructible *Destructible::create(TCODZip &zip){
 
 		Destructible *destructible = nullptr;
 		switch(type){
-			case MONSTER: destructible = new MonsterDestructible(0,0,NULL); break;
+			case MONSTER: destructible = new MonsterDestructible(0,0, 0, NULL); break;
 			case PLAYER: destructible = new PlayerDestructible(0,0, NULL); break;
 			default : break;
 		}
@@ -28,6 +28,14 @@ Destructible *Destructible::create(TCODZip &zip){
 	}
 }
 
+
+void Destructible::setDefense(float defense){
+	this->defense = defense;
+}
+
+float Destructible::getDefense(){
+	return defense;
+}
 
 float Destructible::takeDamage(Actor *owner, float damage){
 	try{
@@ -77,6 +85,15 @@ void Destructible::die(Actor *owner){
 		cerr << "An error occurred in Destructible::die" << endl;
 		throw 0;
 	}
+}
+
+int Destructible::getExperienceReward(){
+	return experienceReward;
+}
+
+void Destructible::increaseTotalHealth(float health){
+	maxHp += health;
+	hp += health;
 }
 
 void Destructible::load(TCODZip &zip){

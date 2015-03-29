@@ -23,33 +23,33 @@ Actor *ActorFactory::CreateVampire(int x, int y, EnemyDifficulty difficulty){
 		Actor *vampire;
 		if(difficulty == EnemyDifficulty::MEDIUM){
 			vampire = new Actor(x, y, 'v', "Hobo vampire", TCODColor::lightestRed);
-			vampire->destructible = new MonsterDestructible(15, 1, "pile of ash");
+			vampire->destructible = new MonsterDestructible(15, 1, 6, "pile of ash");
 			vampire->attacker = new Attacker(3);
 			vampire->ai = new MonsterAi();
 
 		}
 		if(difficulty == EnemyDifficulty::HARD){
 			vampire = new Actor(x, y, 'v', "Techno vampire", TCODColor::lightestRed);
-			vampire->destructible = new MonsterDestructible(30, 2, "pile of ash");
+			vampire->destructible = new MonsterDestructible(30, 2, 12, "pile of ash");
 			vampire->attacker = new Attacker(4);
 			vampire->ai = new MonsterAi();
 
 		}
 		else if(difficulty == EnemyDifficulty::VERY_HARD){
 			vampire = new Actor(x, y, 'v', "Gangster vampire", TCODColor::lighterRed);
-			vampire->destructible = new MonsterDestructible(45, 3, "pile of ash");
+			vampire->destructible = new MonsterDestructible(45, 3, 24, "pile of ash");
 			vampire->attacker = new Attacker(8);
 			vampire->ai = new MonsterAi();
 		}
 		else if(difficulty == EnemyDifficulty::INSANE){
 			vampire = new Actor(x, y, 'v', "Flying vampire", TCODColor::lightRed);
-			vampire->destructible = new MonsterDestructible(80, 4, "pile of ash");
+			vampire->destructible = new MonsterDestructible(80, 4, 48, "pile of ash");
 			vampire->attacker = new Attacker(16);
 			vampire->ai = new MonsterAi();
 		}
 		else if(difficulty == EnemyDifficulty::NIGHTMARE){
 			vampire = new Actor(x, y, 'v', "Count", TCODColor::darkestRed);
-			vampire->destructible = new MonsterDestructible(120, 6, "pile of ash");
+			vampire->destructible = new MonsterDestructible(120, 6, 96, "pile of ash");
 			vampire->attacker = new Attacker(20);
 			vampire->ai = new MonsterAi();
 		}
@@ -67,7 +67,7 @@ Actor *ActorFactory::CreateImp(int x, int y){
 	try{
 		Actor *orc = new Actor(x,y,'g',"gremlin",
 			TCODColor::desaturatedGreen);
-		orc->destructible = new MonsterDestructible(6,0,"dead gremlin");
+		orc->destructible = new MonsterDestructible(6,0, 3,"dead gremlin");
 		orc->attacker = new Attacker(1);
 		orc->ai = new MonsterAi();
 		return orc;
@@ -82,7 +82,7 @@ Actor *ActorFactory::CreateTroll(int x, int y){
 	try{
 		Actor *troll = new Actor(x,y,'T',"troll",
 			 TCODColor::darkBlue);
-		troll->destructible = new MonsterDestructible(16,1,"troll carcass");
+		troll->destructible = new MonsterDestructible(16,1, 0, "troll carcass");
 		troll->attacker = new Attacker(4);
 		troll->ai = new MonsterAi();
 	   return troll;
@@ -109,32 +109,42 @@ Actor *ActorFactory::CreatePotion(int x, int y){
 }
 
 Actor *ActorFactory::CreateMonster(int x, int y, EnemyDifficulty difficulty, MapType mapType){
-	Actor *monster = nullptr;
-	switch(mapType){
-		case MapType::CITY:
-			monster = CreateMonsterForCity(x, y, difficulty);
-			break;
-		case MapType::ROAD:
-			break;
-		case MapType::WOODS:
-			break;
+	try{
+		Actor *monster = nullptr;
+		switch(mapType){
+			case MapType::CITY:
+				monster = CreateMonsterForCity(x, y, difficulty);
+				break;
+			case MapType::ROAD:
+				break;
+			case MapType::WOODS:
+				break;
+		}
+		return monster;
 	}
-	return monster;
+	catch(...){
+		cerr << "An error occurred in ActorFactory::CreateMonster" << endl;
+	}
 }
 
 Actor *ActorFactory::CreateMonsterForCity(int x, int y, EnemyDifficulty difficulty){
-	Actor *monster = nullptr;
-	switch(difficulty){
-		case EnemyDifficulty::EASY:
-			monster = CreateImp(x, y);
-			break;
-		case EnemyDifficulty::MEDIUM:
-		case EnemyDifficulty::HARD:
-		case EnemyDifficulty::VERY_HARD:
-		case EnemyDifficulty::INSANE:
-		case EnemyDifficulty::NIGHTMARE:
-			monster = CreateVampire(x, y, difficulty);
-			break;
+	try{
+		Actor *monster = nullptr;
+		switch(difficulty){
+			case EnemyDifficulty::EASY:
+				monster = CreateImp(x, y);
+				break;
+			case EnemyDifficulty::MEDIUM:
+			case EnemyDifficulty::HARD:
+			case EnemyDifficulty::VERY_HARD:
+			case EnemyDifficulty::INSANE:
+			case EnemyDifficulty::NIGHTMARE:
+				monster = CreateVampire(x, y, difficulty);
+				break;
+		}
+		return monster;
 	}
-	return monster;
+	catch(...){
+		cerr << "An error occurred in CreateMonsterForCity" << endl;
+	}
 }

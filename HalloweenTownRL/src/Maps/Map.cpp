@@ -43,10 +43,6 @@ Map::Map(int width, int height, MapGenerator* generator):
 
 }
 
-void Map::populateActors(){
-	generator->PopulateActors(this);
-}
-
 void Map::init() {
 	try{
 
@@ -62,6 +58,7 @@ void Map::init() {
 		}
 		else if(map == nullptr){
 			map = generator->Generate(this, true);
+			generator->PopulateActors(this);
 		}
 	}
 	catch(...){
@@ -71,29 +68,50 @@ void Map::init() {
 }
 
 ActorFactory::EnemyDifficulty Map::GetDifficulty(){
-	ActorFactory::EnemyDifficulty current;
-	int hour = engine.currentTime.getHour();
-
-		if(hour == 6 || hour == 7){
-			current = ActorFactory::EnemyDifficulty::EASY;
-		}
-		if(hour == 8 || hour == 9){
-			current = ActorFactory::EnemyDifficulty::MEDIUM;
-		}
-		if(hour == 10 || hour == 11){
-			current = ActorFactory::EnemyDifficulty::HARD;
-		}
-		if(hour == 12 || hour == 1){
-			current = ActorFactory::EnemyDifficulty::VERY_HARD;
-		}
-		if(hour == 2 || hour == 3){
-			current = ActorFactory::EnemyDifficulty::INSANE;
-		}
-		if(hour == 4 || hour == 5){
-			current = ActorFactory::EnemyDifficulty::NIGHTMARE;
+	try{
+		ActorFactory::EnemyDifficulty current;
+		switch(engine.currentTime.getHour()){
+			case 6:
+			case 7:
+				current = ActorFactory::EnemyDifficulty::EASY;
+				break;
+			case 8:
+			case 9:
+				current = ActorFactory::EnemyDifficulty::MEDIUM;
+				break;
+			case 10:
+			case 11:
+				current = ActorFactory::EnemyDifficulty::HARD;
+				break;
+			case 12:
+			case 1:
+				current = ActorFactory::EnemyDifficulty::VERY_HARD;
+				break;
+			case 2:
+			case 3:
+				current = ActorFactory::EnemyDifficulty::INSANE;
+				break;
+			case 4:
+			case 5:
+				current = ActorFactory::EnemyDifficulty::NIGHTMARE;
+				break;
 		}
 		return current;
+	}
+	catch(...){
+		cerr << "An error occurred in Map::GetDifficulty" << endl;
+	}
+}
 
+
+void Map::populateActors(){
+	try{
+		if(generator)
+			generator->PopulateActors(this);
+	}
+	catch(...){
+		cerr << "An error occurred in Map::populateActors()" << endl;
+	}
 }
 
 void Map::save(TCODZip &zip) {

@@ -142,16 +142,16 @@ void Engine::load() {
 		}
 		engine.gui->menu.populateMenu(saveGameExists);
 
-		Menu::MenuItemCode menuItem = engine.gui->menu.pick();
+		string menuItem = engine.gui->menu.pick();
 
-		if (menuItem == Menu::EXIT || menuItem == Menu::NONE) {
+		if (menuItem == "Exit" || menuItem == "NONE") {
 			exitGame();
 		}
-		else if (menuItem == Menu::NEW_GAME) {
+		else if (menuItem == "New Game") {
 			newGame();
 			gameStatus = STARTUP;
 		}
-		else if (menuItem == Menu::CONTINUE) {
+		else if (menuItem == "Continue") {
 			continueGame();
 		}
 	} catch (...) {
