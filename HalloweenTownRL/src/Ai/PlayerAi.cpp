@@ -128,8 +128,6 @@ bool PlayerAi::moveOrAttack(Actor *owner, int targetX, int targetY){
 				engine.gui->message(TCODColor::lightGrey,"There's a %s here",actor->name);
 			}
 		}
-
-		engine.currentTime.incrementMinutes();
 		owner->x=targetX;
 		owner->y=targetY;
 		return true;
@@ -243,6 +241,11 @@ void PlayerAi::handleActionKey(Actor *owner, int ascii) {
 					actor->pickable->use(actor,owner);
 					engine.gameStatus=Engine::NEW_TURN;
 				}
+			}
+			break;
+			case '.' : //wait
+			{
+				engine.gameStatus=Engine::NEW_TURN;
 			}
 			break;
 		}

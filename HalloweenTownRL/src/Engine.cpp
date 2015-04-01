@@ -9,7 +9,7 @@ using namespace std;
 
 Engine::Engine(int screenWidth, int screenHeight) :
 		gameStatus(STARTUP), fovRadius(60), screenWidth(screenWidth), screenHeight(screenHeight),
-		currentTime(6, 00){
+		currentTime(6, 00), incrementTime(false){
 	try {
 		currentMap = nullptr;
 		maps = nullptr;
@@ -267,6 +267,9 @@ void Engine::update() {
 		TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
 		player->update();
 		if (gameStatus == NEW_TURN) {
+			if(incrementTime)
+				currentTime.incrementMinutes();
+			incrementTime = !incrementTime;
 			for (Actor *actor : actors) {
 				if (actor != player) {
 					actor->update();

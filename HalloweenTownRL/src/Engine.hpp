@@ -52,6 +52,7 @@ private:
 	vector<vector<Map*>> *CreateMaps();
 	int mapX;
 	int mapY;
+	bool incrementTime;
 };
  
 
