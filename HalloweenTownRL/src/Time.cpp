@@ -18,6 +18,32 @@ Time::Time(int hour, int minutes){
 	}
 }
 
+int Time::elapsedMinutes(Time previousTime){
+	try{
+
+		int tempCurrentHour = hour;
+		int tempPreviousHour = previousTime.getHour();
+
+		int elapsedTime = 0;
+		if(tempCurrentHour<6)
+			tempCurrentHour += 12;
+
+		if(tempPreviousHour<6)
+			tempPreviousHour += 12;
+
+		if(tempPreviousHour>tempCurrentHour){
+			cerr << "A previous time cannot be later then a current time" << endl;
+			throw 0;
+		}
+
+		elapsedTime = (tempCurrentHour - tempPreviousHour)*60;
+		elapsedTime += (minutes - previousTime.getMinutes());
+		return elapsedTime;
+	}
+	catch(...){
+		cerr << "An error occurred in Time::elapsedMinutes()" << endl;
+	}
+}
 int Time::getHour(){
 	try{
 		return hour;

@@ -17,6 +17,7 @@ Map::Map(int width, int height) :
 		map = nullptr;
 		tiles = nullptr;
 		rng = nullptr;
+		lastSeen = nullptr;
 		seed = TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);
 		actors = new TCODList<Actor>();
 	}
@@ -33,6 +34,7 @@ Map::Map(int width, int height, MapGenerator* generator):
 		map = nullptr;
 		tiles = nullptr;
 		rng = nullptr;
+		lastSeen = nullptr;
 		seed = TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);
 		actors = new TCODList<Actor>();
 	}
@@ -130,6 +132,15 @@ void Map::save(TCODZip &zip) {
 		cerr << "An error occurred with Map::save"  << endl;
 		throw 0;
 	}
+}
+
+
+Time* Map::getTimeLastSeen(){
+	return lastSeen;
+};
+
+void Map::setTimeLastSeen(Time* time){
+	lastSeen = time;
 }
 
 void Map::load(TCODZip &zip) {

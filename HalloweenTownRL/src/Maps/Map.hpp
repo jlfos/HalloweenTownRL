@@ -1,5 +1,7 @@
 #include <vector>
 
+class Time;
+
 using namespace std;
 
 struct Tile {
@@ -18,6 +20,7 @@ class Map : public Persistent{
 private:
     bool notOnMap(int x, int y) const;
     MapGenerator* generator;
+    Time* lastSeen;
 public :
     int width,height;
     Tile *tiles;
@@ -36,6 +39,8 @@ public :
     void load(TCODZip &zip);
     void save(TCODZip &zip);
     void populateActors();
+    Time* getTimeLastSeen();
+    void setTimeLastSeen(Time* time);
     vector<Point> spawnLocations;
     ActorFactory::EnemyDifficulty GetDifficulty();
 protected :

@@ -33,14 +33,22 @@ void MonsterAi::update(Actor *owner){
 
 void MonsterAi::moveOrAttack(Actor *owner, int targetX, int targetY){
 	try{
+		TCODRandom rng;
 		int dx = targetX - owner->x;
 		int dy = targetY - owner->y;
 		int stepdx = (dx > 0 ? 1:-1);
 		int stepdy = (dy > 0 ? 1:-1);
 		float distance = sqrtf(dx*dx+dy*dy);
 		if(distance >=2){
-			dx = (int)(round(dx/distance));
-			dy = (int)(round(dy/distance));
+			if(distance >= 20){
+				dx = rng.getInt(-1, 1);
+				dy = rng.getInt(-1, 1);
+			}
+			else{
+				dx = (int)(round(dx/distance));
+				dy = (int)(round(dy/distance));
+			}
+
 			if(engine.currentMap->canWalk(owner->x+dx, owner->y+dy)){
 				owner->x += dx;
 				owner->y += dy;

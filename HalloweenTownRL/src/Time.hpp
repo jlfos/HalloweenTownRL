@@ -19,6 +19,7 @@ class Time {
 		const char* c_str();
 		int getHour();
 		int getMinutes();
+		int elapsedMinutes(Time previousTime);
 		void incrementHour();
 		void incrementMinutes();
 	private:

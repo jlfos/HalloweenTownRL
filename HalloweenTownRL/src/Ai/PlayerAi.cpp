@@ -146,7 +146,7 @@ int PlayerAi::getLevel(){
 
 void PlayerAi::levelUpPlayer(Actor* player){
 	try{
-		experienceLevel += 1;
+		experienceLevel++;
 		currentLevelGoal += LEVEL_UP_INCREASE;
 		LevelUpMenu levelUpMenu;
 		string result = levelUpMenu.pick();

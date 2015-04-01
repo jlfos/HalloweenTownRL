@@ -324,7 +324,18 @@ void Engine::nextLevel(Map::TileType type) {
 		gui->clear();
 		player = ActorFactory::CreateHero(heroX, heroY);
 		currentMap = (*maps)[mapX][mapY];
-		currentMap->populateActors();
+		bool populateFlag = false;
+		if(currentMap->getTimeLastSeen()){
+			if(currentTime.elapsedMinutes((*currentMap->getTimeLastSeen())) >= 60)
+				populateFlag = true;
+		}
+		else{
+			currentMap->setTimeLastSeen(new Time(currentTime.getHour(), currentTime.getMinutes()));
+			populateFlag = true;
+		}
+
+		if(populateFlag)
+			currentMap->populateActors();
 		actors = currentMap->actors;
 		actors.push(player);
 		gameStatus = STARTUP;
@@ -352,8 +363,6 @@ void Engine::render() {
 		currentMap->render();
 
 		gui->render();
-
-
 
 		TCODConsole::root->print(1, screenHeight - 2, "HP: %d/%d",
 				(int) player->destructible->hp,
