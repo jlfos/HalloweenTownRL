@@ -15,6 +15,7 @@ protected:
 	void MoveUp(Actor *owner);
 	void LoadMenu();
 private:
+	void playerLook(Actor* player);
 	void levelUpPlayer(Actor* player);
 	bool levelUpOccurred();
 	int currentLevelGoal;

@@ -1,7 +1,10 @@
 #include <iostream>
+#include <chrono>
+#include <thread>
 #include "../main.hpp"
 
 using namespace std;
+
 
 const int LEVEL_UP_BASE=1;
 const int LEVEL_UP_INCREASE=20;
@@ -248,11 +251,44 @@ void PlayerAi::handleActionKey(Actor *owner, int ascii) {
 				engine.gameStatus=Engine::NEW_TURN;
 			}
 			break;
+			case 'l':
+			{
+				playerLook(owner);
+			}
+			break;
 		}
 	}
 	catch(...){
 		cerr << "An error occurred in PlayerAi::handleActionKey" << endl;
 		throw 0;
+	}
+}
+
+void PlayerAi::playerLook(Actor* player){
+	bool lookMode = true;
+	int cursorX = player->x;
+	int cursorY = player->y;
+
+	while(lookMode){
+		engine.render();
+		this_thread::sleep_for(chrono::milliseconds(1));
+		TCODConsole::root->setChar(cursorX, cursorY, 219);
+		TCODConsole::root->setCharForeground(cursorX, cursorY, TCODColor::white);
+		TCODConsole::flush();
+		this_thread::sleep_for(chrono::milliseconds(3));
+		TCOD_key_t lastKey;
+		TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
+		switch(lastKey.vk) {
+		case TCODK_UP : cursorY--; break;
+		case TCODK_DOWN : cursorY++; break;
+		case TCODK_LEFT : cursorX--; break;
+		case TCODK_RIGHT : cursorX++; break;
+		case TCODK_ESCAPE :lookMode = false; break;
+//		case TCODK_CHAR : handleActionKey(owner, engine.lastKey.c); break;
+			default:break;
+		}
+
+
 	}
 }
 

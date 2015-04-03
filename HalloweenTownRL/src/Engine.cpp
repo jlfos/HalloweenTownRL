@@ -293,7 +293,10 @@ void Engine::nextLevel(Map::TileType type) {
 			if (mapY < WORLD_SIZE_LATITUDE - 1) {
 				mapY++;
 			} else {
-				mapY = 0;
+				gui->message(TCODColor::red,
+						"An invisible force keeps you from moving forward");
+				gameStatus = IDLE;
+				return;
 			}
 		}
 		if (type == Map::TileType::RIGHT_EDGE) {
@@ -302,7 +305,10 @@ void Engine::nextLevel(Map::TileType type) {
 			if (mapX < WORLD_SIZE_LONGITUDE - 1) {
 				mapX++;
 			} else {
-				mapX = 0;
+				gui->message(TCODColor::red,
+						"An invisible force keeps you from moving forward");
+				gameStatus = IDLE;
+				return;
 			}
 		}
 		if (type == Map::TileType::BOTTOM_EDGE) {
@@ -311,7 +317,10 @@ void Engine::nextLevel(Map::TileType type) {
 			if (mapY > 0) {
 				mapY--;
 			} else {
-				mapY = WORLD_SIZE_LATITUDE - 1;
+				gui->message(TCODColor::red,
+						"An invisible force keeps you from moving forward");
+				gameStatus = IDLE;
+				return;
 			}
 		}
 		if (type == Map::TileType::LEFT_EDGE) {
@@ -320,11 +329,13 @@ void Engine::nextLevel(Map::TileType type) {
 			if (mapX > 0) {
 				mapX--;
 			} else {
-				mapX = WORLD_SIZE_LONGITUDE - 1;
+				gui->message(TCODColor::red,
+						"An invisible force keeps you from moving forward");
+				gameStatus = IDLE;
+				return;
 			}
 		}
 		actors.remove(player);
-		gui->clear();
 		player = ActorFactory::CreateHero(heroX, heroY);
 		currentMap = (*maps)[mapX][mapY];
 		bool populateFlag = false;
@@ -371,14 +382,13 @@ void Engine::render() {
 				(int) player->destructible->hp,
 				(int) player->destructible->maxHp);
 
-
-
 		// draw the actors
 		for (Actor *actor : actors) {
 			if (currentMap->isInFov(actor->x, actor->y)) {
 				actor->render();
 			}
 		}
+		TCODConsole::flush();
 
 	} catch (...) {
 		cerr << "An error occurred with Engine::render" << endl;
