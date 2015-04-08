@@ -5,7 +5,7 @@ using namespace std;
 
 Actor *ActorFactory::CreateHero(int x, int y){
 	try{
-		Actor *player = new Actor(x, y,'@',"player",TCODColor::white);
+		Actor *player = new Actor(x, y, 256,"player",TCODColor::white);
 		player->destructible=new PlayerDestructible(30,2,"your cadaver");
 		player->attacker=new Attacker(3);
 		player->ai = new PlayerAi();
