@@ -24,13 +24,13 @@ TCODMap* ForestMapGenerator::Generate(Map* map, bool generateActors){
 				emptyMap->setProperties(tilex, tiley, true, false);
 				map->tiles[tilex+tiley*(map->width)].visibleColor = TCODColor(139, 69, 19);
 				map->tiles[tilex+tiley*(map->width)].fogColor = TCODColor(97, 49, 12);
-				map->tiles[tilex+tiley*(map->width)].character = 190;
+				map->tiles[tilex+tiley*(map->width)].character = Actor::CharacterCodes::YEN_SYMBOL;
 			}
 			else{
 				emptyMap->setProperties(tilex, tiley, true, true);
 				map->tiles[tilex+tiley*(map->width)].visibleColor = TCODColor::green;
 				map->tiles[tilex+tiley*(map->width)].fogColor = TCODColor::darkerGreen;
-				map->tiles[tilex+tiley*(map->width)].character = 46;
+				map->tiles[tilex+tiley*(map->width)].character = Actor::CharacterCodes::PERIOD;
 			}
 		}
 	}

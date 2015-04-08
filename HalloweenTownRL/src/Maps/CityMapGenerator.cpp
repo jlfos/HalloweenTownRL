@@ -36,7 +36,7 @@ TCODMap* CityMapGenerator::Generate(Map* map, bool generateActors){
 					cityMap->setProperties(tilex, tiley, true, true);
 					map->tiles[tilex+tiley*(map->width)].visibleColor = TCODColor::lighterGrey;
 					map->tiles[tilex+tiley*(map->width)].fogColor = TCODColor::grey;
-					map->tiles[tilex+tiley*(map->width)].character = 46;
+					map->tiles[tilex+tiley*(map->width)].character = Actor::CharacterCodes::PERIOD;
 					if(tilesTillNextSpawn==0){
 						tilesTillNextSpawn =rng->getInt(5, 50);
 						Point spawn;
@@ -101,19 +101,19 @@ void CityMapGenerator::CreateBuilding(Map* map, TCODMap* cityMap, int startX, in
 			map->tiles[tilex+tiley*(map->width)].visibleColor = visible;
 			map->tiles[tilex+tiley*(map->width)].fogColor = fog;
 			if(tilex==startX && tiley==startY)
-				map->tiles[tilex+tiley*(map->width)].character = 201;
+				map->tiles[tilex+tiley*(map->width)].character = Actor::CharacterCodes::DOUBLE_PIPE_CORNER_UPPER_LEFT;
 			else if(tilex==startX && tiley == startY+sizeY-1)
-				map->tiles[tilex+tiley*(map->width)].character = 200;
+				map->tiles[tilex+tiley*(map->width)].character = Actor::CharacterCodes::DOUBLE_PIPE_CORNER_LOWER_LEFT;
 			else if(tilex==startX+sizeX-1 && tiley==startY)
-				map->tiles[tilex+tiley*(map->width)].character = 187;
+				map->tiles[tilex+tiley*(map->width)].character = Actor::CharacterCodes::DOUBLE_PIPE_CORNER_UPPER_RIGHT;
 			else if(tilex==startX+sizeX-1 && tiley==startY+sizeY-1)
-				map->tiles[tilex+tiley*(map->width)].character = 188;
+				map->tiles[tilex+tiley*(map->width)].character = Actor::CharacterCodes::DOUBLE_PIPE_CORNER_LOWER_RIGHT;
 			else if(tilex==startX || tilex==startX+sizeX-1)
-				map->tiles[tilex+tiley*(map->width)].character = 186;
+				map->tiles[tilex+tiley*(map->width)].character = Actor::CharacterCodes::DOUBLE_PIPE_VERTICAL;
 			else if(tiley==startY || tiley == startY+sizeY-1)
-				map->tiles[tilex+tiley*(map->width)].character = 205;
+				map->tiles[tilex+tiley*(map->width)].character = Actor::CharacterCodes::DOUBLE_PIPE_HORIZONTAL;
 			else
-				map->tiles[tilex+tiley*(map->width)].character = 35;
+				map->tiles[tilex+tiley*(map->width)].character = Actor::CharacterCodes::BLOCK_FULL;
 		}
 	}
 }

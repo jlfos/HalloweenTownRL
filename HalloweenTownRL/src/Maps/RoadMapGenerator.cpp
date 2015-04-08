@@ -21,7 +21,7 @@ TCODMap* RoadMapGenerator::Generate(Map* map, bool generateActors){
 				emptyMap->setProperties(tilex, tiley, true, true);
 				map->tiles[tilex+tiley*(map->width)].visibleColor = TCODColor::lightGrey;
 				map->tiles[tilex+tiley*(map->width)].fogColor = TCODColor::darkGrey;
-				map->tiles[tilex+tiley*(map->width)].character = 46;
+				map->tiles[tilex+tiley*(map->width)].character = Actor::CharacterCodes::PERIOD;
 //				if(enemies==0){
 //					enemies++;
 //					map->actors.push(ActorFactory::CreateVampire(tilex, tiley, ActorFactory::EnemyDifficulty::MEDIUM));
@@ -43,7 +43,7 @@ TCODMap* RoadMapGenerator::Generate(Map* map, bool generateActors){
 				emptyMap->setProperties(tilex, tiley, true, true);
 				map->tiles[tilex+tiley*(map->width)].visibleColor = TCODColor::darkGreen;
 				map->tiles[tilex+tiley*(map->width)].fogColor = TCODColor::darkestGreen;
-				map->tiles[tilex+tiley*(map->width)].character = 46;
+				map->tiles[tilex+tiley*(map->width)].character = Actor::CharacterCodes::PERIOD;
 			}
 		}
 	}

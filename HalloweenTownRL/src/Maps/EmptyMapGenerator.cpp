@@ -27,7 +27,7 @@ TCODMap* EmptyMapGenerator::Generate(Map* map, bool generateActors){
 			int rand = rng.getInt(0, 400);
 			map->tiles[tilex+tiley*(map->width)].visibleColor = TCODColor::lighterRed;
 			map->tiles[tilex+tiley*(map->width)].fogColor = TCODColor::darkRed;
-			map->tiles[tilex+tiley*(map->width)].character = 46;
+			map->tiles[tilex+tiley*(map->width)].character = Actor::CharacterCodes::PERIOD;
 			if(rand%400==0 && generateActors ){
 				AddItem(map, tilex, tiley);
 				potionCount++;
