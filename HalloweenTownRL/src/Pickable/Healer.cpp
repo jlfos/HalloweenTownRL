@@ -11,39 +11,39 @@ Healer::~Healer(){
 
 }
 
-bool Healer::use(Actor *owner, Actor *wearer){
+bool Healer::Use(Actor *owner, Actor *wearer){
 	try{
 		if(wearer->destructible){
-			float amountHealed = wearer->destructible->heal(amount);
+			float amountHealed = wearer->destructible->Heal(amount);
 			if(amountHealed > 0){
-				return Pickable::use(owner, wearer);
+				return Pickable::Use(owner, wearer);
 			}
 		}
 		return false;
 	}
 	catch(...){
-		cerr << "An error occurred with Healer::use" ;
+		cerr << "An error occurred with Healer::Use" ;
 		throw 0;
 	}
 }
 
-void Healer::load(TCODZip &zip){
+void Healer::Load(TCODZip &zip){
 	try{
 		amount=zip.getFloat();
 	}
 	catch(...){
-		cerr << "An error occurred with Healer::load"  << endl;
+		cerr << "An error occurred with Healer::Load"  << endl;
 		throw 0;
 	}
 }
 
-void Healer::save(TCODZip &zip){
+void Healer::Save(TCODZip &zip){
 	try{
 		zip.putInt(HEALER);
 		zip.putFloat(amount);
 	}
 	catch(...){
-		cerr << "An error occurred with Healer::save"  << endl;
+		cerr << "An error occurred with Healer::Save"  << endl;
 		throw 0;
 	}
 }

@@ -8,35 +8,35 @@ PlayerDestructible::PlayerDestructible(float maxHp, float defense, const char *c
 }
 
 
-void PlayerDestructible::die(Actor *owner){
+void PlayerDestructible::Die(Actor *owner){
 	try{
-		engine.gui->message(TCODColor::red,"You died!");
-		Destructible::die(owner);
+		engine.gui->PushMessage(TCODColor::red,"You died!");
+		Destructible::Die(owner);
 		engine.gameStatus=Engine::DEFEAT;
 	}
 	catch(...){
-		cerr << "An error occurred in PlayerDestructible::die";
+		cerr << "An error occurred in PlayerDestructible::Die";
 		throw 0;
 	}
 }
 
-void PlayerDestructible::save(TCODZip &zip){
+void PlayerDestructible::Save(TCODZip &zip){
 	try{
 		zip.putInt(PLAYER);
-		Destructible::save(zip);
+		Destructible::Save(zip);
 	}
 	catch(...){
-		cerr << "An error occurred in PlayerDestructible::save" << endl;
+		cerr << "An error occurred in PlayerDestructible::Save" << endl;
 		throw 0;
 	}
 }
 
-void PlayerDestructible::load(TCODZip &zip){
+void PlayerDestructible::Load(TCODZip &zip){
 	try{
-		Destructible::load(zip);
+		Destructible::Load(zip);
 	}
 	catch(...){
-		cerr << "An error occurred in PlayerDestructible::load" << endl;
+		cerr << "An error occurred in PlayerDestructible::Load" << endl;
 		throw 0;
 	}
 }

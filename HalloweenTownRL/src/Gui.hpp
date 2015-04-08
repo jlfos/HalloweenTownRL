@@ -7,11 +7,11 @@ public :
 	PauseMenu menu;
 	Gui();
 	~Gui();
-	void render();
-	void message(const TCODColor &col, const char *text, ...);
-	void load(TCODZip &zip);
-	void save(TCODZip &zip);
-	void clear();
+	void Render();
+	void PushMessage(const TCODColor &col, const char *text, ...);
+	void Load(TCODZip &zip);
+	void Save(TCODZip &zip);
+	void Clear();
 protected :
 	TCODConsole *con;
 	struct Message {
@@ -22,8 +22,8 @@ protected :
 	};
 	TCODList<Message *> log;
 
-	void renderBar(int x, int y, int width, const char *name,
+	void RenderBar(int x, int y, int width, const char *name,
 		float value, float maxValue, const TCODColor &barColor,
 		const TCODColor &backColor);
-	void renderMouseLook();
+	void RenderMouseLook();
 };

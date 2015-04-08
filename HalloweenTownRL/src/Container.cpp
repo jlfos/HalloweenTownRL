@@ -23,7 +23,7 @@ Container::~Container(){
 	}
 }
 
-bool Container::add(Actor *actor){
+bool Container::Add(Actor *actor){
 	try{
 		if(size>0 && inventory.size() >= size){
 			return false;
@@ -32,49 +32,49 @@ bool Container::add(Actor *actor){
 		return true;
 	}
 	catch(...){
-		cerr << "An error occurred with Container::add"  << endl;
+		cerr << "An error occurred with Container::Add"  << endl;
 		throw 0;
 	}
 }
 
-void Container::remove(Actor *actor){
+void Container::Remove(Actor *actor){
 	try{
 	inventory.remove(actor);
 	}
 	catch(...){
-		cerr << "An error occurred with Container::remove" << endl;
+		cerr << "An error occurred with Container::Remove" << endl;
 		throw 0;
 	}
 }
 
-void Container::load(TCODZip &zip){
+void Container::Load(TCODZip &zip){
 	try{
 		size = zip.getInt();
 		int nbActors = zip.getInt();
 		while(nbActors > 0){
 			Actor *actor = new Actor(0,0,0,nullptr, TCODColor::white);
-			actor->load(zip);
+			actor->Load(zip);
 			inventory.push(actor);
 			nbActors--;
 		}
 	}
 	catch(...){
-		cerr << "An error occurred with Container::load"  << endl;
+		cerr << "An error occurred with Container::Load"  << endl;
 		throw 0;
 	}
 }
 
 
-void Container::save(TCODZip &zip){
+void Container::Save(TCODZip &zip){
 	try{
 		zip.putInt(size);
 		zip.putInt(inventory.size());
 		for(Actor *it : inventory){
-			(it)->save(zip);
+			(it)->Save(zip);
 		}
 	}
 	catch(...){
-		cerr << "An error occurred with Container::save"  << endl;
+		cerr << "An error occurred with Container::Save"  << endl;
 		throw 0;
 	}
 }

@@ -13,15 +13,15 @@ public:
 		CONTINUE,
 		EXIT
 	};
-	virtual void populateMenu(bool saveGameExists) = 0;
-	string pick();
+	virtual void PopulateMenu(bool saveGameExists) = 0;
+	string Pick();
 	Menu();
 	~Menu();
-	void clear();
+	void Clear();
 
 protected:
-	void addItem(string item);
-	void setHeader(string header);
+	void AddItem(string item);
+	void SetHeader(string header);
 private:
 	string header;
 	TCODList<string> items;

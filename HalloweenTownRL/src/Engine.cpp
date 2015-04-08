@@ -26,7 +26,7 @@ Engine::Engine(int screenWidth, int screenHeight) :
 	}
 }
 
-void Engine::init() {
+void Engine::Init() {
 	try {
 
 		player = ActorFactory::CreateHero(DEFAULT_PLAYER_START_X,
@@ -38,11 +38,11 @@ void Engine::init() {
 		currentMap = (*maps)[mapX][mapY];
 		actors = currentMap->actors;
 		actors.push(player);
-		gui->message(TCODColor::red,
+		gui->PushMessage(TCODColor::red,
 				"Welcome stranger!\nPrepare to perish in the horrors of Halloween Town.");
 		gameStatus = STARTUP;
 	} catch (...) {
-		cerr << "An error occurred with Engine::init" << endl;
+		cerr << "An error occurred with Engine::Init" << endl;
 		throw 0;
 	}
 }
@@ -68,7 +68,7 @@ vector<vector<Map*>> *Engine::CreateMaps() {
 						maps->at(i).push_back(temp);
 					}
 				}
-				(*maps)[i][j]->init();
+				(*maps)[i][j]->Init();
 
 			}
 		}
@@ -79,7 +79,7 @@ vector<vector<Map*>> *Engine::CreateMaps() {
 	}
 }
 
-void Engine::term() {
+void Engine::Term() {
 
 	try {
 
@@ -94,16 +94,16 @@ void Engine::term() {
 			delete maps;
 			maps = nullptr;
 		}
-		gui->clear();
+		gui->Clear();
 	} catch (...) {
-		cerr << "An error occurred with Engine::term" << endl;
+		cerr << "An error occurred with Engine::Term" << endl;
 		throw 0;
 	}
 }
 
-void Engine::save() {
+void Engine::Save() {
 	try {
-		if (player->destructible->isDead()) {
+		if (player->destructible->IsDead()) {
 			TCODSystem::deleteFile("game.sav");
 		} else {
 			TCODZip zip;
@@ -114,45 +114,45 @@ void Engine::save() {
 			zip.putInt(mapY);
 			zip.putInt(WORLD_SIZE_LATITUDE);
 			zip.putInt(WORLD_SIZE_LONGITUDE);
-			player->save(zip);
+			player->Save(zip);
 
 			actors.remove(player);
 
 			for (int i = 0; i < WORLD_SIZE_LATITUDE; i++) {
 				for (int j = 0; j < WORLD_SIZE_LONGITUDE; j++) {
-					(*maps)[i][j]->save(zip);
+					(*maps)[i][j]->Save(zip);
 				}
 			}
 
-			gui->save(zip);
+			gui->Save(zip);
 			zip.saveToFile("game.sav");
 		}
 	} catch (...) {
-		cerr << "An error occurred with Engine::save" << endl;
+		cerr << "An error occurred with Engine::Save" << endl;
 		throw 0;
 	}
 }
 
-void Engine::load() {
+void Engine::Load() {
 	try {
 		bool saveGameExists;
 		if (TCODSystem::fileExists("game.sav")) {
 			saveGameExists = true;
 
 		}
-		engine.gui->menu.populateMenu(saveGameExists);
+		engine.gui->menu.PopulateMenu(saveGameExists);
 
-		string menuItem = engine.gui->menu.pick();
+		string menuItem = engine.gui->menu.Pick();
 
 		if (menuItem == "Exit" || menuItem == "NONE") {
-			exitGame();
+			ExitGame();
 		}
 		else if (menuItem == "New Game") {
-			newGame();
+			NewGame();
 			gameStatus = STARTUP;
 		}
 		else if (menuItem == "Continue") {
-			continueGame();
+			ContinueGame();
 		}
 	} catch (...) {
 		cerr << "An error occurred with Engine::load" << endl;
@@ -160,9 +160,9 @@ void Engine::load() {
 	}
 }
 
-void Engine::exitGame() {
+void Engine::ExitGame() {
 	try {
-		save();
+		Save();
 		exit(0);
 
 	} catch (...) {
@@ -171,21 +171,21 @@ void Engine::exitGame() {
 	}
 }
 
-void Engine::newGame() {
+void Engine::NewGame() {
 	try {
-		term();
-		init();
+		Term();
+		Init();
 	} catch (...) {
 		cerr << "An error occurred with Engine::newGame" << endl;
 		throw 0;
 	}
 }
 
-void Engine::continueGame() {
+void Engine::ContinueGame() {
 	try {
 		if(gameStatus == STARTUP){
 			cout << "Load game from save" << endl;
-			term();
+			Term();
 			TCODZip zip;
 			zip.loadFromFile("game.sav");
 
@@ -202,13 +202,13 @@ void Engine::continueGame() {
 			}
 
 			player = new Actor(0, 0, 0, nullptr, TCODColor::white);
-			player->load(zip);
+			player->Load(zip);
 
 			maps = new vector<vector<Map*>>(WORLD_SIZE_LATITUDE);
 			for (int i = 0; i < tempLatitudeSize; i++) {
 				for (int j = 0; j < tempLongitudeSize; j++) {
 					(*maps)[i].push_back(new Map(width, height));
-					(*maps)[i][j]->load(zip);
+					(*maps)[i][j]->Load(zip);
 					if (mapX == i && mapY == j) {
 						currentMap = (*maps)[i][j];
 						actors = (*maps)[i][j]->actors;
@@ -217,17 +217,17 @@ void Engine::continueGame() {
 				}
 			}
 
-			gui->load(zip);
+			gui->Load(zip);
 
 			gameStatus = STARTUP;
 		}
 		else{
 			cout << "Return to game" << endl;
-			engine.gui->menu.clear();
+			engine.gui->menu.Clear();
 
 		}
 	} catch (...) {
-		cerr << "An error occurred with Engine::continueGame" << endl;
+		cerr << "An error occurred with Engine::ContinueGame" << endl;
 		throw 0;
 	}
 }
@@ -259,30 +259,31 @@ Engine::~Engine() {
 	}
 }
 
-void Engine::update() {
+void Engine::Update() {
 	try {
 		if (gameStatus == STARTUP)
-			currentMap->computeFov();
+			currentMap->ComputeFov();
 		gameStatus = IDLE;
 		TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
-		player->update();
+		player->Update();
 		if (gameStatus == NEW_TURN) {
 			if(incrementTime)
-				currentTime.incrementMinutes();
+				currentTime.IncrementMinutes();
 			incrementTime = !incrementTime;
 			for (Actor *actor : actors) {
 				if (actor != player) {
-					actor->update();
+					actor->Update();
 				}
 			}
 		}
 	} catch (...) {
-		cerr << "An error occurred with Engine::update" << endl;
+		cerr << "An error occurred with Engine::Update" << endl;
 		throw 0;
 	}
 }
 
-void Engine::nextLevel(Map::TileType type) {
+
+void Engine::NextLevel(Map::TileType type) {
 	try {
 		int heroX = DEFAULT_PLAYER_START_X;
 		int heroY = DEFAULT_PLAYER_START_Y;
@@ -293,7 +294,7 @@ void Engine::nextLevel(Map::TileType type) {
 			if (mapY < WORLD_SIZE_LATITUDE - 1) {
 				mapY++;
 			} else {
-				gui->message(TCODColor::red,
+				gui->PushMessage(TCODColor::red,
 						"An invisible force keeps you from moving forward");
 				gameStatus = IDLE;
 				return;
@@ -305,7 +306,7 @@ void Engine::nextLevel(Map::TileType type) {
 			if (mapX < WORLD_SIZE_LONGITUDE - 1) {
 				mapX++;
 			} else {
-				gui->message(TCODColor::red,
+				gui->PushMessage(TCODColor::red,
 						"An invisible force keeps you from moving forward");
 				gameStatus = IDLE;
 				return;
@@ -317,7 +318,7 @@ void Engine::nextLevel(Map::TileType type) {
 			if (mapY > 0) {
 				mapY--;
 			} else {
-				gui->message(TCODColor::red,
+				gui->PushMessage(TCODColor::red,
 						"An invisible force keeps you from moving forward");
 				gameStatus = IDLE;
 				return;
@@ -329,7 +330,7 @@ void Engine::nextLevel(Map::TileType type) {
 			if (mapX > 0) {
 				mapX--;
 			} else {
-				gui->message(TCODColor::red,
+				gui->PushMessage(TCODColor::red,
 						"An invisible force keeps you from moving forward");
 				gameStatus = IDLE;
 				return;
@@ -339,28 +340,28 @@ void Engine::nextLevel(Map::TileType type) {
 		player = ActorFactory::CreateHero(heroX, heroY);
 		currentMap = (*maps)[mapX][mapY];
 		bool populateFlag = false;
-		if(currentMap->getTimeLastSeen()){
-			if(currentTime.elapsedMinutes((*currentMap->getTimeLastSeen())) >= 60)
+		if(currentMap->TimeLastSeen()){
+			if(currentTime.ElapsedMinutes((*currentMap->TimeLastSeen())) >= 60)
 				populateFlag = true;
 		}
 		else{
-			currentMap->setTimeLastSeen(new Time(currentTime.getHour(), currentTime.getMinutes()));
+			currentMap->TimeLastSeen(new Time(currentTime.GetHour(), currentTime.GetMinutes()));
 			populateFlag = true;
 		}
 
 		if(populateFlag)
-			currentMap->populateActors();
+			currentMap->PopulateActors();
 		actors = currentMap->actors;
 		actors.push(player);
 		gameStatus = STARTUP;
-		update();
+		Update();
 	} catch (...) {
 		cerr << "An error occurred with Engine::nextLevel" << endl;
 		throw 0;
 	}
 }
 
-void Engine::sendToBack(Actor *actor) {
+void Engine::SendToBack(Actor *actor) {
 	try {
 		actors.remove(actor);
 		actors.insertBefore(actor, 0);
@@ -370,13 +371,13 @@ void Engine::sendToBack(Actor *actor) {
 	}
 }
 
-void Engine::render() {
+void Engine::Render() {
 	try {
 		TCODConsole::root->clear();
 		// draw the map
-		currentMap->render();
+		currentMap->Render();
 
-		gui->render();
+		gui->Render();
 
 		TCODConsole::root->print(1, screenHeight - 2, "HP: %d/%d",
 				(int) player->destructible->hp,
@@ -384,14 +385,15 @@ void Engine::render() {
 
 		// draw the actors
 		for (Actor *actor : actors) {
-			if (currentMap->isInFov(actor->x, actor->y)) {
-				actor->render();
+			if (currentMap->IsInFov(actor->x, actor->y)) {
+				actor->Render();
 			}
 		}
 		TCODConsole::flush();
 
-	} catch (...) {
-		cerr << "An error occurred with Engine::render" << endl;
+	}
+	catch (...) {
+		cerr << "An error occurred with Engine::Render" << endl;
 		throw 0;
 	}
 }

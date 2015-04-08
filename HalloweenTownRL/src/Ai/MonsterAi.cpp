@@ -9,12 +9,12 @@ static const int TRACKING_TURNS=3;
 MonsterAi::MonsterAi() : moveCount(0) {
 }
 
-void MonsterAi::update(Actor *owner){
+void MonsterAi::Update(Actor *owner){
 	try{
-		if ( owner->destructible && owner->destructible->isDead() ) {
+		if ( owner->destructible && owner->destructible->IsDead() ) {
 			return;
 		}
-		if ( engine.currentMap->isInFov(owner->x,owner->y) ) {
+		if ( engine.currentMap->IsInFov(owner->x,owner->y) ) {
 			// we can see the player. move towards him
 			moveCount=TRACKING_TURNS;
 		}
@@ -22,7 +22,7 @@ void MonsterAi::update(Actor *owner){
 			moveCount--;
 		}
 	   if ( moveCount > 0 ) {
-		moveOrAttack(owner, engine.player->x,engine.player->y);
+		MoveOrAttack(owner, engine.player->x,engine.player->y);
 	   }
 	}
 	catch(...){
@@ -31,7 +31,7 @@ void MonsterAi::update(Actor *owner){
 	}
 }
 
-void MonsterAi::moveOrAttack(Actor *owner, int targetX, int targetY){
+void MonsterAi::MoveOrAttack(Actor *owner, int targetX, int targetY){
 	try{
 		TCODRandom rng;
 		int dx = targetX - owner->x;
@@ -49,19 +49,19 @@ void MonsterAi::moveOrAttack(Actor *owner, int targetX, int targetY){
 				dy = (int)(round(dy/distance));
 			}
 
-			if(engine.currentMap->canWalk(owner->x+dx, owner->y+dy)){
+			if(engine.currentMap->CanWalk(owner->x+dx, owner->y+dy)){
 				owner->x += dx;
 				owner->y += dy;
 			}
-			else if ( engine.currentMap->canWalk(owner->x+stepdx,owner->y) ) {
+			else if ( engine.currentMap->CanWalk(owner->x+stepdx,owner->y) ) {
 				owner->x += stepdx;
 			}
-			else if ( engine.currentMap->canWalk(owner->x,owner->y+stepdy) ) {
+			else if ( engine.currentMap->CanWalk(owner->x,owner->y+stepdy) ) {
 				owner->y += stepdy;
 			}
 		}
 		else if ( owner->attacker ) {
-				owner->attacker->attack(owner,engine.player);
+				owner->attacker->Attack(owner,engine.player);
 		}
 	}
 	catch(...){
@@ -70,7 +70,7 @@ void MonsterAi::moveOrAttack(Actor *owner, int targetX, int targetY){
 	}
 }
 
-void MonsterAi::load(TCODZip &zip){
+void MonsterAi::Load(TCODZip &zip){
 	try{
 		moveCount=zip.getInt();
 	}
@@ -80,7 +80,7 @@ void MonsterAi::load(TCODZip &zip){
 	}
 }
 
-void MonsterAi::save(TCODZip &zip){
+void MonsterAi::Save(TCODZip &zip){
 	try{
 		zip.putInt(MONSTER);
 		zip.putInt(moveCount);

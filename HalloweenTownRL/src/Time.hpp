@@ -17,15 +17,15 @@ class Time {
 		Time();
 		Time(int hour, int minutes);
 		const char* c_str();
-		int getHour();
-		int getMinutes();
-		int elapsedMinutes(Time previousTime);
-		void incrementHour();
-		void incrementMinutes();
+		int GetHour();
+		int GetMinutes();
+		int ElapsedMinutes(Time previousTime);
+		void IncrementHour();
+		void IncrementMinutes();
 	private:
 		int minutes;
 		int hour;
-		string convertMinutes();
+		string ConvertMinutes();
 };
 
 

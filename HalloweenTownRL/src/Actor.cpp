@@ -22,28 +22,28 @@ Actor::~Actor(){
 		throw 0;
 	}
 }
-void Actor::render() const {
+void Actor::Render() const {
 	try{
 		TCODConsole::root->setChar(x,y,ch);
 		TCODConsole::root->setCharForeground(x,y,col);
 	}
 	catch(...){
-		cerr << "An error occurred with Actor::render"  << endl;
+		cerr << "An error occurred with Actor::Render"  << endl;
 		throw 0;
 	}
 }
 
-void Actor::update(){
+void Actor::Update(){
 	try{
-		if( ai ) ai->update(this);
+		if( ai ) ai->Update(this);
 	}
 	catch(...){
-		cerr << "An error occurred with Actor::update"  << endl;
+		cerr << "An error occurred with Actor::Update"  << endl;
 		throw 0;
 	}
 }
 
-void Actor::save(TCODZip &zip){
+void Actor::Save(TCODZip &zip){
 	try{
 		zip.putInt(x);
 		zip.putInt(y);
@@ -56,20 +56,20 @@ void Actor::save(TCODZip &zip){
 		zip.putInt(ai != nullptr);
 		zip.putInt(pickable != nullptr);
 		zip.putInt(container != nullptr);
-		if(attacker) attacker->save(zip);
-		if(destructible) destructible->save(zip);
-		if(ai)ai->save(zip);
-		if(pickable)pickable->save(zip);
-		if(container)container->save(zip);
+		if(attacker) attacker->Save(zip);
+		if(destructible) destructible->Save(zip);
+		if(ai)ai->Save(zip);
+		if(pickable)pickable->Save(zip);
+		if(container)container->Save(zip);
 	}
 	catch(...){
-		cerr << "An error occurred with Actor::save"  << endl;
+		cerr << "An error occurred with Actor::Save"  << endl;
 		throw 0;
 	}
 }
 
 
-void Actor::load(TCODZip &zip){
+void Actor::Load(TCODZip &zip){
 	try{
 		x=zip.getInt();
 		y=zip.getInt();
@@ -84,24 +84,24 @@ void Actor::load(TCODZip &zip){
 		bool hasContainer = zip.getInt();
 		if(hasAttacker){
 			attacker = new Attacker(0.0f);
-			attacker->load(zip);
+			attacker->Load(zip);
 		}
 		if(hasDestructible){
-			destructible = Destructible::create(zip);
+			destructible = Destructible::Create(zip);
 		}
 		if(hasAi){
-			ai = Ai::create(zip);
+			ai = Ai::Create(zip);
 		}
 		if(hasPickable){
-			pickable = Pickable::create(zip);
+			pickable = Pickable::Create(zip);
 		}
 		if(hasContainer){
 			container = new Container(0);
-			container->load(zip);
+			container->Load(zip);
 		}
 	}
 	catch(...){
-		cerr << "An error occurred with Actor::load"  << endl;
+		cerr << "An error occurred with Actor::Load"  << endl;
 		throw 0;
 	}
 }

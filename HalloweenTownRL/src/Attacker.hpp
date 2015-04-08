@@ -1,11 +1,11 @@
 class Attacker : public Persistent {
 public :
-	void setPower(float power);
-	float getPower();
+	void SetPower(float power);
+	float GetPower();
 	Attacker(float power);
-	void attack(Actor *owner, Actor *target);
-	void load(TCODZip &zip);
-	void save(TCODZip &zip);
+	void Attack(Actor *owner, Actor *target);
+	void Load(TCODZip &zip);
+	void Save(TCODZip &zip);
 private:
 	float power;
 };

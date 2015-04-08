@@ -18,11 +18,11 @@ Time::Time(int hour, int minutes){
 	}
 }
 
-int Time::elapsedMinutes(Time previousTime){
+int Time::ElapsedMinutes(Time previousTime){
 	try{
 
 		int tempCurrentHour = hour;
-		int tempPreviousHour = previousTime.getHour();
+		int tempPreviousHour = previousTime.GetHour();
 
 		int elapsedTime = 0;
 		if(tempCurrentHour<6)
@@ -37,14 +37,14 @@ int Time::elapsedMinutes(Time previousTime){
 		}
 
 		elapsedTime = (tempCurrentHour - tempPreviousHour)*60;
-		elapsedTime += (minutes - previousTime.getMinutes());
+		elapsedTime += (minutes - previousTime.GetMinutes());
 		return elapsedTime;
 	}
 	catch(...){
 		cerr << "An error occurred in Time::elapsedMinutes()" << endl;
 	}
 }
-int Time::getHour(){
+int Time::GetHour(){
 	try{
 		return hour;
 
@@ -53,7 +53,7 @@ int Time::getHour(){
 		cerr << "An error occurred in Time::getHour()" << endl;
 	}
 }
-int Time::getMinutes(){
+int Time::GetMinutes(){
 	try{
 		return minutes;
 	}
@@ -62,7 +62,7 @@ int Time::getMinutes(){
 	}
 }
 
-void Time::incrementHour(){
+void Time::IncrementHour(){
 	if(hour<12){
 		hour++;
 	}
@@ -71,14 +71,14 @@ void Time::incrementHour(){
 	}
 }
 
-void Time::incrementMinutes(){
+void Time::IncrementMinutes(){
 	try{
 		if(minutes<59){
 			minutes++;
 		}
 		else{
 			minutes=0;
-			incrementHour();
+			IncrementHour();
 		}
 	}
 	catch(...){
@@ -89,7 +89,7 @@ void Time::incrementMinutes(){
 const char* Time::c_str(){
 	try{
 		string hourStr = to_string(hour);
-		string minutesStr = convertMinutes();
+		string minutesStr = ConvertMinutes();
 		string periodStr;
 
 		if(hour>=6 &&hour<=11)
@@ -106,7 +106,7 @@ const char* Time::c_str(){
 }
 
 
-string Time::convertMinutes(){
+string Time::ConvertMinutes(){
 	try{
 		string result;
 		if(minutes < 10){

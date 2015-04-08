@@ -34,14 +34,14 @@ Gui::~Gui() {
 }
 
 
-void Gui::render() {
+void Gui::Render() {
 	try{
 		// clear the GUI console
 		con->setDefaultBackground(TCODColor::black);
 		con->clear();
 
 		// draw the health bar
-		renderBar(1,1,BAR_WIDTH,"HP",engine.player->destructible->hp,
+		RenderBar(1,1,BAR_WIDTH,"HP",engine.player->destructible->hp,
 			engine.player->destructible->maxHp,
 			TCODColor::lightRed,TCODColor::darkerRed);
 
@@ -49,7 +49,7 @@ void Gui::render() {
 
 		PlayerAi *playerAi = (PlayerAi*)engine.player->ai;
 		string levelText = "Level: ";
-		levelText += to_string(playerAi->getLevel());
+		levelText += to_string(playerAi->GetLevel());
 		con->print(1, 3, levelText.c_str());
 
 		// draw the message log
@@ -65,7 +65,7 @@ void Gui::render() {
 		}
 
 		// mouse look
-		renderMouseLook();
+		RenderMouseLook();
 
 
 
@@ -80,7 +80,7 @@ void Gui::render() {
 	}
 }
 
-void Gui::renderBar(int x, int y, int width, const char *name,
+void Gui::RenderBar(int x, int y, int width, const char *name,
 	float value, float maxValue, const TCODColor &barColor,
 	const TCODColor &backColor) {
 
@@ -106,7 +106,7 @@ void Gui::renderBar(int x, int y, int width, const char *name,
 	}
 }
 
-void Gui::clear(){
+void Gui::Clear(){
 	try{
 		log.clearAndDelete();
 	}
@@ -120,7 +120,7 @@ Gui::Message::Message(const char *text, const TCODColor &col) :
 	text(strdup(text)),col(col) {
 }
 
-void Gui::save(TCODZip &zip){
+void Gui::Save(TCODZip &zip){
 	try{
 		zip.putInt(log.size());
 		for(Message *it : log){
@@ -134,13 +134,13 @@ void Gui::save(TCODZip &zip){
 	}
 }
 
-void Gui::load(TCODZip &zip){
+void Gui::Load(TCODZip &zip){
 	try{
 		int nbMessages=zip.getInt();
 		while(nbMessages > 0){
 			const char *text=zip.getString();
 			TCODColor col = zip.getColor();
-			message(col, text);
+			PushMessage(col, text);
 			nbMessages--;
 		}
 	}
@@ -160,9 +160,9 @@ Gui::Message::~Message() {
 	}
 }
 
-void Gui::renderMouseLook() {
+void Gui::RenderMouseLook() {
 	try{
-		if (! engine.currentMap->isInFov(engine.mouse.cx, engine.mouse.cy)) {
+		if (! engine.currentMap->IsInFov(engine.mouse.cx, engine.mouse.cy)) {
 			// if mouse is out of fov, nothing to render
 			return;
 		}
@@ -189,7 +189,7 @@ void Gui::renderMouseLook() {
 	}
 }
 
-void Gui::message(const TCODColor &col, const char *text, ...) {
+void Gui::PushMessage(const TCODColor &col, const char *text, ...) {
 	try{
 		// build the text
 		va_list ap;

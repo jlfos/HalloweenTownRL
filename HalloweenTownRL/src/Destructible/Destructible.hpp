@@ -1,17 +1,17 @@
 class Destructible : public Persistent {
 public :
 	Destructible(float maxHp, float defense, int exp, const char *corpseName);
-	inline bool isDead() { return hp <= 0; }
-	float takeDamage(Actor *owner, float damage);
-	float heal(float amount);
-	virtual void die(Actor *owner);
-	int getExperienceReward();
-	void load(TCODZip &zip);
-	void save(TCODZip &zip);
-	static Destructible *create(TCODZip &zip);
-	void increaseTotalHealth(float health);
-	void setDefense(float defense);
-	float getDefense();
+	inline bool IsDead() { return hp <= 0; }
+	float TakeDamage(Actor *owner, float damage);
+	float Heal(float amount);
+	virtual void Die(Actor *owner);
+	int ExperienceReward();
+	void Load(TCODZip &zip);
+	void Save(TCODZip &zip);
+	static Destructible *Create(TCODZip &zip);
+	void IncreaseTotalHealth(float health);
+	void SetDefense(float defense);
+	float GetDefense();
 	float maxHp; // maximum health points
 	float hp; // current health points
 protected:

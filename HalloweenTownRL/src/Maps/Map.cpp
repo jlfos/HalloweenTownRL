@@ -45,7 +45,7 @@ Map::Map(int width, int height, MapGenerator* generator):
 
 }
 
-void Map::init() {
+void Map::Init() {
 	try{
 
 		if(rng== nullptr)
@@ -64,7 +64,7 @@ void Map::init() {
 		}
 	}
 	catch(...){
-		cerr << "An error occurred with Map::init"  << endl;
+		cerr << "An error occurred with Map::Init"  << endl;
 		throw 0;
 	}
 }
@@ -72,7 +72,7 @@ void Map::init() {
 ActorFactory::EnemyDifficulty Map::GetDifficulty(){
 	try{
 		ActorFactory::EnemyDifficulty current;
-		switch(engine.currentTime.getHour()){
+		switch(engine.currentTime.GetHour()){
 			case 6:
 			case 7:
 				current = ActorFactory::EnemyDifficulty::EASY;
@@ -106,17 +106,17 @@ ActorFactory::EnemyDifficulty Map::GetDifficulty(){
 }
 
 
-void Map::populateActors(){
+void Map::PopulateActors(){
 	try{
 		if(generator)
 			generator->PopulateActors(this);
 	}
 	catch(...){
-		cerr << "An error occurred in Map::populateActors()" << endl;
+		cerr << "An error occurred in Map::PopulateActors()" << endl;
 	}
 }
 
-void Map::save(TCODZip &zip) {
+void Map::Save(TCODZip &zip) {
 	try{
 		zip.putInt(seed);
 		for (int i = 0; i < width * height; i++) {
@@ -125,25 +125,25 @@ void Map::save(TCODZip &zip) {
 		int size = actors.size();
 		zip.putInt(size);
 		for(Actor *it : actors){
-			(it)->save(zip);
+			(it)->Save(zip);
 		}
 	}
 	catch(...){
-		cerr << "An error occurred with Map::save"  << endl;
+		cerr << "An error occurred with Map::Save"  << endl;
 		throw 0;
 	}
 }
 
 
-Time* Map::getTimeLastSeen(){
+Time* Map::TimeLastSeen(){
 	return lastSeen;
 };
 
-void Map::setTimeLastSeen(Time* time){
+void Map::TimeLastSeen(Time* time){
 	lastSeen = time;
 }
 
-void Map::load(TCODZip &zip) {
+void Map::Load(TCODZip &zip) {
 	try{
 
 		seed = zip.getInt();
@@ -157,13 +157,13 @@ void Map::load(TCODZip &zip) {
 		int nbActors = zip.getInt();
 		while(nbActors > 0){
 			Actor *actor = new Actor(0,0,0,nullptr, TCODColor::white);
-			actor->load(zip);
+			actor->Load(zip);
 			actors.push(actor);
 			nbActors--;
 		}
 	}
 	catch(...){
-		cerr << "An error occurred with Map::load"  << endl;
+		cerr << "An error occurred with Map::Load"  << endl;
 		throw 0;
 	}
 }
@@ -186,16 +186,6 @@ Map::~Map() {
 			delete rng;
 			rng = nullptr;
 		}
-//		for(int i = 0; i<actors.size(); i++){
-//			delete actors.get(i);
-//
-//		}
-//		for(Actor* actor: actors){
-//			if(actor != nullptr){
-//				delete actor;
-//				actor = nullptr;
-//			}
-//		}
 		actors.clearAndDelete();
 	}
 	catch(...){
@@ -204,7 +194,7 @@ Map::~Map() {
 	}
 }
 
-Map::TileType Map::getTileType(int x, int y) const {
+Map::TileType Map::GetTileType(int x, int y) const {
 	try{
 
 		if(!map->isWalkable(x, y)){
@@ -225,14 +215,14 @@ Map::TileType Map::getTileType(int x, int y) const {
 		}
 	}
 	catch(...){
-		cerr << "An error occurred with Map::isWall"  << endl;
+		cerr << "An error occurred with Map::IsWall"  << endl;
 		throw 0;
 	}
 }
 
-bool Map::canWalk(int x, int y) const {
+bool Map::CanWalk(int x, int y) const {
 	try{
-		TileType type = getTileType(x, y);
+		TileType type = GetTileType(x, y);
 		if(type != TileType::GROUND){
 			// this is a wall or edge
 			return false;
@@ -246,22 +236,22 @@ bool Map::canWalk(int x, int y) const {
 		return true;
 	}
 	catch(...){
-		cerr << "An error occurred with Map::canWalk"  << endl;
+		cerr << "An error occurred with Map::CanWalk"  << endl;
 		throw 0;
 	}
 }
 
-bool Map::isExplored(int x, int y) const {
+bool Map::IsExplored(int x, int y) const {
 	try{
 		return tiles[x + y * width].explored;
 	}
 	catch(...){
-		cerr << "An error occurred with Map::isExplored"  << endl;
+		cerr << "An error occurred with Map::IsExplored"  << endl;
 		throw 0;
 	}
 }
 
-bool Map::isInFov(int x, int y) const {
+bool Map::IsInFov(int x, int y) const {
 	try{
 
 		if (x < 0 || x >= width || y < 0 || y >= height) {
@@ -275,23 +265,23 @@ bool Map::isInFov(int x, int y) const {
 		return false;
 	}
 	catch(...){
-		cerr << "An error occurred with Map::isInFov"  << endl;
+		cerr << "An error occurred with Map::IsInFov"  << endl;
 		throw 0;
 	}
 
 }
 
-void Map::computeFov() {
+void Map::ComputeFov() {
 	try{
 		map->computeFov(engine.player->x, engine.player->y, engine.fovRadius);
 	}
 	catch(...){
-		cerr << "An error occurred with Map::computeFov"  << endl;
+		cerr << "An error occurred with Map::ComputeFov"  << endl;
 		throw 0;
 	}
 }
 
-void Map::render() const {
+void Map::Render() const {
 	try{
 		static const TCODColor darkWall(0, 0, 100);
 		static const TCODColor darkGround(50, 50, 150);
@@ -299,12 +289,11 @@ void Map::render() const {
 		static const TCODColor lightGround(200, 180, 50);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-//				TileType type = getTileType(x, y);
-				if (isInFov(x, y)) {
+				if (IsInFov(x, y)) {
 					TCODConsole::root->setChar(x,y, tiles[x+y*width].character);
 					TCODConsole::root->setCharForeground(x,y,tiles[x+y*width].visibleColor);
 				}
-				else if (isExplored(x, y)) {
+				else if (IsExplored(x, y)) {
 					TCODConsole::root->setChar(x,y, tiles[x+y*width].character);
 					TCODConsole::root->setCharForeground(x,y,tiles[x+y*width].fogColor);
 				}
@@ -312,7 +301,7 @@ void Map::render() const {
 		}
 	}
 	catch(...){
-		cerr << "An error occurred with Map::computeFov"  << endl;
+		cerr << "An error occurred with Map::Render"  << endl;
 		throw 0;
 	}
 

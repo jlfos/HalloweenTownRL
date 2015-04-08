@@ -7,12 +7,12 @@ Engine engine(80, 50);
 
 int main() {
 	try{
-		engine.load();
+		engine.Load();
 		while ( !TCODConsole::isWindowClosed() ) {
 
-			engine.update();
+			engine.Update();
 
-			engine.render();
+			engine.Render();
 
 		}
 		//engine.save();

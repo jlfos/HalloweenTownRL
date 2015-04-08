@@ -4,7 +4,7 @@ public :
 
 	Healer(float amount);
 	~Healer();
-	bool use(Actor *owner, Actor *wearer);
-	void load(TCODZip &zip);
-	void save(TCODZip &zip);
+	bool Use(Actor *owner, Actor *wearer);
+	void Load(TCODZip &zip);
+	void Save(TCODZip &zip);
 };

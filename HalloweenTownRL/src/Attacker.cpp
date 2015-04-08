@@ -6,55 +6,55 @@ using namespace std;
 Attacker::Attacker(float power) :power(power){
 }
 
-void Attacker::attack(Actor *owner, Actor *target){
+void Attacker::Attack(Actor *owner, Actor *target){
 	try{
-		if(target->destructible && ! target->destructible->isDead()){
-			if(power - target->destructible->getDefense()>0){
-				engine.gui->message(owner==engine.player ? TCODColor::red : TCODColor::lightGrey,
+		if(target->destructible && ! target->destructible->IsDead()){
+			if(power - target->destructible->GetDefense()>0){
+				engine.gui->PushMessage(owner==engine.player ? TCODColor::red : TCODColor::lightGrey,
 					"%s attacks %s for %g hit points.", owner->name, target->name,
-					power - target->destructible->getDefense());
+					power - target->destructible->GetDefense());
 			}
 			else{
-				engine.gui->message(TCODColor::lightGrey,
+				engine.gui->PushMessage(TCODColor::lightGrey,
 					"%s attacks %s but it has no effect!", owner->name, target->name);
 			}
-			target->destructible->takeDamage(target, power);
+			target->destructible->TakeDamage(target, power);
 		}
 		else{
-			engine.gui->message(TCODColor::lightGrey,
+			engine.gui->PushMessage(TCODColor::lightGrey,
 				"%s attacks %s in vain.",owner->name, target->name);
 		}
 	}
 	catch(...){
-		cerr << "An error occurred with Attacker::attack"  << endl;
+		cerr << "An error occurred with Attacker::Attack"  << endl;
 		throw 0;
 	}
 }
 
-void Attacker::load(TCODZip &zip){
+void Attacker::Load(TCODZip &zip){
 	try{
 		power=zip.getFloat();
 	}
 	catch(...){
-		cerr << "An error occurred with Attacker::load"  << endl;
+		cerr << "An error occurred with Attacker::Load"  << endl;
 		throw 0;
 	}
 }
 
-void Attacker::setPower(float power){
+void Attacker::SetPower(float power){
 	this->power = power;
 }
 
-float Attacker::getPower(){
+float Attacker::GetPower(){
 	return power;
 }
 
-void Attacker::save(TCODZip &zip){
+void Attacker::Save(TCODZip &zip){
 	try{
 		zip.putFloat(power);
 	}
 	catch(...){
-		cerr << "An error occurred with Attacker::save"  << endl;
+		cerr << "An error occurred with Attacker::Save"  << endl;
 		throw 0;
 	}
 }

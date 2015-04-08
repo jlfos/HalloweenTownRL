@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Ai *Ai::create(TCODZip &zip){
+Ai *Ai::Create(TCODZip &zip){
 	try{
 		AiType type = (AiType)zip.getInt();
 		Ai *ai = nullptr;
@@ -11,7 +11,7 @@ Ai *Ai::create(TCODZip &zip){
 			case PLAYER : ai = new PlayerAi(); break;
 			case MONSTER: ai = new MonsterAi(); break;
 		}
-		ai->load(zip);
+		ai->Load(zip);
 		return ai;
 	}
 	catch(...){

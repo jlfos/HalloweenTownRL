@@ -4,8 +4,8 @@ public:
 	TCODList<Actor *> inventory;
 	Container(int size);
 	~Container();
-	bool add(Actor *actor);
-	void remove(Actor *actor);
-	void load(TCODZip &zip);
-	void save(TCODZip &zip);
+	bool Add(Actor *actor);
+	void Remove(Actor *actor);
+	void Load(TCODZip &zip);
+	void Save(TCODZip &zip);
 };

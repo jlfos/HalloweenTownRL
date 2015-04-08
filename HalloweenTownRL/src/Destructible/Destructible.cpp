@@ -9,7 +9,7 @@ Destructible::Destructible(float maxHp, float defense, int experienceReward, con
 }
 
 
-Destructible *Destructible::create(TCODZip &zip){
+Destructible *Destructible::Create(TCODZip &zip){
 	try{
 		DestructibleType type = (DestructibleType)zip.getInt();
 
@@ -19,31 +19,31 @@ Destructible *Destructible::create(TCODZip &zip){
 			case PLAYER: destructible = new PlayerDestructible(0,0, NULL); break;
 			default : break;
 		}
-		destructible->load(zip);
+		destructible->Load(zip);
 		return destructible;
 	}
 	catch(...){
-		cerr << "An error occurred in Destructible::create" << endl;
+		cerr << "An error occurred in Destructible::Create" << endl;
 		throw 0;
 	}
 }
 
 
-void Destructible::setDefense(float defense){
+void Destructible::SetDefense(float defense){
 	this->defense = defense;
 }
 
-float Destructible::getDefense(){
+float Destructible::GetDefense(){
 	return defense;
 }
 
-float Destructible::takeDamage(Actor *owner, float damage){
+float Destructible::TakeDamage(Actor *owner, float damage){
 	try{
 		damage -= defense;
 		if( damage>0){
 			hp -= damage;
 			if (hp <=0){
-				die(owner);
+				Die(owner);
 			}
 		}
 		else{
@@ -52,12 +52,12 @@ float Destructible::takeDamage(Actor *owner, float damage){
 		return damage;
 	}
 	catch(...){
-		cerr << "An error occurred in Destructible::takeDamage" << endl;
+		cerr << "An error occurred in Destructible::TakeDamage" << endl;
 		throw 0;
 	}
 }
 
-float Destructible::heal(float amount){
+float Destructible::Heal(float amount){
 	try{
 		hp += amount;
 
@@ -68,35 +68,35 @@ float Destructible::heal(float amount){
 		return amount;
 	}
 	catch(...){
-		cerr << "An error occurred in Destructible::heal" << endl;
+		cerr << "An error occurred in Destructible::Heal" << endl;
 		throw 0;
 	}
 }
 
-void Destructible::die(Actor *owner){
+void Destructible::Die(Actor *owner){
 	try{
 		owner->ch='%';
 		owner->col=TCODColor::darkRed;
 		owner->name=corpseName;
 		owner->blocks=false;
-		engine.sendToBack(owner);
+		engine.SendToBack(owner);
 	}
 	catch(...){
-		cerr << "An error occurred in Destructible::die" << endl;
+		cerr << "An error occurred in Destructible::Die" << endl;
 		throw 0;
 	}
 }
 
-int Destructible::getExperienceReward(){
+int Destructible::ExperienceReward(){
 	return experienceReward;
 }
 
-void Destructible::increaseTotalHealth(float health){
+void Destructible::IncreaseTotalHealth(float health){
 	maxHp += health;
 	hp += health;
 }
 
-void Destructible::load(TCODZip &zip){
+void Destructible::Load(TCODZip &zip){
 	try{
 		maxHp=zip.getFloat();
 		hp=zip.getFloat();
@@ -104,12 +104,12 @@ void Destructible::load(TCODZip &zip){
 		corpseName=strdup(zip.getString());
 	}
 	catch(...){
-		cerr << "An error occurred in Destructible::load" << endl;
+		cerr << "An error occurred in Destructible::Load" << endl;
 		throw 0;
 	}
 }
 
-void Destructible::save(TCODZip &zip){
+void Destructible::Save(TCODZip &zip){
 	try{
 		zip.putFloat(maxHp);
 		zip.putFloat(hp);
@@ -117,7 +117,7 @@ void Destructible::save(TCODZip &zip){
 		zip.putString(corpseName);
 	}
 	catch(...){
-		cerr << "An error occurred in Destructible::save" << endl;
+		cerr << "An error occurred in Destructible::Save" << endl;
 		throw 0;
 	}
 }

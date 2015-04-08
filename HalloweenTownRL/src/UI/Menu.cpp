@@ -15,7 +15,7 @@ Menu::Menu(){
 
 Menu::~Menu(){
 	try{
-		clear();
+		Clear();
 	}
 	catch(...){
 		cerr << "An error occurred with Menu::~Menu"  << endl;
@@ -23,7 +23,7 @@ Menu::~Menu(){
 	}
 }
 
-void Menu::clear(){
+void Menu::Clear(){
 	try{
 		items.clear();
 	}
@@ -34,7 +34,7 @@ void Menu::clear(){
 }
 
 
-void Menu::addItem(string item){
+void Menu::AddItem(string item){
 	try{
 		items.push(item);
 	}
@@ -44,11 +44,11 @@ void Menu::addItem(string item){
 	}
 }
 
-void Menu::setHeader(string header){
+void Menu::SetHeader(string header){
 	this->header = header;
 }
 
-string Menu::pick(){
+string Menu::Pick(){
 	try{
 //		static TCODImage img("tree.png");
 		int selectedItem = 0;

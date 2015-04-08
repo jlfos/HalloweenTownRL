@@ -18,7 +18,7 @@ struct Point {
 };
 class Map : public Persistent{
 private:
-    bool notOnMap(int x, int y) const;
+    bool NotOnMap(int x, int y) const;
     MapGenerator* generator;
     Time* lastSeen;
 public :
@@ -29,18 +29,18 @@ public :
     ~Map();
     TCODList<Actor*> actors;
     enum class TileType {GROUND, WALL, LEFT_EDGE, RIGHT_EDGE, TOP_EDGE, BOTTOM_EDGE};
-    TileType getTileType(int x, int y) const;
-	bool isInFov(int x, int y) const;
-    bool isExplored(int x, int y) const;
-    bool canWalk(int x, int y) const;
-    void computeFov();
-    void render() const;
-    void init();
-    void load(TCODZip &zip);
-    void save(TCODZip &zip);
-    void populateActors();
-    Time* getTimeLastSeen();
-    void setTimeLastSeen(Time* time);
+    TileType GetTileType(int x, int y) const;
+	bool IsInFov(int x, int y) const;
+    bool IsExplored(int x, int y) const;
+    bool CanWalk(int x, int y) const;
+    void ComputeFov();
+    void Render() const;
+    void Init();
+    void Load(TCODZip &zip);
+    void Save(TCODZip &zip);
+    void PopulateActors();
+    Time* TimeLastSeen();
+    void TimeLastSeen(Time* time);
     vector<Point> spawnLocations;
     ActorFactory::EnemyDifficulty GetDifficulty();
 protected :

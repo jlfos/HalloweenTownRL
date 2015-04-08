@@ -1,10 +1,10 @@
 class MonsterAi : public Ai {
 public:
 	MonsterAi();
-	void update(Actor *owner);
-	void load(TCODZip &zip);
-	void save(TCODZip &zip);
+	void Update(Actor *owner);
+	void Load(TCODZip &zip);
+	void Save(TCODZip &zip);
 protected:
-	void moveOrAttack(Actor *owner, int targetX, int targetY);
+	void MoveOrAttack(Actor *owner, int targetX, int targetY);
 	int moveCount;
 };

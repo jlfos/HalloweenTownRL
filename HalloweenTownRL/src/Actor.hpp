@@ -275,8 +275,8 @@ public:
 
 	Actor(int x, int y, int ch, const char *name, const TCODColor &col);
 	~Actor();
-	void update();
-	void render() const;
-	void load(TCODZip &zip);
-	void save(TCODZip &zip);
+	void Update();
+	void Render() const;
+	void Load(TCODZip &zip);
+	void Save(TCODZip &zip);
 };

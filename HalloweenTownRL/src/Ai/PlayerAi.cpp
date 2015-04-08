@@ -13,10 +13,10 @@ PlayerAi::PlayerAi() :experienceLevel(1), currentExperience(0), currentLevelGoal
 
 }
 
-void PlayerAi::update(Actor *owner){
+void PlayerAi::Update(Actor *owner){
 	try{
 
-		if(owner->destructible && owner->destructible->isDead()){
+		if(owner->destructible && owner->destructible->IsDead()){
 			return;
 		}
 		switch(engine.lastKey.vk) {
@@ -25,12 +25,12 @@ void PlayerAi::update(Actor *owner){
 		case TCODK_LEFT : MoveLeft(owner); break;
 		case TCODK_RIGHT : MoveRight(owner); break;
 		case TCODK_ESCAPE :LoadMenu(); break;
-		case TCODK_CHAR : handleActionKey(owner, engine.lastKey.c); break;
+		case TCODK_CHAR : HandleActionKey(owner, engine.lastKey.c); break;
 			default:break;
 		}
 	}
 	catch(...){
-		cerr << "An error occurred in PlayerAi::update" << endl;
+		cerr << "An error occurred in PlayerAi::Update" << endl;
 		throw 0;
 	}
 
@@ -40,8 +40,8 @@ void PlayerAi::update(Actor *owner){
 void PlayerAi::MoveLeft(Actor *owner){
 	try{
 		engine.gameStatus=Engine::NEW_TURN;
-		if (moveOrAttack(owner, owner->x-1,owner->y)) {
-			engine.currentMap->computeFov();
+		if (MoveOrAttack(owner, owner->x-1,owner->y)) {
+			engine.currentMap->ComputeFov();
 		}
 	}
 	catch(...){
@@ -53,8 +53,8 @@ void PlayerAi::MoveLeft(Actor *owner){
 void PlayerAi::MoveDown(Actor *owner){
     try{
 		engine.gameStatus=Engine::NEW_TURN;
-		if (moveOrAttack(owner, owner->x,owner->y+1)) {
-			engine.currentMap->computeFov();
+		if (MoveOrAttack(owner, owner->x,owner->y+1)) {
+			engine.currentMap->ComputeFov();
 		}
     }
     catch(...){
@@ -67,8 +67,8 @@ void PlayerAi::MoveDown(Actor *owner){
 void PlayerAi::MoveRight(Actor *owner){
 	try{
 		engine.gameStatus=Engine::NEW_TURN;
-		if (moveOrAttack(owner, owner->x+1,owner->y)) {
-			engine.currentMap->computeFov();
+		if (MoveOrAttack(owner, owner->x+1,owner->y)) {
+			engine.currentMap->ComputeFov();
 		}
 	}
 	catch(...){
@@ -80,8 +80,8 @@ void PlayerAi::MoveRight(Actor *owner){
 void PlayerAi::MoveUp(Actor *owner){
 	try{
 		engine.gameStatus=Engine::NEW_TURN;
-		if (moveOrAttack(owner, owner->x,owner->y-1)) {
-			engine.currentMap->computeFov();
+		if (MoveOrAttack(owner, owner->x,owner->y-1)) {
+			engine.currentMap->ComputeFov();
 		}
 	}
 	catch(...){
@@ -93,32 +93,32 @@ void PlayerAi::MoveUp(Actor *owner){
 void PlayerAi::LoadMenu(){
 	try{
 		//engine.save();
-		engine.load();
+		engine.Load();
 	}
 	catch(...){
 		cerr << "An error occurred in PlayerAi::LoadMenu" << endl;
 		throw 0;
 	}
 }
-bool PlayerAi::moveOrAttack(Actor *owner, int targetX, int targetY){
+bool PlayerAi::MoveOrAttack(Actor *owner, int targetX, int targetY){
 	try{
-		Map::TileType type = engine.currentMap->getTileType(targetX, targetY);
+		Map::TileType type = engine.currentMap->GetTileType(targetX, targetY);
 		if(type == Map::TileType::WALL)  return false;
 		else if(type == Map::TileType::TOP_EDGE ||
 				type == Map::TileType::RIGHT_EDGE ||
 				type == Map::TileType::BOTTOM_EDGE ||
 				type == Map::TileType::LEFT_EDGE) {
-				engine.nextLevel(type);
+				engine.NextLevel(type);
 				return false;
 		}
 		for(Actor* actor : engine.actors){
-			if(actor->destructible && !actor->destructible->isDead() &&
+			if(actor->destructible && !actor->destructible->IsDead() &&
 					actor->x == targetX && actor->y == targetY){
-				owner->attacker->attack(owner, actor);
-				if(actor->destructible->isDead()){
-					currentExperience += actor->destructible->getExperienceReward();
-					if(levelUpOccurred()){
-						levelUpPlayer(owner);
+				owner->attacker->Attack(owner, actor);
+				if(actor->destructible->IsDead()){
+					currentExperience += actor->destructible->ExperienceReward();
+					if(LevelUpOccurred()){
+						LevelUpPlayer(owner);
 					}
 				}
 				return false;
@@ -126,9 +126,9 @@ bool PlayerAi::moveOrAttack(Actor *owner, int targetX, int targetY){
 		}
 
 		for(Actor* actor : engine.actors){
-			bool corpseOrItem =(actor->destructible && actor->destructible->isDead()) || actor->pickable;
+			bool corpseOrItem =(actor->destructible && actor->destructible->IsDead()) || actor->pickable;
 			if(corpseOrItem && actor->x == targetX && actor->y == targetY){
-				engine.gui->message(TCODColor::lightGrey,"There's a %s here",actor->name);
+				engine.gui->PushMessage(TCODColor::lightGrey,"There's a %s here",actor->name);
 			}
 		}
 		owner->x=targetX;
@@ -136,42 +136,42 @@ bool PlayerAi::moveOrAttack(Actor *owner, int targetX, int targetY){
 		return true;
 	}
 	catch(...){
-		cerr << "An error occurred in PlayerAi::moveOrAttack" << endl;
+		cerr << "An error occurred in PlayerAi::MoveOrAttack" << endl;
 		throw 0;
 	}
 }
 
-int PlayerAi::getLevel(){
+int PlayerAi::GetLevel(){
 	return experienceLevel;
 }
 
-void PlayerAi::levelUpPlayer(Actor* player){
+void PlayerAi::LevelUpPlayer(Actor* player){
 	try{
 		experienceLevel++;
 		currentLevelGoal += LEVEL_UP_INCREASE;
 		LevelUpMenu levelUpMenu;
-		string result = levelUpMenu.pick();
+		string result = levelUpMenu.Pick();
 
 		if(result == "Strength")
-			player->attacker->setPower(player->attacker->getPower()+3 );
+			player->attacker->SetPower(player->attacker->GetPower()+3 );
 
 		else if(result == "Agility")
-			player->destructible->setDefense(player->destructible->getDefense()+1 );
+			player->destructible->SetDefense(player->destructible->GetDefense()+1 );
 
 		else if(result == "Constitution")
-			player->destructible->increaseTotalHealth(10);
+			player->destructible->IncreaseTotalHealth(10);
 	}
 	catch(...){
-		cerr << "An error occured in PlayerAi::levelUpPlayer" << endl;
+		cerr << "An error occured in PlayerAi::LevelUpPlayer" << endl;
 	}
 
 }
 
-bool PlayerAi::levelUpOccurred(){
+bool PlayerAi::LevelUpOccurred(){
 	return currentExperience > currentLevelGoal;
 }
 
-Actor *PlayerAi::choseFromInventory(Actor *owner){
+Actor *PlayerAi::ChooseFromInventory(Actor *owner){
 	try{
 
 		static const int INVENTORY_WIDTH=50;
@@ -210,7 +210,7 @@ Actor *PlayerAi::choseFromInventory(Actor *owner){
 	}
 }
 
-void PlayerAi::handleActionKey(Actor *owner, int ascii) {
+void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 	try
 	{
 			switch(ascii) {
@@ -220,28 +220,28 @@ void PlayerAi::handleActionKey(Actor *owner, int ascii) {
 				bool found=false;
 				for (Actor *actor : engine.actors) {
 					if ( actor->pickable && actor->x == owner->x && actor->y == owner->y ) {
-						if (actor->pickable->pick(actor,owner)) {
+						if (actor->pickable->Pick(actor,owner)) {
 							found=true;
-							engine.gui->message(TCODColor::lightGrey,"You pick the %s.",
+							engine.gui->PushMessage(TCODColor::lightGrey,"You pick the %s.",
 								actor->name);
 							break;
 						} else if (! found) {
 							found=true;
-							engine.gui->message(TCODColor::red,"Your inventory is full.");
+							engine.gui->PushMessage(TCODColor::red,"Your inventory is full.");
 						}
 					}
 				}
 				if (!found) {
-					engine.gui->message(TCODColor::lightGrey,"There's nothing here that you can pick.");
+					engine.gui->PushMessage(TCODColor::lightGrey,"There's nothing here that you can pick.");
 				}
 				engine.gameStatus=Engine::NEW_TURN;
 			}
 			break;
 			case 'i' : // display inventory
 			{
-				Actor *actor=choseFromInventory(owner);
+				Actor *actor=ChooseFromInventory(owner);
 				if ( actor ) {
-					actor->pickable->use(actor,owner);
+					actor->pickable->Use(actor,owner);
 					engine.gameStatus=Engine::NEW_TURN;
 				}
 			}
@@ -253,7 +253,7 @@ void PlayerAi::handleActionKey(Actor *owner, int ascii) {
 			break;
 			case 'l':
 			{
-				playerLook(owner);
+				PlayerLook(owner);
 			}
 			break;
 		}
@@ -264,13 +264,13 @@ void PlayerAi::handleActionKey(Actor *owner, int ascii) {
 	}
 }
 
-void PlayerAi::playerLook(Actor* player){
+void PlayerAi::PlayerLook(Actor* player){
 	bool lookMode = true;
 	int cursorX = player->x;
 	int cursorY = player->y;
 
 	while(lookMode){
-		engine.render();
+		engine.Render();
 		this_thread::sleep_for(chrono::milliseconds(1));
 		TCODConsole::root->setChar(cursorX, cursorY, 219);
 		TCODConsole::root->setCharForeground(cursorX, cursorY, TCODColor::white);
@@ -292,7 +292,7 @@ void PlayerAi::playerLook(Actor* player){
 	}
 }
 
-void PlayerAi::load(TCODZip &zip){
+void PlayerAi::Load(TCODZip &zip){
 	try{
 	}
 	catch(...){
@@ -301,7 +301,7 @@ void PlayerAi::load(TCODZip &zip){
 	}
 }
 
-void PlayerAi::save(TCODZip &zip){
+void PlayerAi::Save(TCODZip &zip){
 	try{
 		zip.putInt(PLAYER);
 	}

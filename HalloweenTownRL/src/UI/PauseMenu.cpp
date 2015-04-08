@@ -10,17 +10,17 @@
 using namespace std;
 
 PauseMenu::PauseMenu(){
-	setHeader("HalloweenTown");
+	SetHeader("HalloweenTown");
 }
 
-void PauseMenu::populateMenu(bool saveGameExists){
+void PauseMenu::PopulateMenu(bool saveGameExists){
 		try{
-			clear();
-			addItem("New Game");
+			Clear();
+			AddItem("New Game");
 			if(saveGameExists){
-				addItem("Continue");
+				AddItem("Continue");
 			}
-			addItem("Exit");
+			AddItem("Exit");
 
 		}
 		catch(...){

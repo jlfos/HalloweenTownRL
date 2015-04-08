@@ -28,19 +28,19 @@ public :
 
     Engine(int screenWidth, int screenHeight);
     ~Engine();
-    void update();
-    void render();
-    void init();
-    void term();
-    void load();
-    void save();
-    void sendToBack(Actor *actor);
-    void nextLevel(Map::TileType type);
+    void Update();
+    void Render();
+    void Init();
+    void Term();
+    void Load();
+    void Save();
+    void SendToBack(Actor *actor);
+    void NextLevel(Map::TileType type);
 	Time currentTime;
 private:
-	void exitGame();
-	void newGame();
-	void continueGame();
+	void ExitGame();
+	void NewGame();
+	void ContinueGame();
 	const int DEFAULT_MAP_WIDTH = 80;
 	const int DEFAULT_MAP_HEIGHT = 43;
 	const int DEFAULT_PLAYER_START_X = 40;

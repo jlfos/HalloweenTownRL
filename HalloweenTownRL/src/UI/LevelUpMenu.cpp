@@ -9,17 +9,17 @@
 using namespace std;
 
 LevelUpMenu::LevelUpMenu(){
-	populateMenu(false);
+	PopulateMenu(false);
 }
 
-void LevelUpMenu::populateMenu(bool saveGameExists){
+void LevelUpMenu::PopulateMenu(bool saveGameExists){
 	try{
-		clear();
+		Clear();
 
-		setHeader("You leveled up! Pick an attribute to increase:");
-		addItem("Strength");
-		addItem("Constitution");
-		addItem("Agility");
+		SetHeader("You leveled up! Pick an attribute to increase:");
+		AddItem("Strength");
+		AddItem("Constitution");
+		AddItem("Agility");
 
 	}
 	catch(...){
