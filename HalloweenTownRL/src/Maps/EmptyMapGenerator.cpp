@@ -17,17 +17,19 @@ EmptyMapGenerator::EmptyMapGenerator(int seed) :seed(seed){
 }
 
 TCODMap* EmptyMapGenerator::Generate(Map* map, bool generateActors){
-	TCODMap* emptyMap = new TCODMap(map->width, map->height);
+	int width = map->GetWidth();
+	int height = map->GetHeight();
+	TCODMap* emptyMap = new TCODMap(width, height);
 	TCODRandom rng(seed, TCOD_RNG_MT);
 
 	int potionCount = 0;
-	for (int tilex = 0; tilex < map->width; tilex++) {
-		for (int tiley = 0; tiley < map->height; tiley++) {
+	for (int tilex = 0; tilex < width; tilex++) {
+		for (int tiley = 0; tiley < height; tiley++) {
 			emptyMap->setProperties(tilex, tiley, true, true);
 			int rand = rng.getInt(0, 400);
-			map->tiles[tilex+tiley*(map->width)].visibleColor = TCODColor::lighterRed;
-			map->tiles[tilex+tiley*(map->width)].fogColor = TCODColor::darkRed;
-			map->tiles[tilex+tiley*(map->width)].character = Actor::CharacterCodes::PERIOD;
+			map->tiles[tilex+tiley*width].visibleColor = TCODColor::lighterRed;
+			map->tiles[tilex+tiley*width].fogColor = TCODColor::darkRed;
+			map->tiles[tilex+tiley*width].character = Actor::CharacterCodes::PERIOD;
 			if(rand%400==0 && generateActors ){
 				AddItem(map, tilex, tiley);
 				potionCount++;

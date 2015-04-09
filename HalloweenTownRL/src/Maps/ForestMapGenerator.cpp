@@ -8,11 +8,11 @@
 #include "../main.hpp"
 
 TCODMap* ForestMapGenerator::Generate(Map* map, bool generateActors){
-	TCODMap* emptyMap = new TCODMap(map->width, map->height);
-	int width = map->width;
-	int height = map->height;
-	for (int tilex = 0; tilex < map->width; tilex++) {
-		for (int tiley = 0; tiley < map->height; tiley++) {
+	int width = map->GetWidth();
+	int height = map->GetHeight();
+	TCODMap* emptyMap = new TCODMap(width, height);
+	for (int tilex = 0; tilex < width; tilex++) {
+		for (int tiley = 0; tiley < height; tiley++) {
 			TCODRandom *rng = TCODRandom::getInstance();
 			int rand = 0;
 			if(tilex<=width/2)
@@ -22,15 +22,15 @@ TCODMap* ForestMapGenerator::Generate(Map* map, bool generateActors){
 
 			if(rand%100==0){
 				emptyMap->setProperties(tilex, tiley, true, false);
-				map->tiles[tilex+tiley*(map->width)].visibleColor = TCODColor(139, 69, 19);
-				map->tiles[tilex+tiley*(map->width)].fogColor = TCODColor(97, 49, 12);
-				map->tiles[tilex+tiley*(map->width)].character = Actor::CharacterCodes::YEN_SYMBOL;
+				map->tiles[tilex+tiley*width].visibleColor = TCODColor(139, 69, 19);
+				map->tiles[tilex+tiley*width].fogColor = TCODColor(97, 49, 12);
+				map->tiles[tilex+tiley*width].character = Actor::CharacterCodes::YEN_SYMBOL;
 			}
 			else{
 				emptyMap->setProperties(tilex, tiley, true, true);
-				map->tiles[tilex+tiley*(map->width)].visibleColor = TCODColor::green;
-				map->tiles[tilex+tiley*(map->width)].fogColor = TCODColor::darkerGreen;
-				map->tiles[tilex+tiley*(map->width)].character = Actor::CharacterCodes::PERIOD;
+				map->tiles[tilex+tiley*width].visibleColor = TCODColor::green;
+				map->tiles[tilex+tiley*width].fogColor = TCODColor::darkerGreen;
+				map->tiles[tilex+tiley*width].character = Actor::CharacterCodes::PERIOD;
 			}
 		}
 	}

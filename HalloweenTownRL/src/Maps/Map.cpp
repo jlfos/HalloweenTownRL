@@ -220,6 +220,23 @@ Map::TileType Map::GetTileType(int x, int y) const {
 	}
 }
 
+int Map::GetWidth(){
+	try{
+		return width;
+	}
+	catch(...){
+		cerr << "An error occurred in Map::GetWidth" << endl;
+	}
+}
+
+int Map::GetHeight(){
+	try{
+		return height;
+	}
+	catch(...){
+		cerr << "An error occurred in Map::GetHeight" << endl;
+	}
+}
 bool Map::CanWalk(int x, int y) const {
 	try{
 		TileType type = GetTileType(x, y);

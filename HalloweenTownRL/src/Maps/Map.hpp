@@ -21,8 +21,9 @@ private:
     bool NotOnMap(int x, int y) const;
     MapGenerator* generator;
     Time* lastSeen;
-public :
     int width,height;
+public :
+
     Tile *tiles;
     Map(int width, int height);
     Map(int width, int height, MapGenerator* generator);
@@ -41,6 +42,8 @@ public :
     void PopulateActors();
     Time* TimeLastSeen();
     void TimeLastSeen(Time* time);
+    int GetWidth();
+    int GetHeight();
     vector<Point> spawnLocations;
     ActorFactory::EnemyDifficulty GetDifficulty();
 protected :

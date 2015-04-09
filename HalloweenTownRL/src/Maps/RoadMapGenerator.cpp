@@ -10,8 +10,8 @@
 #include "../main.hpp"
 
 TCODMap* RoadMapGenerator::Generate(Map* map, bool generateActors){
-	int width = map->width;
-	int height = map->height;
+	int width = map->GetWidth();
+	int height = map->GetHeight();
 	int enemies = 0;
 	TCODMap* emptyMap = new TCODMap(width, height);
 	for (int tilex = 0; tilex < width; tilex++) {
@@ -19,9 +19,9 @@ TCODMap* RoadMapGenerator::Generate(Map* map, bool generateActors){
 
 			if(tilex <= (width/2)+3  &&  tilex >= (width/2)-3){
 				emptyMap->setProperties(tilex, tiley, true, true);
-				map->tiles[tilex+tiley*(map->width)].visibleColor = TCODColor::lightGrey;
-				map->tiles[tilex+tiley*(map->width)].fogColor = TCODColor::darkGrey;
-				map->tiles[tilex+tiley*(map->width)].character = Actor::CharacterCodes::PERIOD;
+				map->tiles[tilex+tiley*width].visibleColor = TCODColor::lightGrey;
+				map->tiles[tilex+tiley*width].fogColor = TCODColor::darkGrey;
+				map->tiles[tilex+tiley*width].character = Actor::CharacterCodes::PERIOD;
 //				if(enemies==0){
 //					enemies++;
 //					map->actors.push(ActorFactory::CreateVampire(tilex, tiley, ActorFactory::EnemyDifficulty::MEDIUM));
@@ -41,9 +41,9 @@ TCODMap* RoadMapGenerator::Generate(Map* map, bool generateActors){
 			}
 			else{
 				emptyMap->setProperties(tilex, tiley, true, true);
-				map->tiles[tilex+tiley*(map->width)].visibleColor = TCODColor::darkGreen;
-				map->tiles[tilex+tiley*(map->width)].fogColor = TCODColor::darkestGreen;
-				map->tiles[tilex+tiley*(map->width)].character = Actor::CharacterCodes::PERIOD;
+				map->tiles[tilex+tiley*width].visibleColor = TCODColor::darkGreen;
+				map->tiles[tilex+tiley*width].fogColor = TCODColor::darkestGreen;
+				map->tiles[tilex+tiley*width].character = Actor::CharacterCodes::PERIOD;
 			}
 		}
 	}

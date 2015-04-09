@@ -108,8 +108,8 @@ void Engine::Save() {
 		} else {
 			TCODZip zip;
 			//save the map first
-			zip.putInt(currentMap->width);
-			zip.putInt(currentMap->height);
+			zip.putInt(currentMap->GetWidth());
+			zip.putInt(currentMap->GetHeight());
 			zip.putInt(mapX);
 			zip.putInt(mapY);
 			zip.putInt(WORLD_SIZE_LATITUDE);

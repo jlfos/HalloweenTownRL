@@ -17,8 +17,10 @@ class CityMapGenerator : public MapGenerator{
 	public:
 		TCODMap* Generate(Map* map, bool generateActors);
 		CityMapGenerator();
+		~CityMapGenerator();
 		void PopulateActors(Map* map);
 	private:
+		TCODRandom* rng;
 		void CreateBuilding(Map* map, TCODMap* cityMap, int x, int y);
 		int eastWestStreet;
 		int northSouthStreet;
