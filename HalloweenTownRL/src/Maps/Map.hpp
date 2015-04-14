@@ -6,7 +6,7 @@ using namespace std;
 
 struct Tile {
     bool explored; // has the player already seen this tile ?
-    Tile() : explored(false) {}
+    Tile() : explored(false), character(Actor::CharacterCodes::RAINBOW) {}
     TCODColor visibleColor;
     TCODColor fogColor;
     int character;
@@ -21,10 +21,12 @@ private:
     bool NotOnMap(int x, int y) const;
     MapGenerator* generator;
     Time* lastSeen;
-    int width,height;
-public :
-
     Tile *tiles;
+    int width,height;
+    long seed;
+    TCODRandom *rng;
+    TCODMap *map;
+public :
     Map(int width, int height);
     Map(int width, int height, MapGenerator* generator);
     ~Map();
@@ -44,10 +46,8 @@ public :
     void TimeLastSeen(Time* time);
     int GetWidth();
     int GetHeight();
+    void SetTileProperties(int tileIndex, TCODColor visible, TCODColor fog, int character);
+    bool TileHasBeenSet(int tileIndex);
     vector<Point> spawnLocations;
     ActorFactory::EnemyDifficulty GetDifficulty();
-protected :
-    TCODMap *map;
-    long seed;
-    TCODRandom *rng;
 };

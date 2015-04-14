@@ -22,6 +22,8 @@ class CityMapGenerator : public MapGenerator{
 	private:
 		TCODRandom* rng;
 		void CreateBuilding(Map* map, TCODMap* cityMap, int x, int y);
+		int GenerateBuildingCharacter(int startX, int startY, int currentX, int currentY, int sizeX, int sizeY);
+		void GenerateBuildingColors(TCODColor& visible, TCODColor& fog);
 		int eastWestStreet;
 		int northSouthStreet;
 };

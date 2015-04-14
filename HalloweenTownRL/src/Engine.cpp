@@ -8,7 +8,7 @@
 using namespace std;
 
 Engine::Engine(int screenWidth, int screenHeight) :
-		gameStatus(STARTUP), fovRadius(60), screenWidth(screenWidth), screenHeight(screenHeight),
+		gameStatus(STARTUP), fovRadius(10), screenWidth(screenWidth), screenHeight(screenHeight),
 		currentTime(6, 00), incrementTime(false){
 	try {
 		currentMap = nullptr;

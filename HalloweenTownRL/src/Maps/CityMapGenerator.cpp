@@ -23,6 +23,9 @@ CityMapGenerator::~CityMapGenerator(){
 	}
 }
 
+/**
+ *  Generates the tiles for the map
+ */
 TCODMap* CityMapGenerator::Generate(Map* map, bool generateActors){
 	int width = map->GetWidth();
 	int height = map->GetHeight();
@@ -39,18 +42,16 @@ TCODMap* CityMapGenerator::Generate(Map* map, bool generateActors){
 
 	for (int tilex = 0; tilex < width; tilex++) {
 		for (int tiley = 0; tiley < height; tiley++) {
-				if(map->tiles[tilex+tiley*width].character==0){
+			int tileIndex = tilex+tiley*width;
+			if(!map->TileHasBeenSet(tileIndex)){
 					cityMap->setProperties(tilex, tiley, true, true);
-					map->tiles[tilex+tiley*width].visibleColor = TCODColor::lighterGrey;
-					map->tiles[tilex+tiley*width].fogColor = TCODColor::grey;
-					map->tiles[tilex+tiley*width].character = Actor::CharacterCodes::PERIOD;
+					map->SetTileProperties(tileIndex, TCODColor::lighterGrey, TCODColor::grey, Actor::CharacterCodes::PERIOD);
 					if(tilesTillNextSpawn==0){
 						tilesTillNextSpawn =rng->getInt(5, 50);
 						Point spawn;
 						spawn.x = tilex;
 						spawn.y = tiley;
 						map->spawnLocations.push_back(spawn);
-						//map->actors.push(ActorFactory::CreateImp(tilex, tiley));
 					}
 					tilesTillNextSpawn--;
 				}
@@ -59,7 +60,9 @@ TCODMap* CityMapGenerator::Generate(Map* map, bool generateActors){
 
 	return cityMap;
 }
-
+/**
+ * Populates the actors on a map based off the current difficulty
+ */
 void CityMapGenerator::PopulateActors(Map* map){
 	try{
 		map->actors.clear();
@@ -81,15 +84,34 @@ void CityMapGenerator::PopulateActors(Map* map){
 	}
 }
 
-
+/*
+ * Generates a building of random color and size.
+ */
 void CityMapGenerator::CreateBuilding(Map* map, TCODMap* cityMap, int startX, int startY){
-	int sizeX = rng->getInt(3, 8);
-	int sizeY = rng->getInt(3, 8);
-	int color = rng->getInt(1, 3);
 	TCODColor visible;
 	TCODColor fog;
+	int sizeX = rng->getInt(3, 8);
+	int sizeY = rng->getInt(3, 8);
 	int width = map->GetWidth();
+	GenerateBuildingColors(visible, fog);
 	int height = map->GetHeight();
+	for(int tileX = startX; tileX < startX+sizeX && tileX < width-1; tileX++ ){
+		for(int tileY = startY; tileY < startY+sizeY && tileY < height-1; tileY++){
+
+			int tileIndex =  tileX + tileY* width;
+			int character = GenerateBuildingCharacter(startX, startY, tileX, tileY, sizeX, sizeY);
+
+			cityMap->setProperties(tileX, tileY, false, false);
+			map->SetTileProperties(tileIndex, visible, fog, character);
+		}
+	}
+}
+/**
+ * Generates building colors (visible and fog of war). Based off of rng.
+ * Current choices are crimson, sepia and grey
+ */
+void CityMapGenerator::GenerateBuildingColors(TCODColor& visible, TCODColor& fog){
+	int color = rng->getInt(1, 3);
 	if(color == 1){
 		visible = TCODColor::darkerGrey;
 		fog = TCODColor::darkestGrey;
@@ -102,27 +124,28 @@ void CityMapGenerator::CreateBuilding(Map* map, TCODMap* cityMap, int startX, in
 		visible = TCODColor::darkerSepia;
 		fog = TCODColor::darkestSepia;
 	}
-	for(int tilex = startX; tilex < startX+sizeX && tilex < width-1; tilex++ ){
-		for(int tiley = startY; tiley < startY+sizeY && tiley < height-1; tiley++){
-			cityMap->setProperties(tilex, tiley, true, false);
-			map->tiles[tilex+tiley*width].visibleColor = visible;
-			map->tiles[tilex+tiley*width].fogColor = fog;
-			if(tilex==startX && tiley==startY)
-				map->tiles[tilex+tiley*width].character = Actor::CharacterCodes::DOUBLE_PIPE_CORNER_UPPER_LEFT;
-			else if(tilex==startX && tiley == startY+sizeY-1)
-				map->tiles[tilex+tiley*width].character = Actor::CharacterCodes::DOUBLE_PIPE_CORNER_LOWER_LEFT;
-			else if(tilex==startX+sizeX-1 && tiley==startY)
-				map->tiles[tilex+tiley*width].character = Actor::CharacterCodes::DOUBLE_PIPE_CORNER_UPPER_RIGHT;
-			else if(tilex==startX+sizeX-1 && tiley==startY+sizeY-1)
-				map->tiles[tilex+tiley*width].character = Actor::CharacterCodes::DOUBLE_PIPE_CORNER_LOWER_RIGHT;
-			else if(tilex==startX || tilex==startX+sizeX-1)
-				map->tiles[tilex+tiley*width].character = Actor::CharacterCodes::DOUBLE_PIPE_VERTICAL;
-			else if(tiley==startY || tiley == startY+sizeY-1)
-				map->tiles[tilex+tiley*width].character = Actor::CharacterCodes::DOUBLE_PIPE_HORIZONTAL;
-			else
-				map->tiles[tilex+tiley*width].character = Actor::CharacterCodes::BLOCK_FULL;
-		}
-	}
+
 }
 
-
+/*
+ * Generates a character code for a building (sides, corners, etc) based off the start coordinates,
+ * the end coordinates, and the size of the building
+ */
+int CityMapGenerator::GenerateBuildingCharacter(int startX, int startY, int currentX, int currentY, int sizeX, int sizeY){
+	int characterCode = Actor::CharacterCodes::RAINBOW;
+	if(currentX == startX && currentY == startY)
+		characterCode = Actor::CharacterCodes::DOUBLE_PIPE_CORNER_UPPER_LEFT;
+	else if(currentX == startX && currentY == startY+sizeY-1)
+		characterCode = Actor::CharacterCodes::DOUBLE_PIPE_CORNER_LOWER_LEFT;
+	else if(currentX == startX+sizeX-1 && currentY == startY)
+		characterCode = Actor::CharacterCodes::DOUBLE_PIPE_CORNER_UPPER_RIGHT;
+	else if(currentX == startX+sizeX-1 && currentY == startY+sizeY-1)
+		characterCode = Actor::CharacterCodes::DOUBLE_PIPE_CORNER_LOWER_RIGHT;
+	else if(currentX == startX || currentX == startX+sizeX-1)
+		characterCode = Actor::CharacterCodes::DOUBLE_PIPE_VERTICAL;
+	else if(currentY == startY || currentY == startY+sizeY-1)
+		characterCode = Actor::CharacterCodes::DOUBLE_PIPE_HORIZONTAL;
+	else	//Interior of the building
+		characterCode = Actor::CharacterCodes::BLOCK_FULL;
+	return characterCode;
+}

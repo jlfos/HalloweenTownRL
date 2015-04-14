@@ -12,10 +12,13 @@ class Map;
 
 class ForestMapGenerator : public MapGenerator{
 	public:
+		ForestMapGenerator();
+		~ForestMapGenerator();
 		TCODMap* Generate(Map* map, bool generateActors);
 		void PopulateActors(Map* map);
 	private:
 		void AddItem(Map* map, int x, int y);
+		TCODRandom* rng;
 };
 
 

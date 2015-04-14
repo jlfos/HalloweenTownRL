@@ -237,6 +237,24 @@ int Map::GetHeight(){
 		cerr << "An error occurred in Map::GetHeight" << endl;
 	}
 }
+
+
+
+void Map::SetTileProperties(int tileIndex, TCODColor visible, TCODColor fog, int character){
+	tiles[tileIndex].visibleColor = visible;
+	tiles[tileIndex].fogColor = fog;
+	tiles[tileIndex].character = character;
+
+}
+
+bool Map::TileHasBeenSet(int tileIndex){
+	if(tiles[tileIndex].character == Actor::CharacterCodes::RAINBOW)
+		return false;
+	else
+		return true;
+
+}
+
 bool Map::CanWalk(int x, int y) const {
 	try{
 		TileType type = GetTileType(x, y);
