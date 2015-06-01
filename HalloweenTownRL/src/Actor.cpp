@@ -1,7 +1,6 @@
 #include <iostream>
 #include "main.hpp"
 
-using namespace std;
 
 Actor::Actor(int x, int y, int ch, const char *name, const TCODColor &col) :
     x(x),y(y),ch(ch),col(col), name(name),
@@ -18,7 +17,7 @@ Actor::~Actor(){
 		if(container) delete container;
 	}
 	catch(...){
-		cerr << "An error occurred with Actor::~Actor"  << endl;
+		std::cerr << "An error occurred with Actor::~Actor"  << std::endl;
 		throw 0;
 	}
 }
@@ -28,7 +27,7 @@ void Actor::Render() const {
 		TCODConsole::root->setCharForeground(x,y,col);
 	}
 	catch(...){
-		cerr << "An error occurred with Actor::Render"  << endl;
+		std::cerr << "An error occurred with Actor::Render"  << std::endl;
 		throw 0;
 	}
 }
@@ -38,7 +37,7 @@ void Actor::Update(){
 		if( ai ) ai->Update(this);
 	}
 	catch(...){
-		cerr << "An error occurred with Actor::Update"  << endl;
+		std::cerr << "An error occurred with Actor::Update"  << std::endl;
 		throw 0;
 	}
 }
@@ -63,7 +62,7 @@ void Actor::Save(TCODZip &zip){
 		if(container)container->Save(zip);
 	}
 	catch(...){
-		cerr << "An error occurred with Actor::Save"  << endl;
+		std::cerr << "An error occurred with Actor::Save"  << std::endl;
 		throw 0;
 	}
 }
@@ -101,7 +100,7 @@ void Actor::Load(TCODZip &zip){
 		}
 	}
 	catch(...){
-		cerr << "An error occurred with Actor::Load"  << endl;
+		std::cerr << "An error occurred with Actor::Load"  << std::endl;
 		throw 0;
 	}
 }

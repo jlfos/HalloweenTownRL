@@ -2,7 +2,6 @@
 #include "libtcod.hpp"
 #include "../main.hpp"
 
-using namespace std;
 
 Destructible::Destructible(float maxHp, float defense, int experienceReward, const char *corpseName) :
 	maxHp(maxHp), hp(maxHp), defense(defense), experienceReward(experienceReward), corpseName(corpseName){
@@ -23,7 +22,7 @@ Destructible *Destructible::Create(TCODZip &zip){
 		return destructible;
 	}
 	catch(...){
-		cerr << "An error occurred in Destructible::Create" << endl;
+		std::cerr << "An error occurred in Destructible::Create" << std::endl;
 		throw 0;
 	}
 }
@@ -52,7 +51,7 @@ float Destructible::TakeDamage(Actor *owner, float damage){
 		return damage;
 	}
 	catch(...){
-		cerr << "An error occurred in Destructible::TakeDamage" << endl;
+		std::cerr << "An error occurred in Destructible::TakeDamage" << std::endl;
 		throw 0;
 	}
 }
@@ -68,7 +67,7 @@ float Destructible::Heal(float amount){
 		return amount;
 	}
 	catch(...){
-		cerr << "An error occurred in Destructible::Heal" << endl;
+		std::cerr << "An error occurred in Destructible::Heal" << std::endl;
 		throw 0;
 	}
 }
@@ -82,7 +81,7 @@ void Destructible::Die(Actor *owner){
 		engine.SendToBack(owner);
 	}
 	catch(...){
-		cerr << "An error occurred in Destructible::Die" << endl;
+		std::cerr << "An error occurred in Destructible::Die" << std::endl;
 		throw 0;
 	}
 }
@@ -104,7 +103,7 @@ void Destructible::Load(TCODZip &zip){
 		corpseName=strdup(zip.getString());
 	}
 	catch(...){
-		cerr << "An error occurred in Destructible::Load" << endl;
+		std::cerr << "An error occurred in Destructible::Load" << std::endl;
 		throw 0;
 	}
 }
@@ -117,7 +116,7 @@ void Destructible::Save(TCODZip &zip){
 		zip.putString(corpseName);
 	}
 	catch(...){
-		cerr << "An error occurred in Destructible::Save" << endl;
+		std::cerr << "An error occurred in Destructible::Save" << std::endl;
 		throw 0;
 	}
 }

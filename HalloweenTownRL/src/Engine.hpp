@@ -1,7 +1,5 @@
 #include <vector>
 
-using namespace std;
-
 class Engine {
 
 private:
@@ -18,7 +16,7 @@ public :
     TCODList<Actor*> actors;
     Actor *player;
     Map *currentMap;
-    vector<vector<Map*>> *maps;
+    std::vector<std::vector<Map*>> *maps;
     int fovRadius;
     int screenWidth;
     int screenHeight;
@@ -38,18 +36,19 @@ public :
     void NextLevel(Map::TileType type);
 	Time currentTime;
 private:
+	enum class MapType {FOREST_NORTH, FOREST_SOUTH, ROAD_EW, CITY };
 	void ExitGame();
 	void NewGame();
 	void ContinueGame();
 	const int DEFAULT_MAP_WIDTH = 80;
 	const int DEFAULT_MAP_HEIGHT = 43;
 	const int DEFAULT_PLAYER_START_X = 40;
-	const int DEFAULT_PLAYER_START_Y = 25;
+	const int DEFAULT_PLAYER_START_Y = 10;
 	const int DEFAULT_MAP_X = 1;
 	const int DEFAULT_MAP_Y = 1;
-	const int WORLD_SIZE_LATITUDE = 3;
-	const int WORLD_SIZE_LONGITUDE = 3;
-	vector<vector<Map*>> *CreateMaps();
+	int WORLD_SIZE_LATITUDE;
+	int WORLD_SIZE_LONGITUDE;
+	std::vector<std::vector<Map*>> *CreateMaps(std::vector<std::vector<Engine::MapType>>);
 	int mapX;
 	int mapY;
 	bool incrementTime;

@@ -2,8 +2,6 @@
 #include <math.h>
 #include "../main.hpp"
 
-using namespace std;
-
 static const int TRACKING_TURNS=3;
 
 MonsterAi::MonsterAi() : moveCount(0) {
@@ -26,7 +24,7 @@ void MonsterAi::Update(Actor *owner){
 	   }
 	}
 	catch(...){
-		cerr << "An error occurred in MonsterAi::update" << endl;
+		std::cerr << "An error occurred in MonsterAi::update" << std::endl;
 		throw 0;
 	}
 }
@@ -65,7 +63,7 @@ void MonsterAi::MoveOrAttack(Actor *owner, int targetX, int targetY){
 		}
 	}
 	catch(...){
-		cerr << "An error occurred in MonsterAi::moveOrAttack" << endl;
+		std::cerr << "An error occurred in MonsterAi::moveOrAttack" << std::endl;
 		throw 0;
 	}
 }
@@ -75,7 +73,7 @@ void MonsterAi::Load(TCODZip &zip){
 		moveCount=zip.getInt();
 	}
 	catch(...){
-		cerr << "An error occurred in MonsterAi::load" << endl;
+		std::cerr << "An error occurred in MonsterAi::load" << std::endl;
 		throw 0;
 	}
 }
@@ -86,7 +84,7 @@ void MonsterAi::Save(TCODZip &zip){
 		zip.putInt(moveCount);
 	}
 	catch(...){
-		cerr << "An error occurred in MonsterAi::save" << endl;
+		std::cerr << "An error occurred in MonsterAi::save" << std::endl;
 		throw 0;
 	}
 }

@@ -1,7 +1,6 @@
 #include <iostream>
 #include "main.hpp"
 
-using namespace std;
 
 Time::Time(){
 	hour = 0;
@@ -14,7 +13,7 @@ Time::Time(int hour, int minutes){
 		this->minutes = minutes;
 	}
 	catch(...){
-		cerr << "An error occurred in Time::Time()" << endl;
+		std::cerr << "An error occurred in Time::Time()" << std::endl;
 	}
 }
 
@@ -32,7 +31,7 @@ int Time::ElapsedMinutes(Time previousTime){
 			tempPreviousHour += 12;
 
 		if(tempPreviousHour>tempCurrentHour){
-			cerr << "A previous time cannot be later then a current time" << endl;
+			std::cerr << "A previous time cannot be later then a current time" << std::endl;
 			throw 0;
 		}
 
@@ -41,7 +40,7 @@ int Time::ElapsedMinutes(Time previousTime){
 		return elapsedTime;
 	}
 	catch(...){
-		cerr << "An error occurred in Time::elapsedMinutes()" << endl;
+		std::cerr << "An error occurred in Time::elapsedMinutes()" << std::endl;
 	}
 }
 int Time::GetHour(){
@@ -50,7 +49,7 @@ int Time::GetHour(){
 
 	}
 	catch(...){
-		cerr << "An error occurred in Time::getHour()" << endl;
+		std::cerr << "An error occurred in Time::getHour()" << std::endl;
 	}
 }
 int Time::GetMinutes(){
@@ -58,7 +57,7 @@ int Time::GetMinutes(){
 		return minutes;
 	}
 	catch(...){
-		cerr << "An error occurred in Time::getMinutes()" << endl;
+		std::cerr << "An error occurred in Time::getMinutes()" << std::endl;
 	}
 }
 
@@ -82,42 +81,42 @@ void Time::IncrementMinutes(){
 		}
 	}
 	catch(...){
-		cerr << "An error occurred in Time::incrementMinutes()" << endl;
+		std::cerr << "An error occurred in Time::incrementMinutes()" << std::endl;
 	}
 }
 
 const char* Time::c_str(){
 	try{
-		string hourStr = to_string(hour);
-		string minutesStr = ConvertMinutes();
-		string periodStr;
+		std::string hourStr = std::to_string(hour);
+		std::string minutesStr = ConvertMinutes();
+		std::string periodStr;
 
 		if(hour>=6 &&hour<=11)
 			periodStr = "PM";
 		else
 			periodStr = "AM";
-		string total = hourStr+":"+minutesStr+periodStr;
+		std::string total = hourStr+":"+minutesStr+periodStr;
 
 		return total.c_str();
 	}
 	catch(...){
-		cerr << "An error occurred in Time::c_str()" << endl;
+		std::cerr << "An error occurred in Time::c_str()" << std::endl;
 	}
 }
 
 
-string Time::ConvertMinutes(){
+std::string Time::ConvertMinutes(){
 	try{
-		string result;
+		std::string result;
 		if(minutes < 10){
-			result = "0" + to_string(minutes);
+			result = "0" + std::to_string(minutes);
 		}
 		else{
-			result = to_string(minutes);
+			result = std::to_string(minutes);
 		}
 		return result;
 	}
 	catch(...){
-		cerr << "An error occurred in Time::convertMinutes" << endl;
+		std::cerr << "An error occurred in Time::convertMinutes" << std::endl;
 	}
 }

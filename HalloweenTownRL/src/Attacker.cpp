@@ -1,7 +1,6 @@
 #include <iostream>
 #include "main.hpp"
 
-using namespace std;
 
 Attacker::Attacker(float power) :power(power){
 }
@@ -26,7 +25,7 @@ void Attacker::Attack(Actor *owner, Actor *target){
 		}
 	}
 	catch(...){
-		cerr << "An error occurred with Attacker::Attack"  << endl;
+		std::cerr << "An error occurred with Attacker::Attack"  << std::endl;
 		throw 0;
 	}
 }
@@ -36,7 +35,7 @@ void Attacker::Load(TCODZip &zip){
 		power=zip.getFloat();
 	}
 	catch(...){
-		cerr << "An error occurred with Attacker::Load"  << endl;
+		std::cerr << "An error occurred with Attacker::Load"  << std::endl;
 		throw 0;
 	}
 }
@@ -54,7 +53,7 @@ void Attacker::Save(TCODZip &zip){
 		zip.putFloat(power);
 	}
 	catch(...){
-		cerr << "An error occurred with Attacker::Save"  << endl;
+		std::cerr << "An error occurred with Attacker::Save"  << std::endl;
 		throw 0;
 	}
 }

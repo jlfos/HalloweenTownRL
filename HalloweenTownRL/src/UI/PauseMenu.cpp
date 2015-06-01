@@ -7,7 +7,6 @@
 #include <iostream>
 #include "../main.hpp"
 
-using namespace std;
 
 PauseMenu::PauseMenu(){
 	SetHeader("HalloweenTown");
@@ -24,7 +23,7 @@ void PauseMenu::PopulateMenu(bool saveGameExists){
 
 		}
 		catch(...){
-			cerr << "An error occurred with Menu::populateMenu"  << endl;
+			std::cerr << "An error occurred with Menu::populateMenu"  << std::endl;
 			throw 0;
 		}
 }

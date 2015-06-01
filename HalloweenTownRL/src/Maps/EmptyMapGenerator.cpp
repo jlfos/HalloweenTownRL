@@ -7,7 +7,6 @@
 #include <iostream>
 #include "../main.hpp"
 
-using namespace std;
 
 EmptyMapGenerator::EmptyMapGenerator(){
 	seed = TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);

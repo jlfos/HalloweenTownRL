@@ -7,7 +7,6 @@
 #include <iostream>
 #include "../main.hpp"
 
-using namespace std;
 
 CityMapGenerator::CityMapGenerator(){
 	rng = TCODRandom::getInstance();
@@ -80,7 +79,7 @@ void CityMapGenerator::PopulateActors(Map* map){
 		}
 	}
 	catch(...){
-		cerr << "An error occurred in CityMapGenerator::PopulateActors()" << endl;
+		std::cerr << "An error occurred in CityMapGenerator::PopulateActors()" << std::endl;
 	}
 }
 

@@ -10,7 +10,6 @@
 
 #include <string>
 
-using namespace std;
 
 class Time {
 	public:
@@ -25,7 +24,7 @@ class Time {
 	private:
 		int minutes;
 		int hour;
-		string ConvertMinutes();
+		std::string ConvertMinutes();
 };
 
 

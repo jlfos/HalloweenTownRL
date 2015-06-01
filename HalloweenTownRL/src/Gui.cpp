@@ -4,7 +4,6 @@
 #include <string>
 #include "main.hpp"
 
-using namespace std;
 
 static const int PANEL_HEIGHT=7;
 static const int BAR_WIDTH=20;
@@ -16,7 +15,7 @@ Gui::Gui() {
 		con = new TCODConsole(engine.screenWidth,PANEL_HEIGHT);
 	}
 	catch(...){
-		cerr << "An error occurred with Gui::Gui"  << endl;
+		std::cerr << "An error occurred with Gui::Gui"  << std::endl;
 		throw 0;
 	}
 
@@ -28,7 +27,7 @@ Gui::~Gui() {
 		log.clearAndDelete();
 	}
 	catch(...){
-		cerr << "An error occurred with Gui::~Gui"  << endl;
+		std::cerr << "An error occurred with Gui::~Gui"  << std::endl;
 		throw 0;
 	}
 }
@@ -48,8 +47,8 @@ void Gui::Render() {
 		con->print(1, 2, engine.currentTime.c_str());
 
 		PlayerAi *playerAi = (PlayerAi*)engine.player->ai;
-		string levelText = "Level: ";
-		levelText += to_string(playerAi->GetLevel());
+		std::string levelText = "Level: ";
+		levelText += std::to_string(playerAi->GetLevel());
 		con->print(1, 3, levelText.c_str());
 
 		// draw the message log
@@ -75,7 +74,7 @@ void Gui::Render() {
 
 	}
 	catch(...){
-		cerr << "An error occurred with Gui::render"  << endl;
+		std::cerr << "An error occurred with Gui::render"  << std::endl;
 		throw 0;
 	}
 }
@@ -101,7 +100,7 @@ void Gui::RenderBar(int x, int y, int width, const char *name,
 			"%s : %g/%g", name, value, maxValue);
 	}
 	catch(...){
-		cerr << "An error occurred with Gui::renderBar"  << endl;
+		std::cerr << "An error occurred with Gui::renderBar"  << std::endl;
 		throw 0;
 	}
 }
@@ -111,7 +110,7 @@ void Gui::Clear(){
 		log.clearAndDelete();
 	}
 	catch(...){
-		cerr << "An error occurred with Gui::clear"  << endl;
+		std::cerr << "An error occurred with Gui::clear"  << std::endl;
 		throw 0;
 	}
 }
@@ -129,7 +128,7 @@ void Gui::Save(TCODZip &zip){
 		}
 	}
 	catch(...){
-		cerr << "An error occurred with Gui::save"  << endl;
+		std::cerr << "An error occurred with Gui::save"  << std::endl;
 		throw 0;
 	}
 }
@@ -145,7 +144,7 @@ void Gui::Load(TCODZip &zip){
 		}
 	}
 	catch(...){
-		cerr << "An error occurred with Gui::load"  << endl;
+		std::cerr << "An error occurred with Gui::load"  << std::endl;
 		throw 0;
 	}
 }
@@ -155,7 +154,7 @@ Gui::Message::~Message() {
 		free(text);
 	}
 	catch(...){
-		cerr << "An error occurred with Gui::~Message"  << endl;
+		std::cerr << "An error occurred with Gui::~Message"  << std::endl;
 		throw 0;
 	}
 }
@@ -184,7 +183,7 @@ void Gui::RenderMouseLook() {
 		con->print(1,0,buf);
 	}
 	catch(...){
-		cerr << "An error occurred with Gui::renderMouseLook"  << endl;
+		std::cerr << "An error occurred with Gui::renderMouseLook"  << std::endl;
 		throw 0;
 	}
 }
@@ -223,7 +222,7 @@ void Gui::PushMessage(const TCODColor &col, const char *text, ...) {
 		} while ( lineEnd );
 	}
 	catch(...){
-		cerr << "An error occurred with Gui::message"  << endl;
+		std::cerr << "An error occurred with Gui::message"  << std::endl;
 		throw 0;
 	}
 }

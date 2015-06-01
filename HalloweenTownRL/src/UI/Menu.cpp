@@ -1,99 +1,94 @@
 #include <iostream>
 #include "../main.hpp"
 
-using namespace std;
+Menu::Menu() {
+	try {
 
-Menu::Menu(){
-	try{
-
-	}
-	catch(...){
-		cerr << "An error occurred with Menu::Menu" << endl;
+	} catch (...) {
+		std::cerr << "An error occurred with Menu::Menu" << std::endl;
 		throw 0;
 	}
 }
 
-Menu::~Menu(){
-	try{
+Menu::~Menu() {
+	try {
 		Clear();
-	}
-	catch(...){
-		cerr << "An error occurred with Menu::~Menu"  << endl;
+	} catch (...) {
+		std::cerr << "An error occurred with Menu::~Menu" << std::endl;
 		throw 0;
 	}
 }
 
-void Menu::Clear(){
-	try{
+void Menu::Clear() {
+	try {
 		items.clear();
-	}
-	catch(...){
-		cerr << "An error occurred with Menu::clear"  << endl;
+	} catch (...) {
+		std::cerr << "An error occurred with Menu::clear" << std::endl;
 		throw 0;
 	}
 }
 
-
-void Menu::AddItem(string item){
-	try{
+void Menu::AddItem(std::string item) {
+	try {
 		items.push(item);
-	}
-	catch(...){
-		cerr << "An error occurred with Menu::addItem"  << endl;
+	} catch (...) {
+		std::cerr << "An error occurred with Menu::addItem" << std::endl;
 		throw 0;
 	}
 }
 
-void Menu::SetHeader(string header){
+void Menu::SetHeader(std::string header) {
 	this->header = header;
 }
 
-string Menu::Pick(){
-	try{
+std::string Menu::Pick() {
+	try {
 //		static TCODImage img("tree.png");
 		int selectedItem = 0;
 		TCODConsole::root->clear();
 		TCODConsole::root->setDefaultForeground(TCODColor::darkOrange);
-		TCODConsole::root->printEx(10, 6, TCOD_bkgnd_flag_t::TCOD_BKGND_COLOR_BURN, TCOD_alignment_t::TCOD_LEFT, header.c_str());
-		while(!TCODConsole::isWindowClosed()){
+		TCODConsole::root->printEx(10, 6,
+				TCOD_bkgnd_flag_t::TCOD_BKGND_COLOR_BURN,
+				TCOD_alignment_t::TCOD_LEFT, header.c_str());
+		while (!TCODConsole::isWindowClosed()) {
 //			img.blit2x(TCODConsole::root, 0, 0);
 			int currentItem = 0;
-			for(string it: items){
-				if(currentItem == selectedItem){
-					TCODConsole::root->setDefaultForeground(TCODColor::lighterOrange);
+			for (std::string it : items) {
+				if (currentItem == selectedItem) {
+					TCODConsole::root->setDefaultForeground(
+							TCODColor::lighterOrange);
+				} else {
+					TCODConsole::root->setDefaultForeground(
+							TCODColor::lightGrey);
 				}
-				else{
-					TCODConsole::root->setDefaultForeground(TCODColor::lightGrey);
-				}
-				TCODConsole::root->print(10, 15+currentItem*3, it.c_str());
+				TCODConsole::root->print(10, 15 + currentItem * 3, it.c_str());
 				currentItem++;
 				TCODConsole::flush();
 
 				TCOD_key_t key;
 				TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &key, nullptr);
-				switch(key.vk){
-					case TCODK_UP:
-						selectedItem--;
-						if(selectedItem < 0){
-							selectedItem = items.size() - 1;
-						}
-						break;
-					case TCODK_DOWN:
-						selectedItem = (selectedItem + 1) % items.size();
-						break;
-					case TCODK_ENTER :
-						return items.get(selectedItem);
-					default:
-						break;
+				switch (key.vk) {
+				case TCODK_UP:
+					selectedItem--;
+					if (selectedItem < 0) {
+						selectedItem = items.size() - 1;
+					}
+					break;
+				case TCODK_DOWN:
+					selectedItem = (selectedItem + 1) % items.size();
+					break;
+				case TCODK_ENTER:
+					return items.get(selectedItem);
+				default:
+					break;
 
 				}
 
 			}
 		}
 		return "NONE";
-	}
-	catch(...){
-		cerr << "An error occurred with Menu::pick"  << endl;
+	} catch (...) {
+		std::cerr << "An error occurred with Menu::pick" << std::endl;
 		throw 0;
 	}
 }

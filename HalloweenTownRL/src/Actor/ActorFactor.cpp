@@ -1,8 +1,6 @@
 #include "../main.hpp"
 #include <iostream>
 
-using namespace std;
-
 Actor *ActorFactory::CreateHero(int x, int y){
 	try{
 		Actor *player = new Actor(x, y, Actor::CharacterCodes::AT_SIGN,"player",TCODColor::white);
@@ -13,7 +11,7 @@ Actor *ActorFactory::CreateHero(int x, int y){
 		return player;
 	}
 	catch(...){
-		cerr << "An error occurred in ActorFactory::CreateHero" << endl;
+		std::cerr << "An error occurred in ActorFactory::CreateHero" << std::endl;
 		throw 0;
 	}
 }
@@ -56,7 +54,7 @@ Actor *ActorFactory::CreateVampire(int x, int y, EnemyDifficulty difficulty){
 		return vampire;
 	}
 	catch(...){
-		cerr << "An error occurred in ActorFactory::CreateVampire" << endl;
+		std::cerr << "An error occurred in ActorFactory::CreateVampire" << std::endl;
 		throw 0;
 	}
 
@@ -73,7 +71,7 @@ Actor *ActorFactory::CreateImp(int x, int y){
 		return orc;
 	}
 	catch(...){
-		cerr << "An error occurred in ActorFactory::CreateOrc" << endl;
+		std::cerr << "An error occurred in ActorFactory::CreateOrc" << std::endl;
 		throw 0;
 	}
 }
@@ -88,7 +86,7 @@ Actor *ActorFactory::CreateTroll(int x, int y){
 	   return troll;
 	}
 	catch(...){
-		cerr << "An error occurred in ActorFactory::CreateTroll" << endl;
+		std::cerr << "An error occurred in ActorFactory::CreateTroll" << std::endl;
 		throw 0;
 	}
 
@@ -103,7 +101,7 @@ Actor *ActorFactory::CreatePotion(int x, int y){
 		return healthPotion;
 	}
 	catch(...){
-		cerr << "An error occurred in ActorFactory::CreatePotion" << endl;
+		std::cerr << "An error occurred in ActorFactory::CreatePotion" << std::endl;
 		throw 0;
 	}
 }
@@ -123,7 +121,7 @@ Actor *ActorFactory::CreateMonster(int x, int y, EnemyDifficulty difficulty, Map
 		return monster;
 	}
 	catch(...){
-		cerr << "An error occurred in ActorFactory::CreateMonster" << endl;
+		std::cerr << "An error occurred in ActorFactory::CreateMonster" << std::endl;
 	}
 }
 
@@ -145,6 +143,6 @@ Actor *ActorFactory::CreateMonsterForCity(int x, int y, EnemyDifficulty difficul
 		return monster;
 	}
 	catch(...){
-		cerr << "An error occurred in CreateMonsterForCity" << endl;
+		std::cerr << "An error occurred in CreateMonsterForCity" << std::endl;
 	}
 }

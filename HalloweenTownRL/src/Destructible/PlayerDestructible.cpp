@@ -1,8 +1,6 @@
 #include <iostream>
 #include "../main.hpp"
 
-using namespace std;
-
 PlayerDestructible::PlayerDestructible(float maxHp, float defense, const char *corpseName) :
     Destructible(maxHp, defense, 0, corpseName) {
 }
@@ -15,7 +13,7 @@ void PlayerDestructible::Die(Actor *owner){
 		engine.gameStatus=Engine::DEFEAT;
 	}
 	catch(...){
-		cerr << "An error occurred in PlayerDestructible::Die";
+		std::cerr << "An error occurred in PlayerDestructible::Die";
 		throw 0;
 	}
 }
@@ -26,7 +24,7 @@ void PlayerDestructible::Save(TCODZip &zip){
 		Destructible::Save(zip);
 	}
 	catch(...){
-		cerr << "An error occurred in PlayerDestructible::Save" << endl;
+		std::cerr << "An error occurred in PlayerDestructible::Save" << std::endl;
 		throw 0;
 	}
 }
@@ -36,7 +34,7 @@ void PlayerDestructible::Load(TCODZip &zip){
 		Destructible::Load(zip);
 	}
 	catch(...){
-		cerr << "An error occurred in PlayerDestructible::Load" << endl;
+		std::cerr << "An error occurred in PlayerDestructible::Load" << std::endl;
 		throw 0;
 	}
 }

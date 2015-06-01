@@ -2,8 +2,6 @@
 
 class Time;
 
-using namespace std;
-
 struct Tile {
     bool explored; // has the player already seen this tile ?
     Tile() : explored(false), character(Actor::CharacterCodes::RAINBOW) {}
@@ -48,6 +46,6 @@ public :
     int GetHeight();
     void SetTileProperties(int tileIndex, TCODColor visible, TCODColor fog, int character);
     bool TileHasBeenSet(int tileIndex);
-    vector<Point> spawnLocations;
+    std::vector<Point> spawnLocations;
     ActorFactory::EnemyDifficulty GetDifficulty();
 };

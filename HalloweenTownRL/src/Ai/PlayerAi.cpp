@@ -3,9 +3,6 @@
 #include <thread>
 #include "../main.hpp"
 
-using namespace std;
-
-
 const int LEVEL_UP_BASE=1;
 const int LEVEL_UP_INCREASE=20;
 
@@ -30,7 +27,7 @@ void PlayerAi::Update(Actor *owner){
 		}
 	}
 	catch(...){
-		cerr << "An error occurred in PlayerAi::Update" << endl;
+		std::cerr << "An error occurred in PlayerAi::Update" << std::endl;
 		throw 0;
 	}
 
@@ -45,7 +42,7 @@ void PlayerAi::MoveLeft(Actor *owner){
 		}
 	}
 	catch(...){
-		cerr << "An error occurred in PlayerAi::MoveLeft" << endl;
+		std::cerr << "An error occurred in PlayerAi::MoveLeft" << std::endl;
 		throw 0;
 	}
 }
@@ -58,7 +55,7 @@ void PlayerAi::MoveDown(Actor *owner){
 		}
     }
     catch(...){
-		cerr << "An error occurred in PlayerAi::MoveDown" << endl;
+		std::cerr << "An error occurred in PlayerAi::MoveDown" << std::endl;
 		throw 0;
     }
 }
@@ -72,7 +69,7 @@ void PlayerAi::MoveRight(Actor *owner){
 		}
 	}
 	catch(...){
-		cerr << "An error occurred in PlayerAi::MoveRight" << endl;
+		std::cerr << "An error occurred in PlayerAi::MoveRight" << std::endl;
 		throw 0;
 	}
 }
@@ -85,7 +82,7 @@ void PlayerAi::MoveUp(Actor *owner){
 		}
 	}
 	catch(...){
-		cerr << "An error occurred in PlayerAi::MoveUp" << endl;
+		std::cerr << "An error occurred in PlayerAi::MoveUp" << std::endl;
 		throw 0;
 	}
 }
@@ -96,7 +93,7 @@ void PlayerAi::LoadMenu(){
 		engine.Load();
 	}
 	catch(...){
-		cerr << "An error occurred in PlayerAi::LoadMenu" << endl;
+		std::cerr << "An error occurred in PlayerAi::LoadMenu" << std::endl;
 		throw 0;
 	}
 }
@@ -136,7 +133,7 @@ bool PlayerAi::MoveOrAttack(Actor *owner, int targetX, int targetY){
 		return true;
 	}
 	catch(...){
-		cerr << "An error occurred in PlayerAi::MoveOrAttack" << endl;
+		std::cerr << "An error occurred in PlayerAi::MoveOrAttack" << std::endl;
 		throw 0;
 	}
 }
@@ -150,7 +147,7 @@ void PlayerAi::LevelUpPlayer(Actor* player){
 		experienceLevel++;
 		currentLevelGoal += LEVEL_UP_INCREASE;
 		LevelUpMenu levelUpMenu;
-		string result = levelUpMenu.Pick();
+		std::string result = levelUpMenu.Pick();
 
 		if(result == "Strength")
 			player->attacker->SetPower(player->attacker->GetPower()+3 );
@@ -162,7 +159,7 @@ void PlayerAi::LevelUpPlayer(Actor* player){
 			player->destructible->IncreaseTotalHealth(10);
 	}
 	catch(...){
-		cerr << "An error occured in PlayerAi::LevelUpPlayer" << endl;
+		std::cerr << "An error occured in PlayerAi::LevelUpPlayer" << std::endl;
 	}
 
 }
@@ -205,7 +202,7 @@ Actor *PlayerAi::ChooseFromInventory(Actor *owner){
 		return nullptr;
 	}
 	catch(...){
-		cerr << "An error occurred in PlayerAi::chooseFromInventory" << endl;
+		std::cerr << "An error occurred in PlayerAi::chooseFromInventory" << std::endl;
 		throw 0;
 	}
 }
@@ -259,7 +256,7 @@ void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 		}
 	}
 	catch(...){
-		cerr << "An error occurred in PlayerAi::handleActionKey" << endl;
+		std::cerr << "An error occurred in PlayerAi::handleActionKey" << std::endl;
 		throw 0;
 	}
 }
@@ -271,11 +268,11 @@ void PlayerAi::PlayerLook(Actor* player){
 
 	while(lookMode){
 		engine.Render();
-		this_thread::sleep_for(chrono::milliseconds(1));
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		TCODConsole::root->setChar(cursorX, cursorY, 219);
 		TCODConsole::root->setCharForeground(cursorX, cursorY, TCODColor::white);
 		TCODConsole::flush();
-		this_thread::sleep_for(chrono::milliseconds(3));
+		std::this_thread::sleep_for(std::chrono::milliseconds(3));
 		TCOD_key_t lastKey;
 		TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
 		switch(lastKey.vk) {
@@ -296,7 +293,7 @@ void PlayerAi::Load(TCODZip &zip){
 	try{
 	}
 	catch(...){
-		cerr << "An error occurred in PlayerAi::load" << endl;
+		std::cerr << "An error occurred in PlayerAi::load" << std::endl;
 		throw 0;
 	}
 }
@@ -306,7 +303,7 @@ void PlayerAi::Save(TCODZip &zip){
 		zip.putInt(PLAYER);
 	}
 	catch(...){
-		cerr << "An error occurred in PlayerAi::save" << endl;
+		std::cerr << "An error occurred in PlayerAi::save" << std::endl;
 		throw 0;
 	}
 }

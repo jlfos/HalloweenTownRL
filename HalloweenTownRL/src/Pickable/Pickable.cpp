@@ -1,7 +1,6 @@
 #include <iostream>
 #include "../main.hpp"
 
-using namespace std;
 
 bool Pickable::Pick(Actor *owner, Actor *wearer){
 	try{
@@ -12,7 +11,7 @@ bool Pickable::Pick(Actor *owner, Actor *wearer){
 		return false;
 	}
 	catch(...){
-		cerr << "An error occurred with Pickable::Pick"  << endl;
+		std::cerr << "An error occurred with Pickable::Pick"  << std::endl;
 		throw 0;
 	}
 }
@@ -28,7 +27,7 @@ bool Pickable::Use(Actor *owner, Actor *wearer){
 		return false;
 	}
 	catch(...){
-		cerr << "An error occurred with Pickable::Use"  << endl;
+		std::cerr << "An error occurred with Pickable::Use"  << std::endl;
 		throw 0;
 	}
 }
@@ -45,7 +44,7 @@ Pickable *Pickable::Create(TCODZip &zip){
 		return pickable;
 	}
 	catch(...){
-		cerr << "An error occurred with Pickable::Create"  << endl;
+		std::cerr << "An error occurred with Pickable::Create"  << std::endl;
 		throw 0;
 	}
 }

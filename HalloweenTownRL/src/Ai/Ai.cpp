@@ -1,7 +1,6 @@
 #include <iostream>
 #include "../main.hpp"
 
-using namespace std;
 
 Ai *Ai::Create(TCODZip &zip){
 	try{
@@ -15,7 +14,7 @@ Ai *Ai::Create(TCODZip &zip){
 		return ai;
 	}
 	catch(...){
-		cerr << "An error occurred in Ai::create" << endl;
+		std::cerr << "An error occurred in Ai::create" << std::endl;
 		throw 0;
 	}
 }

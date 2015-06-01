@@ -5,8 +5,6 @@
 #include "libtcod.hpp"
 #include "main.hpp"
 
-using namespace std;
-
 Engine::Engine(int screenWidth, int screenHeight) :
 		gameStatus(STARTUP), fovRadius(10), screenWidth(screenWidth), screenHeight(screenHeight),
 		currentTime(6, 00), incrementTime(false){
@@ -21,7 +19,7 @@ Engine::Engine(int screenWidth, int screenHeight) :
 		gui = new Gui();
 
 	} catch (...) {
-		cerr << "An error occurred with Engine::Engine" << endl;
+		std::cerr << "An error occurred with Engine::Engine" << std::endl;
 		throw 0;
 	}
 }
@@ -31,51 +29,92 @@ void Engine::Init() {
 
 		player = ActorFactory::CreateHero(DEFAULT_PLAYER_START_X,
 				DEFAULT_PLAYER_START_Y);
-		maps = CreateMaps();
-		mapX = DEFAULT_MAP_X;
-		mapY = DEFAULT_MAP_Y;
-
-		currentMap = (*maps)[mapX][mapY];
+		std::vector<std::vector<Engine::MapType>> mapTypes{
+				{Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH },
+				{Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY },
+				{Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::ROAD_EW },
+				{Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::FOREST_SOUTH },
+				{Engine::MapType::FOREST_SOUTH, Engine::MapType::FOREST_SOUTH, Engine::MapType::FOREST_SOUTH, Engine::MapType::FOREST_SOUTH }
+		};
+		maps = CreateMaps(mapTypes);
+		WORLD_SIZE_LATITUDE = mapTypes.size();
+		WORLD_SIZE_LONGITUDE = mapTypes.front().size();
+//		currentMap = (*maps)[mapX][mapY];
 		actors = currentMap->actors;
 		actors.push(player);
 		gui->PushMessage(TCODColor::red,
 				"Welcome stranger!\nPrepare to perish in the horrors of Halloween Town.");
 		gameStatus = STARTUP;
 	} catch (...) {
-		cerr << "An error occurred with Engine::Init" << endl;
+		std::cerr << "An error occurred with Engine::Init" << std::endl;
 		throw 0;
 	}
 }
 
-vector<vector<Map*>> *Engine::CreateMaps() {
+std::vector<std::vector<Map*>> *Engine::CreateMaps(std::vector<std::vector<Engine::MapType>> mapTypes) {
 	try {
-		vector<vector<Map*>> *maps = new vector<vector<Map*>>(
-				WORLD_SIZE_LATITUDE);
+		std::vector<std::vector<Map*>> *maps = new std::vector<std::vector<Map*>>();
+		for(int i = 0; i<mapTypes.size(); i++)
+//		(std::vector<Engine::MapType> v : mapTypes)
+		{
 
-		TCODRandom *rng = TCODRandom::getInstance();
-		for (int i = 0; i < WORLD_SIZE_LATITUDE; i++) {
-			for (int j = 0; j < WORLD_SIZE_LONGITUDE; j++) {
-				 if (i  == 1) {
-					Map* temp = new Map(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT,
-							new RoadMapGenerator());
-					if (temp) {
-						maps->at(i).push_back(temp);
-					}
-				} else {
-					Map* temp = new Map(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT,
-							new CityMapGenerator());
-					if (temp) {
-						maps->at(i).push_back(temp);
-					}
+			maps->push_back(std::vector<Map*>());
+			for(int j = 0; j<mapTypes.at(i).size(); j++)
+//			(Engine::MapType mt : v)
+			{
+
+				bool firstMapFlag = false;
+				MapGenerator* generator = nullptr;
+				switch(mapTypes.at(i).at(j)){
+				case Engine::MapType::FOREST_NORTH:
+					generator = new ForestMapGenerator(MapGenerator::Orientation::NORTH);
+					break;
+				case Engine::MapType::FOREST_SOUTH:
+					generator = new ForestMapGenerator(MapGenerator::Orientation::SOUTH);
+					break;
+				case Engine::MapType::ROAD_EW:
+					firstMapFlag = true;
+					mapX = j;
+					mapY = i;
+					generator = new RoadMapGenerator(MapGenerator::Orientation::EAST);
+					break;
+				case Engine::MapType::CITY:
+					generator = new CityMapGenerator();
+					break;
 				}
-				(*maps)[i][j]->Init();
 
+
+				Map* temp = new Map(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, generator);
+				temp->Init();
+				if(firstMapFlag)
+					currentMap = temp;
+				(*maps).back().push_back(temp);
 			}
 		}
 
+//		for (int i = 0; i < WORLD_SIZE_LATITUDE; i++) {
+//			for (int j = 0; j < WORLD_SIZE_LONGITUDE; j++) {
+//				 if (i  == 1) {
+//					Map* temp = new Map(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT,
+//							new RoadMapGenerator());
+//					if (temp) {
+//						maps->at(i).push_back(temp);
+//					}
+//				} else {
+//					Map* temp = new Map(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT,
+//							new ForestMapGenerator(MapGenerator::Orientation::SOUTH));
+//					if (temp) {
+//						maps->at(i).push_back(temp);
+//					}
+//				}
+//				(*maps)[i][j]->Init();
+//
+//			}
+//		}
+
 		return maps;
 	} catch (...) {
-		cerr << "An error occurred in Engine::CreateMaps" << endl;
+		std::cerr << "An error occurred in Engine::CreateMaps" << std::endl;
 	}
 }
 
@@ -96,7 +135,7 @@ void Engine::Term() {
 		}
 		gui->Clear();
 	} catch (...) {
-		cerr << "An error occurred with Engine::Term" << endl;
+		std::cerr << "An error occurred with Engine::Term" << std::endl;
 		throw 0;
 	}
 }
@@ -128,7 +167,7 @@ void Engine::Save() {
 			zip.saveToFile("game.sav");
 		}
 	} catch (...) {
-		cerr << "An error occurred with Engine::Save" << endl;
+		std::cerr << "An error occurred with Engine::Save" << std::endl;
 		throw 0;
 	}
 }
@@ -142,7 +181,7 @@ void Engine::Load() {
 		}
 		engine.gui->menu.PopulateMenu(saveGameExists);
 
-		string menuItem = engine.gui->menu.Pick();
+		std::string menuItem = engine.gui->menu.Pick();
 
 		if (menuItem == "Exit" || menuItem == "NONE") {
 			ExitGame();
@@ -155,7 +194,7 @@ void Engine::Load() {
 			ContinueGame();
 		}
 	} catch (...) {
-		cerr << "An error occurred with Engine::load" << endl;
+		std::cerr << "An error occurred with Engine::load" << std::endl;
 		throw 0;
 	}
 }
@@ -166,7 +205,7 @@ void Engine::ExitGame() {
 		exit(0);
 
 	} catch (...) {
-		cerr << "An error occurred with Engine::exitGame" << endl;
+		std::cerr << "An error occurred with Engine::exitGame" << std::endl;
 		throw 0;
 	}
 }
@@ -176,7 +215,7 @@ void Engine::NewGame() {
 		Term();
 		Init();
 	} catch (...) {
-		cerr << "An error occurred with Engine::newGame" << endl;
+		std::cerr << "An error occurred with Engine::newGame" << std::endl;
 		throw 0;
 	}
 }
@@ -184,7 +223,7 @@ void Engine::NewGame() {
 void Engine::ContinueGame() {
 	try {
 		if(gameStatus == STARTUP){
-			cout << "Load game from save" << endl;
+			std::cout << "Load game from save" << std::endl;
 			Term();
 			TCODZip zip;
 			zip.loadFromFile("game.sav");
@@ -197,14 +236,14 @@ void Engine::ContinueGame() {
 			int tempLongitudeSize = zip.getInt();
 			if (tempLatitudeSize != WORLD_SIZE_LATITUDE
 					|| tempLongitudeSize != WORLD_SIZE_LONGITUDE) {
-				cerr << "An error occurred with loading the save file." << endl;
+				std::cerr << "An error occurred with loading the save file." << std::endl;
 				return;
 			}
 
 			player = new Actor(0, 0, 0, nullptr, TCODColor::white);
 			player->Load(zip);
 
-			maps = new vector<vector<Map*>>(WORLD_SIZE_LATITUDE);
+			maps = new std::vector<std::vector<Map*>>(WORLD_SIZE_LATITUDE);
 			for (int i = 0; i < tempLatitudeSize; i++) {
 				for (int j = 0; j < tempLongitudeSize; j++) {
 					(*maps)[i].push_back(new Map(width, height));
@@ -222,12 +261,12 @@ void Engine::ContinueGame() {
 			gameStatus = STARTUP;
 		}
 		else{
-			cout << "Return to game" << endl;
+			std::cout << "Return to game" << std::endl;
 			engine.gui->menu.Clear();
 
 		}
 	} catch (...) {
-		cerr << "An error occurred with Engine::ContinueGame" << endl;
+		std::cerr << "An error occurred with Engine::ContinueGame" << std::endl;
 		throw 0;
 	}
 }
@@ -254,7 +293,7 @@ Engine::~Engine() {
 		}
 
 	} catch (...) {
-		cerr << "An error occurred with Engine::~Engine" << endl;
+		std::cerr << "An error occurred with Engine::~Engine" << std::endl;
 		throw 0;
 	}
 }
@@ -277,7 +316,7 @@ void Engine::Update() {
 			}
 		}
 	} catch (...) {
-		cerr << "An error occurred with Engine::Update" << endl;
+		std::cerr << "An error occurred with Engine::Update" << std::endl;
 		throw 0;
 	}
 }
@@ -291,8 +330,8 @@ void Engine::NextLevel(Map::TileType type) {
 		if (type == Map::TileType::TOP_EDGE) {
 			heroX = player->x;
 			heroY = DEFAULT_MAP_HEIGHT - 1;
-			if (mapY < WORLD_SIZE_LATITUDE - 1) {
-				mapY++;
+			if (mapY > 0) {
+				mapY--;
 			} else {
 				gui->PushMessage(TCODColor::red,
 						"An invisible force keeps you from moving forward");
@@ -315,8 +354,8 @@ void Engine::NextLevel(Map::TileType type) {
 		if (type == Map::TileType::BOTTOM_EDGE) {
 			heroX = player->x;
 			heroY = 0;
-			if (mapY > 0) {
-				mapY--;
+			if (mapY < WORLD_SIZE_LATITUDE -1) {
+				mapY++;
 			} else {
 				gui->PushMessage(TCODColor::red,
 						"An invisible force keeps you from moving forward");
@@ -337,8 +376,7 @@ void Engine::NextLevel(Map::TileType type) {
 			}
 		}
 		actors.remove(player);
-		player = ActorFactory::CreateHero(heroX, heroY);
-		currentMap = (*maps)[mapX][mapY];
+		currentMap = (*maps)[mapY][mapX];
 		bool populateFlag = false;
 		if(currentMap->TimeLastSeen()){
 			if(currentTime.ElapsedMinutes((*currentMap->TimeLastSeen())) >= 60)
@@ -352,11 +390,13 @@ void Engine::NextLevel(Map::TileType type) {
 		if(populateFlag)
 			currentMap->PopulateActors();
 		actors = currentMap->actors;
+		player->x = heroX;
+		player->y = heroY;
 		actors.push(player);
 		gameStatus = STARTUP;
 		Update();
 	} catch (...) {
-		cerr << "An error occurred with Engine::nextLevel" << endl;
+		std::cerr << "An error occurred with Engine::nextLevel" << std::endl;
 		throw 0;
 	}
 }
@@ -366,7 +406,7 @@ void Engine::SendToBack(Actor *actor) {
 		actors.remove(actor);
 		actors.insertBefore(actor, 0);
 	} catch (...) {
-		cerr << "An error occurred with Engine::sendToBack" << endl;
+		std::cerr << "An error occurred with Engine::sendToBack" << std::endl;
 		throw 0;
 	}
 }
@@ -393,7 +433,7 @@ void Engine::Render() {
 
 	}
 	catch (...) {
-		cerr << "An error occurred with Engine::Render" << endl;
+		std::cerr << "An error occurred with Engine::Render" << std::endl;
 		throw 0;
 	}
 }

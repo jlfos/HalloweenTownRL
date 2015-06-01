@@ -3,10 +3,10 @@
 
 #include <string>
 
-using namespace std;
-
 class Menu{
 public:
+
+
 	enum class PauseMenuItemCode {
 		NONE,
 		NEW_GAME,
@@ -14,17 +14,17 @@ public:
 		EXIT
 	};
 	virtual void PopulateMenu(bool saveGameExists) = 0;
-	string Pick();
+	std::string Pick();
 	Menu();
 	~Menu();
 	void Clear();
 
 protected:
-	void AddItem(string item);
-	void SetHeader(string header);
+	void AddItem(std::string item);
+	void SetHeader(std::string header);
 private:
-	string header;
-	TCODList<string> items;
+	std::string header;
+	TCODList<std::string> items;
 };
 
 

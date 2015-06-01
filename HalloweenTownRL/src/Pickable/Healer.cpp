@@ -1,8 +1,6 @@
 #include <iostream>
 #include "../main.hpp"
 
-using namespace std;
-
 Healer::Healer(float amount) : amount(amount){
 
 }
@@ -22,7 +20,7 @@ bool Healer::Use(Actor *owner, Actor *wearer){
 		return false;
 	}
 	catch(...){
-		cerr << "An error occurred with Healer::Use" ;
+		std::cerr << "An error occurred with Healer::Use" ;
 		throw 0;
 	}
 }
@@ -32,7 +30,7 @@ void Healer::Load(TCODZip &zip){
 		amount=zip.getFloat();
 	}
 	catch(...){
-		cerr << "An error occurred with Healer::Load"  << endl;
+		std::cerr << "An error occurred with Healer::Load"  << std::endl;
 		throw 0;
 	}
 }
@@ -43,7 +41,7 @@ void Healer::Save(TCODZip &zip){
 		zip.putFloat(amount);
 	}
 	catch(...){
-		cerr << "An error occurred with Healer::Save"  << endl;
+		std::cerr << "An error occurred with Healer::Save"  << std::endl;
 		throw 0;
 	}
 }

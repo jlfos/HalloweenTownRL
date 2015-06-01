@@ -1,14 +1,13 @@
 #include <iostream>
 #include "main.hpp"
 
-using namespace std;
 
 Container::Container(int size): size(size), inventory(0){
 	try{
 
 	}
 	catch(...){
-		cerr << "An error occurred with Container::Container"  << endl;
+		std::cerr << "An error occurred with Container::Container"  << std::endl;
 		throw 0;
 	}
 }
@@ -18,7 +17,7 @@ Container::~Container(){
 		inventory.clearAndDelete();
 	}
 	catch(...){
-		cerr << "An error occurred with Container::~Container"  << endl;
+		std::cerr << "An error occurred with Container::~Container"  << std::endl;
 		throw 0;
 	}
 }
@@ -32,7 +31,7 @@ bool Container::Add(Actor *actor){
 		return true;
 	}
 	catch(...){
-		cerr << "An error occurred with Container::Add"  << endl;
+		std::cerr << "An error occurred with Container::Add"  << std::endl;
 		throw 0;
 	}
 }
@@ -42,7 +41,7 @@ void Container::Remove(Actor *actor){
 	inventory.remove(actor);
 	}
 	catch(...){
-		cerr << "An error occurred with Container::Remove" << endl;
+		std::cerr << "An error occurred with Container::Remove" << std::endl;
 		throw 0;
 	}
 }
@@ -59,7 +58,7 @@ void Container::Load(TCODZip &zip){
 		}
 	}
 	catch(...){
-		cerr << "An error occurred with Container::Load"  << endl;
+		std::cerr << "An error occurred with Container::Load"  << std::endl;
 		throw 0;
 	}
 }
@@ -74,7 +73,7 @@ void Container::Save(TCODZip &zip){
 		}
 	}
 	catch(...){
-		cerr << "An error occurred with Container::Save"  << endl;
+		std::cerr << "An error occurred with Container::Save"  << std::endl;
 		throw 0;
 	}
 }

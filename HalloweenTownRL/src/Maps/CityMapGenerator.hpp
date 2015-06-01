@@ -6,8 +6,6 @@
  */
 #include <vector>
 
-using namespace std;
-
 #ifndef CITYMAPGENERATOR_HPP_
 #define CITYMAPGENERATOR_HPP_
 

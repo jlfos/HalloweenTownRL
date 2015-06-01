@@ -1,7 +1,6 @@
 #include <iostream>
 #include "main.hpp"
 
-using namespace std;
 
 Engine engine(80, 50);
 
@@ -19,7 +18,7 @@ int main() {
 		return 0;
 	}
 	catch(...){
-		cerr << "An error occurred with main()"  << endl;
+		std::cerr << "An error occurred with main()"  << std::endl;
 		throw 0;
 	}
 }

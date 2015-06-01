@@ -6,7 +6,6 @@
  */
 #include <iostream>
 #include "../main.hpp"
-using namespace std;
 
 LevelUpMenu::LevelUpMenu(){
 	PopulateMenu(false);
@@ -23,7 +22,7 @@ void LevelUpMenu::PopulateMenu(bool saveGameExists){
 
 	}
 	catch(...){
-		cerr << "An error occurred with LevelUpMenu::populateMenu"  << endl;
+		std::cerr << "An error occurred with LevelUpMenu::populateMenu"  << std::endl;
 		throw 0;
 	}
 };

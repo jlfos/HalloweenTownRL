@@ -3,8 +3,6 @@
 #include "../main.hpp"
 
 
-using namespace std;
-
 static const int ROOM_MAX_SIZE = 14;
 static const int ROOM_MIN_SIZE = 8;
 static const int MAX_ROOM_MONSTERS = 4;
@@ -22,7 +20,7 @@ Map::Map(int width, int height) :
 		actors = new TCODList<Actor>();
 	}
 	catch(...){
-		cerr << "An error occurred with Map::Map(int, int)"  << endl;
+		std::cerr << "An error occurred with Map::Map(int, int)"  << std::endl;
 		throw 0;
 	}
 }
@@ -39,7 +37,7 @@ Map::Map(int width, int height, MapGenerator* generator):
 		actors = new TCODList<Actor>();
 	}
 	catch(...){
-		cerr << "An error occurred with Map::Map(int, int, MapGenerator)"  << endl;
+		std::cerr << "An error occurred with Map::Map(int, int, MapGenerator)"  << std::endl;
 		throw 0;
 	}
 
@@ -64,7 +62,7 @@ void Map::Init() {
 		}
 	}
 	catch(...){
-		cerr << "An error occurred with Map::Init"  << endl;
+		std::cerr << "An error occurred with Map::Init"  << std::endl;
 		throw 0;
 	}
 }
@@ -101,7 +99,7 @@ ActorFactory::EnemyDifficulty Map::GetDifficulty(){
 		return current;
 	}
 	catch(...){
-		cerr << "An error occurred in Map::GetDifficulty" << endl;
+		std::cerr << "An error occurred in Map::GetDifficulty" << std::endl;
 	}
 }
 
@@ -112,7 +110,7 @@ void Map::PopulateActors(){
 			generator->PopulateActors(this);
 	}
 	catch(...){
-		cerr << "An error occurred in Map::PopulateActors()" << endl;
+		std::cerr << "An error occurred in Map::PopulateActors()" << std::endl;
 	}
 }
 
@@ -129,7 +127,7 @@ void Map::Save(TCODZip &zip) {
 		}
 	}
 	catch(...){
-		cerr << "An error occurred with Map::Save"  << endl;
+		std::cerr << "An error occurred with Map::Save"  << std::endl;
 		throw 0;
 	}
 }
@@ -163,7 +161,7 @@ void Map::Load(TCODZip &zip) {
 		}
 	}
 	catch(...){
-		cerr << "An error occurred with Map::Load"  << endl;
+		std::cerr << "An error occurred with Map::Load"  << std::endl;
 		throw 0;
 	}
 }
@@ -189,7 +187,7 @@ Map::~Map() {
 		actors.clearAndDelete();
 	}
 	catch(...){
-		cerr << "An error occurred with Map::~Map"  << endl;
+		std::cerr << "An error occurred with Map::~Map"  << std::endl;
 		throw 0;
 	}
 }
@@ -215,7 +213,7 @@ Map::TileType Map::GetTileType(int x, int y) const {
 		}
 	}
 	catch(...){
-		cerr << "An error occurred with Map::IsWall"  << endl;
+		std::cerr << "An error occurred with Map::IsWall"  << std::endl;
 		throw 0;
 	}
 }
@@ -225,7 +223,7 @@ int Map::GetWidth(){
 		return width;
 	}
 	catch(...){
-		cerr << "An error occurred in Map::GetWidth" << endl;
+		std::cerr << "An error occurred in Map::GetWidth" << std::endl;
 	}
 }
 
@@ -234,7 +232,7 @@ int Map::GetHeight(){
 		return height;
 	}
 	catch(...){
-		cerr << "An error occurred in Map::GetHeight" << endl;
+		std::cerr << "An error occurred in Map::GetHeight" << std::endl;
 	}
 }
 
@@ -271,7 +269,7 @@ bool Map::CanWalk(int x, int y) const {
 		return true;
 	}
 	catch(...){
-		cerr << "An error occurred with Map::CanWalk"  << endl;
+		std::cerr << "An error occurred with Map::CanWalk"  << std::endl;
 		throw 0;
 	}
 }
@@ -281,7 +279,7 @@ bool Map::IsExplored(int x, int y) const {
 		return tiles[x + y * width].explored;
 	}
 	catch(...){
-		cerr << "An error occurred with Map::IsExplored"  << endl;
+		std::cerr << "An error occurred with Map::IsExplored"  << std::endl;
 		throw 0;
 	}
 }
@@ -300,7 +298,7 @@ bool Map::IsInFov(int x, int y) const {
 		return false;
 	}
 	catch(...){
-		cerr << "An error occurred with Map::IsInFov"  << endl;
+		std::cerr << "An error occurred with Map::IsInFov"  << std::endl;
 		throw 0;
 	}
 
@@ -311,7 +309,7 @@ void Map::ComputeFov() {
 		map->computeFov(engine.player->x, engine.player->y, engine.fovRadius);
 	}
 	catch(...){
-		cerr << "An error occurred with Map::ComputeFov"  << endl;
+		std::cerr << "An error occurred with Map::ComputeFov"  << std::endl;
 		throw 0;
 	}
 }
@@ -336,7 +334,7 @@ void Map::Render() const {
 		}
 	}
 	catch(...){
-		cerr << "An error occurred with Map::Render"  << endl;
+		std::cerr << "An error occurred with Map::Render"  << std::endl;
 		throw 0;
 	}
 
