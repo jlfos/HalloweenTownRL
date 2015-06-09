@@ -1,3 +1,5 @@
+#ifndef HALLOWEENTOWN_GUI_HPP
+#define HALLOWEENTOWN_GUI_HPP
 #include <string>
 
 
@@ -26,3 +28,4 @@ protected :
 		const TCODColor &backColor);
 	void RenderMouseLook();
 };
+#endif

@@ -1,3 +1,5 @@
+#ifndef HALLOWEENTOWN_ENGINE_HPP
+#define HALLOWEENTOWN_ENGINE_HPP
 #include <vector>
 
 class Engine {
@@ -57,3 +59,4 @@ private:
 
 
 extern Engine engine;
+#endif

@@ -1,3 +1,5 @@
+#ifndef HALLOWEENTOWN_HEALER_HPP
+#define HALLOWEENTOWN_HEALER_HPP
 class Healer : public Pickable {
 public :
 	float amount; // how many hp
@@ -8,3 +10,4 @@ public :
 	void Load(TCODZip &zip);
 	void Save(TCODZip &zip);
 };
+#endif

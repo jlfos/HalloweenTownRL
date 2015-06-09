@@ -1,3 +1,5 @@
+#ifndef HALLOWEENTOWN_ATTACKER_HPP
+#define HALLOWEENTOWN_ATTACKER_HPP
 class Attacker : public Persistent {
 public :
 	void SetPower(float power);
@@ -9,3 +11,4 @@ public :
 private:
 	float power;
 };
+#endif

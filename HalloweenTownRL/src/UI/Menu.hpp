@@ -1,5 +1,5 @@
-#ifndef MENU_HPP_
-#define MENU_HPP_
+#ifndef HALLOWEENTOWN_MENU_HPP
+#define HALLOWEENTOWN_MENU_HPP
 
 #include <string>
 

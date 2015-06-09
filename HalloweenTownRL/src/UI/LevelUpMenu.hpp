@@ -2,11 +2,10 @@
  * LevelUpMenu.hpp
  *
  *  Created on: Mar 28, 2015
- *      Author: josh
  */
 
-#ifndef LEVELUPMENU_HPP_
-#define LEVELUPMENU_HPP_
+#ifndef HALLOWEENTOWN_LEVELUPMENU_HPP
+#define HALLOWEENTOWN_LEVELUPMENU_HPP
 
 
 class LevelUpMenu : public Menu {
@@ -17,4 +16,4 @@ public:
 
 
 
-#endif /* LEVELUPMENU_HPP_ */
+#endif /* HALLOWEENTOWN_LEVELUPMENU_HPP */

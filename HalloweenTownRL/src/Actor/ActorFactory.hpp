@@ -2,11 +2,11 @@
  * ActorFactory.cpp
  *
  *  Created on: Feb 9, 2015
- *      Author: josh
+ *
  */
 
-#ifndef ACTORFACTORY_CPP_
-#define ACTORFACTORY_CPP_
+#ifndef HALLOWEENTOWN_ACTORFACTORY_HPP
+#define HALLOWEENTOWN_ACTORFACTORY_HPP
 
 class ActorFactory {
 	public:
@@ -25,4 +25,4 @@ class ActorFactory {
 
 
 
-#endif /* ACTORFACTORY_CPP_ */
+#endif /* HALLOWEENTOWN_ACTORFACTORY_CPP */

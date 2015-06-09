@@ -2,12 +2,12 @@
  * CityMapGenerator.hpp
  *
  *  Created on: Mar 1, 2015
- *      Author: josh
+ *
  */
 #include <vector>
 
-#ifndef CITYMAPGENERATOR_HPP_
-#define CITYMAPGENERATOR_HPP_
+#ifndef HALLOWEENTOWN_CITYMAPGENERATOR_HPP
+#define HALLOWEENTOWN_CITYMAPGENERATOR_HPP
 
 class Map;
 
@@ -28,4 +28,4 @@ class CityMapGenerator : public MapGenerator{
 
 
 
-#endif /* CITYMAPGENERATOR_HPP_ */
+#endif /* HALLOWEENTOWN_CITYMAPGENERATOR_HPP */

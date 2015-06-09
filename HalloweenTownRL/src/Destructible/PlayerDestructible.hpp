@@ -1,3 +1,5 @@
+#ifndef HALLOWEENTOWN_PLAYERDESTRUCTIBLE_HPP
+#define HALLOWEENTOWN_PLAYERDESTRUCTIBLE_HPP
 class PlayerDestructible : public Destructible {
 public :
 	PlayerDestructible(float maxHp, float defense, const char *corpseName);
@@ -5,3 +7,4 @@ public :
 	void Load(TCODZip &zip);
 	void Save(TCODZip &zip);
 };
+#endif

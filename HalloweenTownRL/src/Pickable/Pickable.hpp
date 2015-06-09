@@ -1,3 +1,5 @@
+#ifndef HALLOWEENTOWN_PICKABLE_HPP
+#define HALLOWEENTOWN_PICKABLE_HPP
 class Pickable : public Persistent {
 public :
 	bool Pick(Actor *owner, Actor *wearer);
@@ -8,4 +10,4 @@ protected:
 		HEALER
 	};
 };
-
+#endif

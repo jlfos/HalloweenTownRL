@@ -2,11 +2,11 @@
  * MostlyEmptyMapGenerator.hpp
  *
  *  Created on: Feb 15, 2015
- *      Author: josh
+ *
  */
 
-#ifndef FORESTMAPGENERATOR_HPP_
-#define FORESTMAPGENERATOR_HPP_
+#ifndef HALLOWEENTOWN_FORESTMAPGENERATOR_HPP
+#define HALLOWEENTOWN_FORESTMAPGENERATOR_HPP
 
 class Map;
 
@@ -26,4 +26,4 @@ class ForestMapGenerator : public MapGenerator{
 };
 
 
-#endif /* MOSTLYEMPTYMAPGENERATOR_HPP_ */
+#endif /* HALLOWEENTOWN_MOSTLYEMPTYMAPGENERATOR_HPP */

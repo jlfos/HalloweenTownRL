@@ -1,3 +1,5 @@
+#ifndef HALLOWEENTOWN_ACTOR_HPP
+#define HALLOWEENTOWN_ACTOR_HPP
 class Actor: public Persistent {
 public:
 	enum CharacterCodes {
@@ -280,3 +282,4 @@ public:
 	void Load(TCODZip &zip);
 	void Save(TCODZip &zip);
 };
+#endif

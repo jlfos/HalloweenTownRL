@@ -2,13 +2,12 @@
  * MapGenerator.hpp
  *
  *  Created on: Feb 14, 2015
- *      Author: josh
  */
 
 #include "libtcod.h";
 
-#ifndef MAPGENERATOR_HPP_
-#define MAPGENERATOR_HPP_
+#ifndef HALLOWEENTOWN_MAPGENERATOR_HPP
+#define HALLOWEENTOWN_MAPGENERATOR_HPP
 class Map;
 
 class MapGenerator{
@@ -21,4 +20,4 @@ class MapGenerator{
 
 
 
-#endif /* MAPGENERATOR_HPP_ */
+#endif /* HALLOWEENTOWN_MAPGENERATOR_HPP */

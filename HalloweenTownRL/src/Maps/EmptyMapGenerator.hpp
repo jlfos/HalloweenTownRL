@@ -2,11 +2,11 @@
  * EmptyMapGenerator.hpp
  *
  *  Created on: Feb 14, 2015
- *      Author: josh
+ *
  */
 
-#ifndef EMPTYMAPGENERATOR_HPP_
-#define EMPTYMAPGENERATOR_HPP_
+#ifndef HALLOWEENTOWN_EMPTYMAPGENERATOR_HPP
+#define HALLOWEENTOWN_EMPTYMAPGENERATOR_HPP
 
 
 
@@ -23,4 +23,4 @@ class EmptyMapGenerator : public MapGenerator{
 };
 
 
-#endif /* EMPTYMAPGENERATOR_HPP_ */
+#endif /* HALLOWEENTOWN_EMPTYMAPGENERATOR_HPP */

@@ -1,3 +1,6 @@
+
+#ifndef HALLOWEENTOWN_MONSTERAI_HPP
+#define HALLOWEENTOWN_MONSTERAI_HPP
 class MonsterAi : public Ai {
 public:
 	MonsterAi();
@@ -8,3 +11,4 @@ protected:
 	void MoveOrAttack(Actor *owner, int targetX, int targetY);
 	int moveCount;
 };
+#endif

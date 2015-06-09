@@ -3,10 +3,9 @@
  * Time.hpp
  *
  *  Created on: Mar 14, 2015
- *      Author: josh
  */
-#ifndef TIME_HPP_
-#define TIME_HPP_
+#ifndef HALLOWEENTOWN_TIME_HPP
+#define HALLOWEENTOWN_TIME_HPP
 
 #include <string>
 
@@ -29,4 +28,4 @@ class Time {
 
 
 
-#endif /* TIME_HPP_ */
+#endif /* HALLOWEENTOWN_TIME_HPP */

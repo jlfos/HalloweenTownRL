@@ -5,8 +5,8 @@
  *      Author: josh
  */
 
-#ifndef ROADMAPGENERATOR_HPP_
-#define ROADMAPGENERATOR_HPP_
+#ifndef HALLOWEENTOWN_ROADMAPGENERATOR_HPP
+#define HALLOWEENTOWN_ROADMAPGENERATOR_HPP
 
 
 class Map;
@@ -26,4 +26,4 @@ class RoadMapGenerator : public MapGenerator{
 };
 
 
-#endif /* ROADMAPGENERATOR_HPP_ */
+#endif /* HALLOWEENTOWN_ROADMAPGENERATOR_HPP */

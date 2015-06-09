@@ -1,3 +1,5 @@
+#ifndef HALLOWEENTOWN_PLAYERAI_HPP
+#define HALLOWEENTOWN_PLAYERAI_HPP
 class PlayerAi : public Ai {
 public:
 	PlayerAi();
@@ -22,3 +24,4 @@ private:
 	int currentExperience;
 	int experienceLevel;
 };
+#endif

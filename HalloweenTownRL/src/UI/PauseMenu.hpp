@@ -2,11 +2,10 @@
  * PauseMenu.hpp
  *
  *  Created on: Mar 28, 2015
- *      Author: josh
  */
 
-#ifndef PAUSEMENU_HPP_
-#define PAUSEMENU_HPP_
+#ifndef HALLOWEENTOWN_PAUSEMENU_HPP
+#define HALLOWEENTOWN_PAUSEMENU_HPP
 
 class PauseMenu : public Menu {
 public:
@@ -17,4 +16,4 @@ public:
 
 
 
-#endif /* PAUSEMENU_HPP_ */
+#endif /* HALLOWEENTOWN_PAUSEMENU_HPP */

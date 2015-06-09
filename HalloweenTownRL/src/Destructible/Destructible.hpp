@@ -1,3 +1,5 @@
+#ifndef HALLOWEENTOWN_DESTRUCTIBLE_HPP
+#define HALLOWEENTOWN_DESTRUCTIBLE_HPP
 class Destructible : public Persistent {
 public :
 	Destructible(float maxHp, float defense, int exp, const char *corpseName);
@@ -23,3 +25,4 @@ private:
 	int experienceReward;
 	const char *corpseName; // the actor's name once dead/destroyed
 };
+#endif

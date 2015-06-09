@@ -1,3 +1,5 @@
+#ifndef HALLOWEENTOWN_MAP_HPP
+#define HALLOWEENTOWN_MAP_HPP
 #include <vector>
 
 class Time;
@@ -49,3 +51,4 @@ public :
     std::vector<Point> spawnLocations;
     ActorFactory::EnemyDifficulty GetDifficulty();
 };
+#endif
