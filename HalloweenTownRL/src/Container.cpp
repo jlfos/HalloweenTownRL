@@ -1,5 +1,7 @@
 #include <iostream>
-#include "main.hpp"
+#include "libtcod.hpp"
+#include "Actor.hpp"
+#include "Container.hpp"
 
 
 Container::Container(int size): size(size), inventory(0){

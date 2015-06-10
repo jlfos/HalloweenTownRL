@@ -8,6 +8,8 @@
 #ifndef HALLOWEENTOWN_ACTORFACTORY_HPP
 #define HALLOWEENTOWN_ACTORFACTORY_HPP
 
+class Actor;
+
 class ActorFactory {
 	public:
 		enum class EnemyDifficulty {EASY, MEDIUM, HARD, VERY_HARD, INSANE, NIGHTMARE};

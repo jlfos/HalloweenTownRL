@@ -1,7 +1,16 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
-#include "../main.hpp"
+#include "../Actor.hpp"
+#include "../Gui.hpp"
+#include "../Attacker.hpp"
+#include "../Container.hpp"
+#include "../Destructible/Destructible.hpp"
+#include "../Engine.hpp"
+#include "../UI/LevelUpMenu.hpp"
+#include "../Pickable/Pickable.hpp"
+#include "PlayerAi.hpp"
+
 
 const int LEVEL_UP_BASE=1;
 const int LEVEL_UP_INCREASE=20;

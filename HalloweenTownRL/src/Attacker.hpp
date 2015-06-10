@@ -1,5 +1,11 @@
 #ifndef HALLOWEENTOWN_ATTACKER_HPP
 #define HALLOWEENTOWN_ATTACKER_HPP
+
+#include "libtcod.hpp"
+#include "Persistent.hpp"
+
+class Actor;
+
 class Attacker : public Persistent {
 public :
 	void SetPower(float power);

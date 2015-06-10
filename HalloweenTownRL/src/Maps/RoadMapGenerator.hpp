@@ -8,6 +8,8 @@
 #ifndef HALLOWEENTOWN_ROADMAPGENERATOR_HPP
 #define HALLOWEENTOWN_ROADMAPGENERATOR_HPP
 
+#include "libtcod.hpp"
+#include "MapGenerator.hpp"
 
 class Map;
 

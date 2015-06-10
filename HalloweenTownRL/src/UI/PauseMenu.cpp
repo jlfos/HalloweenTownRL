@@ -5,7 +5,8 @@
  *      Author: josh
  */
 #include <iostream>
-#include "../main.hpp"
+#include "Menu.hpp"
+#include "PauseMenu.hpp"
 
 
 PauseMenu::PauseMenu(){

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../main.hpp"
+#include "Menu.hpp"
 
 Menu::Menu() {
 	try {

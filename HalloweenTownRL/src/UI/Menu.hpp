@@ -2,6 +2,7 @@
 #define HALLOWEENTOWN_MENU_HPP
 
 #include <string>
+#include "libtcod.hpp"
 
 class Menu{
 public:

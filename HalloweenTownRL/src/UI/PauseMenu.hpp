@@ -7,6 +7,8 @@
 #ifndef HALLOWEENTOWN_PAUSEMENU_HPP
 #define HALLOWEENTOWN_PAUSEMENU_HPP
 
+#include "Menu.hpp"
+
 class PauseMenu : public Menu {
 public:
 

@@ -3,7 +3,14 @@
 #include <vector>
 #include <time.h>
 #include "libtcod.hpp"
-#include "main.hpp"
+#include "Actor.hpp"
+#include "Destructible/Destructible.hpp"
+#include "Engine.hpp"
+#include "Gui.hpp"
+#include "Maps/CityMapGenerator.hpp"
+#include "Maps/ForestMapGenerator.hpp"
+#include "Maps/MapGenerator.hpp"
+#include "Maps/RoadMapGenerator.hpp"
 
 Engine::Engine(int screenWidth, int screenHeight) :
 		gameStatus(STARTUP), fovRadius(10), screenWidth(screenWidth), screenHeight(screenHeight),

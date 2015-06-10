@@ -5,7 +5,9 @@
  *      Author: josh
  */
 #include <iostream>
-#include "../main.hpp"
+
+#include "LevelUpMenu.hpp"
+#include "Menu.hpp"
 
 LevelUpMenu::LevelUpMenu(){
 	PopulateMenu(false);

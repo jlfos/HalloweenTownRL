@@ -8,7 +8,10 @@
 #ifndef HALLOWEENTOWN_EMPTYMAPGENERATOR_HPP
 #define HALLOWEENTOWN_EMPTYMAPGENERATOR_HPP
 
+#include "libtcod.hpp"
+#include "MapGenerator.hpp"
 
+class Map;
 
 class EmptyMapGenerator : public MapGenerator{
 

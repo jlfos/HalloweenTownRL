@@ -2,7 +2,12 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "main.hpp"
+#include "libtcod.hpp"
+#include "Ai/Ai.hpp"
+#include "Ai/PlayerAi.hpp"
+#include "Destructible/Destructible.hpp"
+#include "Engine.hpp"
+#include "Gui.hpp"
 
 
 static const int PANEL_HEIGHT=7;

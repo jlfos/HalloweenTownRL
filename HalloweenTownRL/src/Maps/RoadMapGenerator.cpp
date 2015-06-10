@@ -2,12 +2,11 @@
  * RoadMapGenerator.cpp
  *
  *  Created on: Feb 28, 2015
- *      Author: josh
  */
-
-
-
-#include "../main.hpp"
+#include "libtcod.hpp"
+#include "Map.hpp"
+#include "MapGenerator.hpp"
+#include "RoadMapGenerator.hpp"
 
 RoadMapGenerator::RoadMapGenerator():RoadMapGenerator(MapGenerator::Orientation::NORTH) {
 

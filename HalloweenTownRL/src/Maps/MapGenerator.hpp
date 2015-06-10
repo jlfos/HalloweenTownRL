@@ -4,10 +4,10 @@
  *  Created on: Feb 14, 2015
  */
 
-#include "libtcod.h";
-
 #ifndef HALLOWEENTOWN_MAPGENERATOR_HPP
 #define HALLOWEENTOWN_MAPGENERATOR_HPP
+#include "libtcod.h";
+
 class Map;
 
 class MapGenerator{

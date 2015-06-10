@@ -1,6 +1,12 @@
 #ifndef HALLOWEENTOWN_ENGINE_HPP
 #define HALLOWEENTOWN_ENGINE_HPP
 #include <vector>
+#include "libtcod.hpp"
+#include "Maps/Map.hpp"
+#include "Time.hpp"
+
+class Actor;
+class Gui;
 
 class Engine {
 

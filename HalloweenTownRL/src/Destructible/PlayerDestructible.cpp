@@ -1,5 +1,11 @@
 #include <iostream>
-#include "../main.hpp"
+#include "libtcod.hpp"
+#include "../Actor.hpp"
+#include "../Engine.hpp"
+#include "../Gui.hpp"
+#include "Destructible.hpp"
+#include "PlayerDestructible.hpp"
+
 
 PlayerDestructible::PlayerDestructible(float maxHp, float defense, const char *corpseName) :
     Destructible(maxHp, defense, 0, corpseName) {

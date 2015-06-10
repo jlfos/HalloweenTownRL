@@ -1,5 +1,5 @@
 #include <iostream>
-#include "main.hpp"
+#include "Time.hpp"
 
 
 Time::Time(){

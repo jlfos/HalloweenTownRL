@@ -1,5 +1,17 @@
-#include "../main.hpp"
 #include <iostream>
+
+#include "../Actor.hpp"
+#include "ActorFactory.hpp"
+#include "../Ai/Ai.hpp"
+#include "../Ai/MonsterAi.hpp"
+#include "../Ai/PlayerAi.hpp"
+#include "../Attacker.hpp"
+#include "../Container.hpp"
+#include "../Destructible/Destructible.hpp"
+#include "../Destructible/PlayerDestructible.hpp"
+#include "../Destructible/MonsterDestructible.hpp"
+#include "../Pickable/Pickable.hpp"
+#include "../Pickable/Healer.hpp"
 
 Actor *ActorFactory::CreateHero(int x, int y){
 	try{

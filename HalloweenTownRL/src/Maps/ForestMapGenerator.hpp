@@ -8,6 +8,10 @@
 #ifndef HALLOWEENTOWN_FORESTMAPGENERATOR_HPP
 #define HALLOWEENTOWN_FORESTMAPGENERATOR_HPP
 
+
+#include "libtcod.hpp"
+#include "MapGenerator.hpp"
+
 class Map;
 
 class ForestMapGenerator : public MapGenerator{

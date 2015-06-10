@@ -1,5 +1,12 @@
 #ifndef HALLOWEENTOWN_CONTAINER_HPP
 #define HALLOWEENTOWN_CONTAINER_HPP
+
+#include "libtcod.hpp"
+
+#include "Persistent.hpp"
+
+class Actor;
+
 class Container : public Persistent{
 public:
 	int size;

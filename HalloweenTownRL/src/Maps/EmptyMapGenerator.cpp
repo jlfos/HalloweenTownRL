@@ -2,11 +2,12 @@
  * EmptyMapGenerator.cpp
  *
  *  Created on: Feb 14, 2015
- *      Author: josh
+ *
  */
 #include <iostream>
-#include "../main.hpp"
-
+#include "libtcod.hpp"
+#include "EmptyMapGenerator.hpp"
+#include "Map.hpp"
 
 EmptyMapGenerator::EmptyMapGenerator(){
 	seed = TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);

@@ -4,11 +4,14 @@
  *  Created on: Mar 1, 2015
  *
  */
-#include <vector>
+
 
 #ifndef HALLOWEENTOWN_CITYMAPGENERATOR_HPP
 #define HALLOWEENTOWN_CITYMAPGENERATOR_HPP
 
+#include <vector>
+#include "libtcod.hpp"
+#include "MapGenerator.hpp"
 class Map;
 
 class CityMapGenerator : public MapGenerator{

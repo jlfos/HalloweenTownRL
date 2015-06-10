@@ -1,5 +1,11 @@
 #ifndef HALLOWEENTOWN_PLAYERAI_HPP
 #define HALLOWEENTOWN_PLAYERAI_HPP
+
+#include "libtcod.hpp"
+#include "Ai.hpp"
+
+class Actor;
+
 class PlayerAi : public Ai {
 public:
 	PlayerAi();

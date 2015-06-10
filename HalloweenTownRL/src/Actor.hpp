@@ -1,5 +1,16 @@
 #ifndef HALLOWEENTOWN_ACTOR_HPP
 #define HALLOWEENTOWN_ACTOR_HPP
+
+#include "libtcod.hpp"
+#include "Persistent.hpp"
+
+
+
+class Attacker;
+class Ai;
+class Destructible;
+class Container;
+class Pickable;
 class Actor: public Persistent {
 public:
 	enum CharacterCodes {
@@ -272,8 +283,8 @@ public:
 	Attacker *attacker; // something that deals damages
 	Destructible *destructible; // something that can be damaged
 	Ai *ai; // something self-updating
-	Pickable *pickable;
-	Container *container;
+	Pickable *pickable; //something that can be picked up
+	Container *container; //something that contains
 
 	Actor(int x, int y, int ch, const char *name, const TCODColor &col);
 	~Actor();

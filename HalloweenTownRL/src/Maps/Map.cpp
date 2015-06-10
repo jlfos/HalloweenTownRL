@@ -1,6 +1,9 @@
 #include <iostream>
 #include <string>
-#include "../main.hpp"
+#include "../Engine.hpp"
+#include "Map.hpp"
+#include "MapGenerator.hpp"
+
 
 
 static const int ROOM_MAX_SIZE = 14;
@@ -147,7 +150,7 @@ void Map::Load(TCODZip &zip) {
 		seed = zip.getInt();
 		rng = new TCODRandom(seed, TCOD_RNG_MT);
 		tiles = new Tile[width * height];
-		generator = new EmptyMapGenerator();
+//		generator = new EmptyMapGenerator();
 		map = generator->Generate(this, false);
 		for (int i = 0; i < width * height; i++) {
 			tiles[i].explored = zip.getInt();

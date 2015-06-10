@@ -1,6 +1,10 @@
 #include <iostream>
-#include "../main.hpp"
 
+#include "../Actor.hpp"
+#include "../Container.hpp"
+#include "../Engine.hpp"
+#include "Healer.hpp"
+#include "Pickable.hpp"
 
 bool Pickable::Pick(Actor *owner, Actor *wearer){
 	try{

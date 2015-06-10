@@ -5,8 +5,9 @@
  *      Author: josh
  */
 #include <iostream>
-#include "../main.hpp"
-
+#include "libtcod.hpp"
+#include "CityMapGenerator.hpp"
+#include "../Maps/Map.hpp"
 
 CityMapGenerator::CityMapGenerator(){
 	rng = TCODRandom::getInstance();

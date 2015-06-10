@@ -1,5 +1,10 @@
 #ifndef HALLOWEENTOWN_MONSTERDESTRUCTIBLE_HPP
 #define HALLOWEENTOWN_MONSTERDESTRUCTIBLE
+
+#include "libtcod.hpp"
+
+class Actor;
+
 class MonsterDestructible : public Destructible {
 public :
 	MonsterDestructible(float maxHp, float defense, int exp, const char *corpseName);

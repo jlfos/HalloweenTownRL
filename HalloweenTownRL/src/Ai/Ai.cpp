@@ -1,6 +1,8 @@
 #include <iostream>
-#include "../main.hpp"
-
+#include "libtcod.hpp"
+#include "Ai.hpp"
+#include "PlayerAi.hpp"
+#include "MonsterAi.hpp"
 
 Ai *Ai::Create(TCODZip &zip){
 	try{

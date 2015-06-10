@@ -1,5 +1,11 @@
 #ifndef HALLOWEENTOWN_DESTRUCTIBLE_HPP
 #define HALLOWEENTOWN_DESTRUCTIBLE_HPP
+
+#include "libtcod.hpp"
+#include "../Persistent.hpp"
+
+class Actor;
+
 class Destructible : public Persistent {
 public :
 	Destructible(float maxHp, float defense, int exp, const char *corpseName);

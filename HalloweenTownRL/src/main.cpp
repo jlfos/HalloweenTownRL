@@ -1,5 +1,5 @@
 #include <iostream>
-#include "main.hpp"
+#include "Engine.hpp"
 
 
 Engine engine(80, 50);

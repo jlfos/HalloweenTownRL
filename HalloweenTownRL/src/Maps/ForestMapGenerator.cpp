@@ -4,8 +4,11 @@
  *  Created on: Feb 15, 2015
  *      Author: josh
  */
+#include "libtcod.hpp"
+#include "ForestMapGenerator.hpp"
+#include "Map.hpp"
+#include "MapGenerator.hpp"
 
-#include "../main.hpp"
 
 ForestMapGenerator::ForestMapGenerator() : ForestMapGenerator(MapGenerator::Orientation::NORTH){
 

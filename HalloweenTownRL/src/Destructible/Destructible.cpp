@@ -1,6 +1,9 @@
 #include <iostream>
 #include "libtcod.hpp"
-#include "../main.hpp"
+#include "Destructible.hpp"
+#include "../Engine.hpp"
+#include "MonsterDestructible.hpp"
+#include "PlayerDestructible.hpp"
 
 
 Destructible::Destructible(float maxHp, float defense, int experienceReward, const char *corpseName) :

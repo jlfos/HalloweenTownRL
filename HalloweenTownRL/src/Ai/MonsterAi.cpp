@@ -1,6 +1,13 @@
 #include <iostream>
 #include <math.h>
-#include "../main.hpp"
+
+#include "../Actor.hpp"
+#include "../Attacker.hpp"
+#include "../Destructible/Destructible.hpp"
+#include "../Engine.hpp"
+#include "MonsterAi.hpp"
+
+
 
 static const int TRACKING_TURNS=3;
 
