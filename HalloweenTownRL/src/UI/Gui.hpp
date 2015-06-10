@@ -1,7 +1,7 @@
 #ifndef HALLOWEENTOWN_GUI_HPP
 #define HALLOWEENTOWN_GUI_HPP
 #include <string>
-#include "UI/PauseMenu.hpp"
+#include "PauseMenu.hpp"
 
 class Gui : public Persistent {
 public :

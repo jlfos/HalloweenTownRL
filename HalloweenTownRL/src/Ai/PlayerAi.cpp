@@ -1,8 +1,8 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
-#include "../Actor.hpp"
-#include "../Gui.hpp"
+#include "../Actor/Actor.hpp"
+#include "../UI/Gui.hpp"
 #include "../Attacker.hpp"
 #include "../Container.hpp"
 #include "../Destructible/Destructible.hpp"

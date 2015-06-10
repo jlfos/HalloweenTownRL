@@ -2,7 +2,7 @@
 #include "libtcod.hpp"
 #include "Destructible.hpp"
 #include "../Engine.hpp"
-#include "../Gui.hpp"
+#include "../UI/Gui.hpp"
 #include "MonsterDestructible.hpp"
 
 

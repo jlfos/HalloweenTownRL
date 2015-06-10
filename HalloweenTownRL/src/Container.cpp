@@ -1,6 +1,6 @@
 #include <iostream>
 #include "libtcod.hpp"
-#include "Actor.hpp"
+#include "Actor/Actor.hpp"
 #include "Container.hpp"
 
 

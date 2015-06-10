@@ -2,7 +2,7 @@
 #define HALLOWEENTOWN_ACTOR_HPP
 
 #include "libtcod.hpp"
-#include "Persistent.hpp"
+#include "../Persistent.hpp"
 
 
 

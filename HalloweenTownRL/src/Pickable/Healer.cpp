@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Healer.hpp"
 #include "../Ai/Ai.hpp"
-#include "../Actor.hpp"
+#include "../Actor/Actor.hpp"
 #include "../Destructible/Destructible.hpp"
 #include "Pickable.hpp"
 Healer::Healer(float amount) : amount(amount){

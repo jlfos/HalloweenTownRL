@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "../Actor.hpp"
+#include "../Actor/Actor.hpp"
 #include "../Container.hpp"
 #include "../Engine.hpp"
 #include "Healer.hpp"

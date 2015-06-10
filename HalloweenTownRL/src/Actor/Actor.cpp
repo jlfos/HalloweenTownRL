@@ -1,10 +1,10 @@
 #include <iostream>
 #include "Actor.hpp"
-#include "Ai/Ai.hpp"
-#include "Attacker.hpp"
-#include "Container.hpp"
-#include "Destructible/Destructible.hpp"
-#include "Pickable/Pickable.hpp"
+#include "../Ai/Ai.hpp"
+#include "../Attacker.hpp"
+#include "../Container.hpp"
+#include "../Destructible/Destructible.hpp"
+#include "../Pickable/Pickable.hpp"
 
 Actor::Actor(int x, int y, int ch, const char *name, const TCODColor &col) :
     x(x),y(y),ch(ch),col(col), name(name),

@@ -1,7 +1,7 @@
 #ifndef HALLOWEENTOWN_MAP_HPP
 #define HALLOWEENTOWN_MAP_HPP
 #include <vector>
-#include "../Actor.hpp"
+#include "../Actor/Actor.hpp"
 #include "../Actor/ActorFactory.hpp"
 
 class Time;

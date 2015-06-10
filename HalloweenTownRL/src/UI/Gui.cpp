@@ -3,10 +3,10 @@
 #include <fstream>
 #include <string>
 #include "libtcod.hpp"
-#include "Ai/Ai.hpp"
-#include "Ai/PlayerAi.hpp"
-#include "Destructible/Destructible.hpp"
-#include "Engine.hpp"
+#include "../Ai/Ai.hpp"
+#include "../Ai/PlayerAi.hpp"
+#include "../Destructible/Destructible.hpp"
+#include "../Engine.hpp"
 #include "Gui.hpp"
 
 

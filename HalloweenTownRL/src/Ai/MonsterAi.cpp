@@ -1,7 +1,7 @@
 #include <iostream>
 #include <math.h>
 
-#include "../Actor.hpp"
+#include "../Actor/Actor.hpp"
 #include "../Attacker.hpp"
 #include "../Destructible/Destructible.hpp"
 #include "../Engine.hpp"

@@ -1,9 +1,9 @@
 #include <iostream>
-#include "Actor.hpp"
+#include "Actor/Actor.hpp"
 #include "Attacker.hpp"
 #include "Destructible/Destructible.hpp"
 #include "Engine.hpp"
-#include "Gui.hpp"
+#include "UI/Gui.hpp"
 
 Attacker::Attacker(float power) :power(power){
 }

@@ -1,6 +1,5 @@
 #include <iostream>
-
-#include "../Actor.hpp"
+#include "Actor.hpp"
 #include "ActorFactory.hpp"
 #include "../Ai/Ai.hpp"
 #include "../Ai/MonsterAi.hpp"

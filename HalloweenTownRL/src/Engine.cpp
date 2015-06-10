@@ -3,10 +3,10 @@
 #include <vector>
 #include <time.h>
 #include "libtcod.hpp"
-#include "Actor.hpp"
+#include "Actor/Actor.hpp"
 #include "Destructible/Destructible.hpp"
 #include "Engine.hpp"
-#include "Gui.hpp"
+#include "UI/Gui.hpp"
 #include "Maps/CityMapGenerator.hpp"
 #include "Maps/ForestMapGenerator.hpp"
 #include "Maps/MapGenerator.hpp"

@@ -1,8 +1,8 @@
 #include <iostream>
 #include "libtcod.hpp"
-#include "../Actor.hpp"
+#include "../Actor/Actor.hpp"
 #include "../Engine.hpp"
-#include "../Gui.hpp"
+#include "../UI/Gui.hpp"
 #include "Destructible.hpp"
 #include "PlayerDestructible.hpp"
 
