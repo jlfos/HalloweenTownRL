@@ -2,7 +2,7 @@
 #include "libtcod.hpp"
 #include "Actor/Actor.hpp"
 #include "Container.hpp"
-
+#include "Tile/TileColors.hpp"
 
 Container::Container(int size): size(size), inventory(0){
 	try{
@@ -53,7 +53,7 @@ void Container::Load(TCODZip &zip){
 		size = zip.getInt();
 		int nbActors = zip.getInt();
 		while(nbActors > 0){
-			Actor *actor = new Actor(0,0,0,nullptr, TCODColor::white);
+			Actor *actor = new Actor(0,0,0,nullptr, TileColors::white);
 			actor->Load(zip);
 			inventory.push(actor);
 			nbActors--;

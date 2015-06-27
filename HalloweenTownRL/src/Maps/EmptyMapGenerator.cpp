@@ -8,6 +8,7 @@
 #include "libtcod.hpp"
 #include "EmptyMapGenerator.hpp"
 #include "Map.hpp"
+#include "../Tile/TileColors.hpp"
 
 EmptyMapGenerator::EmptyMapGenerator(){
 	seed = TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);
@@ -28,7 +29,7 @@ TCODMap* EmptyMapGenerator::Generate(Map* map, bool generateActors){
 			emptyMap->setProperties(tilex, tiley, true, true);
 			int rand = rng.getInt(0, 400);
 			int tileIndex = tilex+tiley*width;
-			map->SetTileProperties(tileIndex, TCODColor::lighterRed, TCODColor::darkRed, Actor::CharacterCodes::PERIOD);
+			map->SetTileProperties(tileIndex, TileColors::lighterRed, TileColors::darkRed, TileCharacters::Default::PERIOD);
 			if(rand%400==0 && generateActors ){
 				AddItem(map, tilex, tiley);
 				potionCount++;
@@ -43,7 +44,7 @@ void EmptyMapGenerator::PopulateActors(Map* map){
 }
 
 void EmptyMapGenerator::AddItem(Map* map, int x, int y){
-	Actor* item = ActorFactory::CreatePotion(x, y);
+	Actor* item = ActorFactory::CreateMedkit(x, y);
 	map->actors.push(item);
 }
 

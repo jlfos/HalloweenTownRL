@@ -5,7 +5,7 @@
 #include "../UI/Gui.hpp"
 #include "Destructible.hpp"
 #include "PlayerDestructible.hpp"
-
+#include "../Tile/TileColors.hpp"
 
 PlayerDestructible::PlayerDestructible(float maxHp, float defense, const char *corpseName) :
     Destructible(maxHp, defense, 0, corpseName) {
@@ -14,7 +14,7 @@ PlayerDestructible::PlayerDestructible(float maxHp, float defense, const char *c
 
 void PlayerDestructible::Die(Actor *owner){
 	try{
-		engine.gui->PushMessage(TCODColor::red,"You died!");
+		engine.gui->PushMessage(TileColors::red,"You died!");
 		Destructible::Die(owner);
 		engine.gameStatus=Engine::DEFEAT;
 	}

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Menu.hpp"
+#include "../Tile/TileColors.hpp"
 
 Menu::Menu() {
 	try {
@@ -46,7 +47,7 @@ std::string Menu::Pick() {
 //		static TCODImage img("tree.png");
 		int selectedItem = 0;
 		TCODConsole::root->clear();
-		TCODConsole::root->setDefaultForeground(TCODColor::darkOrange);
+		TCODConsole::root->setDefaultForeground(TileColors::darkOrange);
 		TCODConsole::root->printEx(10, 6,
 				TCOD_bkgnd_flag_t::TCOD_BKGND_COLOR_BURN,
 				TCOD_alignment_t::TCOD_LEFT, header.c_str());
@@ -56,10 +57,10 @@ std::string Menu::Pick() {
 			for (std::string it : items) {
 				if (currentItem == selectedItem) {
 					TCODConsole::root->setDefaultForeground(
-							TCODColor::lighterOrange);
+							TileColors::lighterOrange);
 				} else {
 					TCODConsole::root->setDefaultForeground(
-							TCODColor::lightGrey);
+							TileColors::lightGrey);
 				}
 				TCODConsole::root->print(10, 15 + currentItem * 3, it.c_str());
 				currentItem++;

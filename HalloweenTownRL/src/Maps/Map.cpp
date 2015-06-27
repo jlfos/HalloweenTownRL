@@ -1,9 +1,10 @@
 #include <iostream>
 #include <string>
+#include "../Actor/Actor.hpp"
 #include "../Engine.hpp"
 #include "Map.hpp"
 #include "MapGenerator.hpp"
-
+#include "../Tile/TileColors.hpp"
 
 
 static const int ROOM_MAX_SIZE = 14;
@@ -157,7 +158,7 @@ void Map::Load(TCODZip &zip) {
 		}
 		int nbActors = zip.getInt();
 		while(nbActors > 0){
-			Actor *actor = new Actor(0,0,0,nullptr, TCODColor::white);
+			Actor *actor = new Actor(0,0,0,nullptr, TileColors::white);
 			actor->Load(zip);
 			actors.push(actor);
 			nbActors--;
@@ -249,7 +250,7 @@ void Map::SetTileProperties(int tileIndex, TCODColor visible, TCODColor fog, int
 }
 
 bool Map::TileHasBeenSet(int tileIndex){
-	if(tiles[tileIndex].character == Actor::CharacterCodes::RAINBOW)
+	if(tiles[tileIndex].character == TileCharacters::Default::RAINBOW)
 		return false;
 	else
 		return true;
@@ -319,10 +320,6 @@ void Map::ComputeFov() {
 
 void Map::Render() const {
 	try{
-		static const TCODColor darkWall(0, 0, 100);
-		static const TCODColor darkGround(50, 50, 150);
-		static const TCODColor lightWall(130, 110, 50);
-		static const TCODColor lightGround(200, 180, 50);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				if (IsInFov(x, y)) {

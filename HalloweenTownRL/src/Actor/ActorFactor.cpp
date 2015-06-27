@@ -11,10 +11,12 @@
 #include "../Destructible/MonsterDestructible.hpp"
 #include "../Pickable/Pickable.hpp"
 #include "../Pickable/Healer.hpp"
+#include "../Tile/TileCharacters.hpp"
+#include "../Tile/TileColors.hpp"
 
 Actor *ActorFactory::CreateHero(int x, int y){
 	try{
-		Actor *player = new Actor(x, y, Actor::CharacterCodes::AT_SIGN,"player",TCODColor::white);
+		Actor *player = new Actor(x, y, TileCharacters::Default::AT_SIGN,"player",TileColors::white);
 		player->destructible=new PlayerDestructible(30,2,"your cadaver");
 		player->attacker=new Attacker(3);
 		player->ai = new PlayerAi();
@@ -31,33 +33,33 @@ Actor *ActorFactory::CreateVampire(int x, int y, EnemyDifficulty difficulty){
 	try{
 		Actor *vampire;
 		if(difficulty == EnemyDifficulty::MEDIUM){
-			vampire = new Actor(x, y, Actor::CharacterCodes::V_LOWERCASE, "Hobo vampire", TCODColor::lightestRed);
+			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "Hobo vampire", TileColors::lightestRed);
 			vampire->destructible = new MonsterDestructible(15, 1, 6, "pile of ash");
 			vampire->attacker = new Attacker(3);
 			vampire->ai = new MonsterAi();
 
 		}
 		if(difficulty == EnemyDifficulty::HARD){
-			vampire = new Actor(x, y, Actor::CharacterCodes::V_LOWERCASE, "Techno vampire", TCODColor::lightestRed);
+			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "Techno vampire", TileColors::lightestRed);
 			vampire->destructible = new MonsterDestructible(30, 2, 12, "pile of ash");
 			vampire->attacker = new Attacker(4);
 			vampire->ai = new MonsterAi();
 
 		}
 		else if(difficulty == EnemyDifficulty::VERY_HARD){
-			vampire = new Actor(x, y, Actor::CharacterCodes::V_LOWERCASE, "Gangster vampire", TCODColor::lighterRed);
+			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "Gangster vampire", TileColors::lighterRed);
 			vampire->destructible = new MonsterDestructible(45, 3, 24, "pile of ash");
 			vampire->attacker = new Attacker(8);
 			vampire->ai = new MonsterAi();
 		}
 		else if(difficulty == EnemyDifficulty::INSANE){
-			vampire = new Actor(x, y, Actor::CharacterCodes::V_LOWERCASE, "Flying vampire", TCODColor::lightRed);
+			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "Flying vampire", TileColors::lightRed);
 			vampire->destructible = new MonsterDestructible(80, 4, 48, "pile of ash");
 			vampire->attacker = new Attacker(16);
 			vampire->ai = new MonsterAi();
 		}
 		else if(difficulty == EnemyDifficulty::NIGHTMARE){
-			vampire = new Actor(x, y, Actor::CharacterCodes::V_LOWERCASE, "Count", TCODColor::darkestRed);
+			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "Count", TileColors::darkestRed);
 			vampire->destructible = new MonsterDestructible(120, 6, 96, "pile of ash");
 			vampire->attacker = new Attacker(20);
 			vampire->ai = new MonsterAi();
@@ -72,9 +74,9 @@ Actor *ActorFactory::CreateVampire(int x, int y, EnemyDifficulty difficulty){
 }
 
 
-Actor *ActorFactory::CreateImp(int x, int y){
+Actor *ActorFactory::CreateGremlin(int x, int y){
 	try{
-		Actor *orc = new Actor( x, y, Actor::CharacterCodes::G_LOWERCASE, "gremlin",
+		Actor *orc = new Actor( x, y, TileCharacters::Default::G_LOWERCASE, "gremlin",
 			TCODColor::desaturatedGreen);
 		orc->destructible = new MonsterDestructible(6,0, 3,"dead gremlin");
 		orc->attacker = new Attacker(1);
@@ -87,26 +89,11 @@ Actor *ActorFactory::CreateImp(int x, int y){
 	}
 }
 
-Actor *ActorFactory::CreateTroll(int x, int y){
-	try{
-		Actor *troll = new Actor(x,y, Actor::CharacterCodes::T_LOWERCASE,"troll",
-			 TCODColor::darkBlue);
-		troll->destructible = new MonsterDestructible(16,1, 0, "troll carcass");
-		troll->attacker = new Attacker(4);
-		troll->ai = new MonsterAi();
-	   return troll;
-	}
-	catch(...){
-		std::cerr << "An error occurred in ActorFactory::CreateTroll" << std::endl;
-		throw 0;
-	}
 
-}
-
-Actor *ActorFactory::CreatePotion(int x, int y){
+Actor *ActorFactory::CreateMedkit(int x, int y){
 	try{
-		Actor *healthPotion = new Actor(x, y, Actor::CharacterCodes::EXCLAMATION, "health potion",
-				TCODColor::violet);
+		Actor *healthPotion = new Actor(x, y, TileCharacters::Default::PLUS, "medkit",
+				TileColors::red);
 		healthPotion->blocks = false;
 		healthPotion->pickable = new Healer(4);
 		return healthPotion;
@@ -141,7 +128,7 @@ Actor *ActorFactory::CreateMonsterForCity(int x, int y, EnemyDifficulty difficul
 		Actor *monster = nullptr;
 		switch(difficulty){
 			case EnemyDifficulty::EASY:
-				monster = CreateImp(x, y);
+				monster = CreateGremlin(x, y);
 				break;
 			case EnemyDifficulty::MEDIUM:
 			case EnemyDifficulty::HARD:

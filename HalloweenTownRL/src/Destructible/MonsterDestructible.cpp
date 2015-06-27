@@ -1,10 +1,11 @@
 #include <iostream>
 #include "libtcod.hpp"
+#include "../Actor/Actor.hpp"
 #include "Destructible.hpp"
 #include "../Engine.hpp"
 #include "../UI/Gui.hpp"
 #include "MonsterDestructible.hpp"
-
+#include "../Tile/TileColors.hpp"
 
 MonsterDestructible::MonsterDestructible(float maxHp, float defense, int experienceReward, const char *corpseName) :
     Destructible(maxHp, defense, experienceReward, corpseName) {
@@ -23,7 +24,7 @@ void MonsterDestructible::Load(TCODZip &zip){
 
 void MonsterDestructible::Die(Actor *owner){
 	try{
-		engine.gui->PushMessage(TCODColor::lightGrey,"%s is dead",owner->name);
+		engine.gui->PushMessage(TileColors::lightGrey,"%s is dead",owner->name);
 		Destructible::Die(owner);
 	}
 	catch(...){

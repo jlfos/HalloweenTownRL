@@ -9,6 +9,7 @@
 #include "../Engine.hpp"
 #include "../UI/LevelUpMenu.hpp"
 #include "../Pickable/Pickable.hpp"
+#include "../Tile/TileColors.hpp"
 #include "PlayerAi.hpp"
 
 
@@ -134,7 +135,7 @@ bool PlayerAi::MoveOrAttack(Actor *owner, int targetX, int targetY){
 		for(Actor* actor : engine.actors){
 			bool corpseOrItem =(actor->destructible && actor->destructible->IsDead()) || actor->pickable;
 			if(corpseOrItem && actor->x == targetX && actor->y == targetY){
-				engine.gui->PushMessage(TCODColor::lightGrey,"There's a %s here",actor->name);
+				engine.gui->PushMessage(TileColors::lightGrey,"There's a %s here",actor->name);
 			}
 		}
 		owner->x=targetX;
@@ -183,10 +184,10 @@ Actor *PlayerAi::ChooseFromInventory(Actor *owner){
 		static const int INVENTORY_WIDTH=50;
 		static const int INVENTORY_HEIGHT=28;
 		static TCODConsole con(INVENTORY_WIDTH, INVENTORY_HEIGHT);
-		con.setDefaultForeground(TCODColor(200, 180, 50));
+		con.setDefaultForeground(TileColors::darkYellow);
 		con.printFrame(0, 0, INVENTORY_WIDTH, INVENTORY_HEIGHT, true, TCOD_BKGND_DEFAULT, "inventory");
 
-		con.setDefaultForeground(TCODColor::white);
+		con.setDefaultForeground(TileColors::white);
 
 		int shortcut = 'a';
 		int y = 1;
@@ -228,17 +229,17 @@ void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 					if ( actor->pickable && actor->x == owner->x && actor->y == owner->y ) {
 						if (actor->pickable->Pick(actor,owner)) {
 							found=true;
-							engine.gui->PushMessage(TCODColor::lightGrey,"You pick the %s.",
+							engine.gui->PushMessage(TileColors::lightGrey,"You pick the %s.",
 								actor->name);
 							break;
 						} else if (! found) {
 							found=true;
-							engine.gui->PushMessage(TCODColor::red,"Your inventory is full.");
+							engine.gui->PushMessage(TileColors::red,"Your inventory is full.");
 						}
 					}
 				}
 				if (!found) {
-					engine.gui->PushMessage(TCODColor::lightGrey,"There's nothing here that you can pick.");
+					engine.gui->PushMessage(TileColors::lightGrey,"There's nothing here that you can pick.");
 				}
 				engine.gameStatus=Engine::NEW_TURN;
 			}
@@ -279,7 +280,7 @@ void PlayerAi::PlayerLook(Actor* player){
 		engine.Render();
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		TCODConsole::root->setChar(cursorX, cursorY, 219);
-		TCODConsole::root->setCharForeground(cursorX, cursorY, TCODColor::white);
+		TCODConsole::root->setCharForeground(cursorX, cursorY, TileColors::white);
 		TCODConsole::flush();
 		std::this_thread::sleep_for(std::chrono::milliseconds(3));
 		TCOD_key_t lastKey;

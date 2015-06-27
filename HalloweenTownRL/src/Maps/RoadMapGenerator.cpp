@@ -7,6 +7,8 @@
 #include "Map.hpp"
 #include "MapGenerator.hpp"
 #include "RoadMapGenerator.hpp"
+#include "../Tile/TileColors.hpp"
+
 
 RoadMapGenerator::RoadMapGenerator():RoadMapGenerator(MapGenerator::Orientation::NORTH) {
 
@@ -52,9 +54,9 @@ void RoadMapGenerator::PopulateActors(Map* map){
 void RoadMapGenerator::GenerateGrass(int x, int y, int width, TCODMap* roadMap, Map* map){
 	int tileIndex = x+y*width;
 	roadMap->setProperties(x, y, true, true);
-	TCODColor visible = TCODColor::green;
-	TCODColor fog = TCODColor::darkerGreen;
-	int character = Actor::CharacterCodes::PERIOD;
+	TCODColor visible = TileColors::green;
+	TCODColor fog = TileColors::darkerGreen;
+	int character = TileCharacters::Default::PERIOD;
 	map->SetTileProperties(tileIndex, visible, fog, character);
 }
 
@@ -62,8 +64,8 @@ void RoadMapGenerator::GenerateGrass(int x, int y, int width, TCODMap* roadMap, 
 void RoadMapGenerator::GenerateRoad(int x, int y, int width, TCODMap* roadMap, Map* map){
 	int tileIndex = x+y*width;
 	roadMap->setProperties(x, y, true, true);
-	TCODColor visible = TCODColor::lightGrey;
-	TCODColor fog = TCODColor::darkGrey;
-	int character = Actor::CharacterCodes::PERIOD;
+	TCODColor visible = TileColors::lightGrey;
+	TCODColor fog = TileColors::darkGrey;
+	int character = TileCharacters::Default::PERIOD;
 	map->SetTileProperties(tileIndex, visible, fog, character);
 }

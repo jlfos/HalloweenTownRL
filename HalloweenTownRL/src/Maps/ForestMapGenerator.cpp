@@ -8,6 +8,7 @@
 #include "ForestMapGenerator.hpp"
 #include "Map.hpp"
 #include "MapGenerator.hpp"
+#include "../Tile/TileColors.hpp"
 
 
 ForestMapGenerator::ForestMapGenerator() : ForestMapGenerator(MapGenerator::Orientation::NORTH){
@@ -86,9 +87,9 @@ void ForestMapGenerator::GenerateTile(int x, int y, int width, int height, TCODM
 void ForestMapGenerator::GenerateTree(int x, int y, int width, TCODMap* forestMap, Map* map){
 	int tileIndex = x+y*width;
 	forestMap->setProperties(x, y, false, false);
-	TCODColor visible = TCODColor(139, 69, 19);
-	TCODColor fog = TCODColor(97, 49, 12);
-	int character = Actor::CharacterCodes::YEN_SYMBOL;
+	TCODColor visible = TileColors::brown;
+	TCODColor fog = TileColors::darkBrown;
+	int character = TileCharacters::Default::YEN_SYMBOL;
 	map->SetTileProperties(tileIndex, visible, fog, character);
 }
 
@@ -98,9 +99,9 @@ void ForestMapGenerator::GenerateTree(int x, int y, int width, TCODMap* forestMa
 void ForestMapGenerator::GenerateGrass(int x, int y, int width, TCODMap* forestMap, Map* map){
 	int tileIndex = x+y*width;
 	forestMap->setProperties(x, y, true, true);
-	TCODColor visible = TCODColor::green;
-	TCODColor fog = TCODColor::darkerGreen;
-	int character = Actor::CharacterCodes::PERIOD;
+	TCODColor visible = TileColors::green;
+	TCODColor fog = TileColors::darkerGreen;
+	int character = TileCharacters::Default::PERIOD;
 	map->SetTileProperties(tileIndex, visible, fog, character);
 }
 

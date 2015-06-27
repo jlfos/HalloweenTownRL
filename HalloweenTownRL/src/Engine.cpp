@@ -11,6 +11,8 @@
 #include "Maps/ForestMapGenerator.hpp"
 #include "Maps/MapGenerator.hpp"
 #include "Maps/RoadMapGenerator.hpp"
+#include "Tile/TileColors.hpp"
+
 
 Engine::Engine(int screenWidth, int screenHeight) :
 		gameStatus(STARTUP), fovRadius(10), screenWidth(screenWidth), screenHeight(screenHeight),
@@ -49,7 +51,7 @@ void Engine::Init() {
 //		currentMap = (*maps)[mapX][mapY];
 		actors = currentMap->actors;
 		actors.push(player);
-		gui->PushMessage(TCODColor::red,
+		gui->PushMessage(TileColors::red,
 				"Welcome stranger!\nPrepare to perish in the horrors of Halloween Town.");
 		gameStatus = STARTUP;
 	} catch (...) {
@@ -247,7 +249,7 @@ void Engine::ContinueGame() {
 				return;
 			}
 
-			player = new Actor(0, 0, 0, nullptr, TCODColor::white);
+			player = new Actor(0, 0, 0, nullptr, TileColors::white);
 			player->Load(zip);
 
 			maps = new std::vector<std::vector<Map*>>(WORLD_SIZE_LATITUDE);
@@ -340,7 +342,7 @@ void Engine::NextLevel(Map::TileType type) {
 			if (mapY > 0) {
 				mapY--;
 			} else {
-				gui->PushMessage(TCODColor::red,
+				gui->PushMessage(TileColors::red,
 						"An invisible force keeps you from moving forward");
 				gameStatus = IDLE;
 				return;
@@ -352,7 +354,7 @@ void Engine::NextLevel(Map::TileType type) {
 			if (mapX < WORLD_SIZE_LONGITUDE - 1) {
 				mapX++;
 			} else {
-				gui->PushMessage(TCODColor::red,
+				gui->PushMessage(TileColors::red,
 						"An invisible force keeps you from moving forward");
 				gameStatus = IDLE;
 				return;
@@ -364,7 +366,7 @@ void Engine::NextLevel(Map::TileType type) {
 			if (mapY < WORLD_SIZE_LATITUDE -1) {
 				mapY++;
 			} else {
-				gui->PushMessage(TCODColor::red,
+				gui->PushMessage(TileColors::red,
 						"An invisible force keeps you from moving forward");
 				gameStatus = IDLE;
 				return;
@@ -376,7 +378,7 @@ void Engine::NextLevel(Map::TileType type) {
 			if (mapX > 0) {
 				mapX--;
 			} else {
-				gui->PushMessage(TCODColor::red,
+				gui->PushMessage(TileColors::red,
 						"An invisible force keeps you from moving forward");
 				gameStatus = IDLE;
 				return;

@@ -8,6 +8,8 @@
 #include "libtcod.hpp"
 #include "CityMapGenerator.hpp"
 #include "../Maps/Map.hpp"
+#include "../Tile/TileCharacters.hpp"
+#include "../Tile/TileColors.hpp"
 
 CityMapGenerator::CityMapGenerator(){
 	rng = TCODRandom::getInstance();
@@ -45,7 +47,7 @@ TCODMap* CityMapGenerator::Generate(Map* map, bool generateActors){
 			int tileIndex = tilex+tiley*width;
 			if(!map->TileHasBeenSet(tileIndex)){
 					cityMap->setProperties(tilex, tiley, true, true);
-					map->SetTileProperties(tileIndex, TCODColor::lighterGrey, TCODColor::grey, Actor::CharacterCodes::PERIOD);
+					map->SetTileProperties(tileIndex, TileColors::lighterGrey, TileColors::grey, TileCharacters::Default::PERIOD);
 					if(tilesTillNextSpawn==0){
 						tilesTillNextSpawn =rng->getInt(5, 50);
 						Point spawn;
@@ -113,16 +115,16 @@ void CityMapGenerator::CreateBuilding(Map* map, TCODMap* cityMap, int startX, in
 void CityMapGenerator::GenerateBuildingColors(TCODColor& visible, TCODColor& fog){
 	int color = rng->getInt(1, 3);
 	if(color == 1){
-		visible = TCODColor::darkerGrey;
-		fog = TCODColor::darkestGrey;
+		visible = TileColors::darkerGrey;
+		fog = TileColors::darkestGrey;
 	}
 	else if(color == 2){
-		visible = TCODColor::desaturatedCrimson;
-		fog = TCODColor::darkestCrimson;
+		visible = TileColors::desaturatedCrimson;
+		fog = TileColors::darkestCrimson;
 	}
 	else{
-		visible = TCODColor::darkerSepia;
-		fog = TCODColor::darkestSepia;
+		visible = TileColors::darkerSepia;
+		fog = TileColors::darkestSepia;
 	}
 
 }
@@ -132,20 +134,20 @@ void CityMapGenerator::GenerateBuildingColors(TCODColor& visible, TCODColor& fog
  * the end coordinates, and the size of the building
  */
 int CityMapGenerator::GenerateBuildingCharacter(int startX, int startY, int currentX, int currentY, int sizeX, int sizeY){
-	int characterCode = Actor::CharacterCodes::RAINBOW;
+	int characterCode = TileCharacters::Default::RAINBOW;
 	if(currentX == startX && currentY == startY)
-		characterCode = Actor::CharacterCodes::DOUBLE_PIPE_CORNER_UPPER_LEFT;
+		characterCode = TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_LEFT;
 	else if(currentX == startX && currentY == startY+sizeY-1)
-		characterCode = Actor::CharacterCodes::DOUBLE_PIPE_CORNER_LOWER_LEFT;
+		characterCode = TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_LEFT;
 	else if(currentX == startX+sizeX-1 && currentY == startY)
-		characterCode = Actor::CharacterCodes::DOUBLE_PIPE_CORNER_UPPER_RIGHT;
+		characterCode = TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_RIGHT;
 	else if(currentX == startX+sizeX-1 && currentY == startY+sizeY-1)
-		characterCode = Actor::CharacterCodes::DOUBLE_PIPE_CORNER_LOWER_RIGHT;
+		characterCode = TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_RIGHT;
 	else if(currentX == startX || currentX == startX+sizeX-1)
-		characterCode = Actor::CharacterCodes::DOUBLE_PIPE_VERTICAL;
+		characterCode = TileCharacters::Default::DOUBLE_PIPE_VERTICAL;
 	else if(currentY == startY || currentY == startY+sizeY-1)
-		characterCode = Actor::CharacterCodes::DOUBLE_PIPE_HORIZONTAL;
+		characterCode = TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL;
 	else	//Interior of the building
-		characterCode = Actor::CharacterCodes::BLOCK_FULL;
+		characterCode = TileCharacters::Default::BLOCK_FULL;
 	return characterCode;
 }

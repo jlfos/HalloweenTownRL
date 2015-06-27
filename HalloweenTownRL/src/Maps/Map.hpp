@@ -1,15 +1,17 @@
 #ifndef HALLOWEENTOWN_MAP_HPP
 #define HALLOWEENTOWN_MAP_HPP
 #include <vector>
-#include "../Actor/Actor.hpp"
+#include "../Tile/TileCharacters.hpp"
 #include "../Actor/ActorFactory.hpp"
+#include "../Persistent.hpp"
 
 class Time;
 class MapGenerator;
+class Actor;
 
 struct Tile {
     bool explored; // has the player already seen this tile ?
-    Tile() : explored(false), character(Actor::CharacterCodes::RAINBOW) {}
+    Tile() : explored(false), character(TileCharacters::Default::RAINBOW) {}
     TCODColor visibleColor;
     TCODColor fogColor;
     int character;

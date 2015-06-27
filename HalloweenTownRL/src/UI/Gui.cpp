@@ -3,12 +3,13 @@
 #include <fstream>
 #include <string>
 #include "libtcod.hpp"
+#include "../Actor/Actor.hpp"
 #include "../Ai/Ai.hpp"
 #include "../Ai/PlayerAi.hpp"
 #include "../Destructible/Destructible.hpp"
 #include "../Engine.hpp"
 #include "Gui.hpp"
-
+#include "../Tile/TileColors.hpp"
 
 static const int PANEL_HEIGHT=7;
 static const int BAR_WIDTH=20;
@@ -41,13 +42,13 @@ Gui::~Gui() {
 void Gui::Render() {
 	try{
 		// clear the GUI console
-		con->setDefaultBackground(TCODColor::black);
+		con->setDefaultBackground(TileColors::black);
 		con->clear();
 
 		// draw the health bar
 		RenderBar(1,1,BAR_WIDTH,"HP",engine.player->destructible->hp,
 			engine.player->destructible->maxHp,
-			TCODColor::lightRed,TCODColor::darkerRed);
+			TileColors::lightRed, TileColors::darkerRed);
 
 		con->print(1, 2, engine.currentTime.c_str());
 
@@ -100,7 +101,7 @@ void Gui::RenderBar(int x, int y, int width, const char *name,
 			con->rect(x,y,barWidth,1,false,TCOD_BKGND_SET);
 		}
 		// print text on top of the bar
-		con->setDefaultForeground(TCODColor::white);
+		con->setDefaultForeground(TileColors::white);
 		con->printEx(x+width/2,y,TCOD_BKGND_NONE,TCOD_CENTER,
 			"%s : %g/%g", name, value, maxValue);
 	}
@@ -184,7 +185,7 @@ void Gui::RenderMouseLook() {
 			}
 		}
 		// display the list of actors under the mouse cursor
-		con->setDefaultForeground(TCODColor::lightGrey);
+		con->setDefaultForeground(TileColors::lightGrey);
 		con->print(1,0,buf);
 	}
 	catch(...){

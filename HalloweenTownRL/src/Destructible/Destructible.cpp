@@ -1,10 +1,12 @@
 #include <iostream>
 #include "libtcod.hpp"
+#include "../Actor/Actor.hpp"
 #include "Destructible.hpp"
 #include "../Engine.hpp"
 #include "MonsterDestructible.hpp"
 #include "PlayerDestructible.hpp"
-
+#include "../Tile/TileCharacters.hpp"
+#include "../Tile/TileColors.hpp"
 
 Destructible::Destructible(float maxHp, float defense, int experienceReward, const char *corpseName) :
 	maxHp(maxHp), hp(maxHp), defense(defense), experienceReward(experienceReward), corpseName(corpseName){
@@ -77,8 +79,8 @@ float Destructible::Heal(float amount){
 
 void Destructible::Die(Actor *owner){
 	try{
-		owner->ch='%';
-		owner->col=TCODColor::darkRed;
+		owner->ch=TileCharacters::Default::PERCENT;
+		owner->col=TileColors::darkRed;
 		owner->name=corpseName;
 		owner->blocks=false;
 		engine.SendToBack(owner);
