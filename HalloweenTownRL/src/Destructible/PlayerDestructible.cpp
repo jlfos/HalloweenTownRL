@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "libtcod.hpp"
 #include "../Actor/Actor.hpp"
 #include "../Engine.hpp"
@@ -7,7 +8,8 @@
 #include "PlayerDestructible.hpp"
 #include "../Tile/TileColors.hpp"
 
-PlayerDestructible::PlayerDestructible(float maxHp, float defense, const char *corpseName) :
+
+PlayerDestructible::PlayerDestructible(float maxHp, float defense, std::string corpseName) :
     Destructible(maxHp, defense, 0, corpseName) {
 }
 

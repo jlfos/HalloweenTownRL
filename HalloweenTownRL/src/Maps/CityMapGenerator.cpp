@@ -36,14 +36,15 @@ TCODMap* CityMapGenerator::Generate(Map* map, bool generateActors){
 	int buildingSize = 5;
 	int tilesTillNextSpawn = 0;
 	for(int j =1;(eastWestStreet*j)+(buildingSize*(j-1))<height;j++){
+
 		for(int i = 1;(northSouthStreet*i)+(buildingSize*(i-1))<width; i++){
 			CreateBuilding(map, cityMap, 0+(eastWestStreet*i)+(buildingSize*(i-1)),
 										 0+(northSouthStreet*j)+(buildingSize*(j-1)));
 		}
 	}
 
-	for (int tilex = 0; tilex < width; tilex++) {
-		for (int tiley = 0; tiley < height; tiley++) {
+	for (int tilex = 0; tilex < width-1; tilex++) {
+		for (int tiley = 0; tiley < height-1; tiley++) {
 			int tileIndex = tilex+tiley*width;
 			if(!map->TileHasBeenSet(tileIndex)){
 					cityMap->setProperties(tilex, tiley, true, true);
@@ -97,8 +98,8 @@ void CityMapGenerator::CreateBuilding(Map* map, TCODMap* cityMap, int startX, in
 	int width = map->GetWidth();
 	GenerateBuildingColors(visible, fog);
 	int height = map->GetHeight();
-	for(int tileX = startX; tileX < startX+sizeX && tileX < width-1; tileX++ ){
-		for(int tileY = startY; tileY < startY+sizeY && tileY < height-1; tileY++){
+	for(int tileX = startX; tileX < startX+sizeX && tileX < width-2; tileX++ ){
+		for(int tileY = startY; tileY < startY+sizeY && tileY < height-2; tileY++){
 
 			int tileIndex =  tileX + tileY* width;
 			int character = GenerateBuildingCharacter(startX, startY, tileX, tileY, sizeX, sizeY);

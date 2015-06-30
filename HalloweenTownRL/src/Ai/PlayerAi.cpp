@@ -135,7 +135,7 @@ bool PlayerAi::MoveOrAttack(Actor *owner, int targetX, int targetY){
 		for(Actor* actor : engine.actors){
 			bool corpseOrItem =(actor->destructible && actor->destructible->IsDead()) || actor->pickable;
 			if(corpseOrItem && actor->x == targetX && actor->y == targetY){
-				engine.gui->PushMessage(TileColors::lightGrey,"There's a %s here",actor->name);
+				engine.gui->PushMessage(TileColors::lightGrey,"There's a %s here", (actor->name).c_str() );
 			}
 		}
 		owner->x=targetX;
@@ -192,7 +192,7 @@ Actor *PlayerAi::ChooseFromInventory(Actor *owner){
 		int shortcut = 'a';
 		int y = 1;
 		for(Actor *actor : owner->container->inventory){
-			con.print(2, y, "(%c) %s", shortcut, actor->name);
+			con.print(2, y, "(%c) %s", shortcut, (actor->name).c_str());
 			y++;
 			shortcut++;
 		}
@@ -230,7 +230,7 @@ void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 						if (actor->pickable->Pick(actor,owner)) {
 							found=true;
 							engine.gui->PushMessage(TileColors::lightGrey,"You pick the %s.",
-								actor->name);
+								(actor->name).c_str());
 							break;
 						} else if (! found) {
 							found=true;

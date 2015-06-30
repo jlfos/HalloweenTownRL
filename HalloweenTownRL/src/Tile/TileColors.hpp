@@ -35,10 +35,17 @@ namespace TileColors{
 	static const TCODColor violet = TCODColor::violet;
 
 	static const TCODColor brown = TCODColor(139, 69, 19);
-	static const TCODColor darkBrown = TCODColor(97, 49, 12);
+	static const TCODColor darkBrown = TCODColor(90, 49, 12);
+	static const TCODColor darkerBrown = TCODColor(78, 40, 6);
+
+
+	static const TCODColor peach = TCODColor::peach;
 
 	static const TCODColor green = TCODColor::green;
 	static const TCODColor darkerGreen = TCODColor::darkerGreen;
+	static const TCODColor darkestGreen = TCODColor::darkestGreen;
+
+	static const TCODColor desaturatedLime = TCODColor::desaturatedLime;
 
 	static const TCODColor lighterGrey = TCODColor::lighterGrey;
 	static const TCODColor lightGrey = TCODColor::lightGrey;

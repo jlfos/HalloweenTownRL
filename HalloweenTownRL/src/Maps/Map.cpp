@@ -202,9 +202,9 @@ Map::TileType Map::GetTileType(int x, int y) const {
 		if(!map->isWalkable(x, y)){
 			if(y<0)
 				return TileType::TOP_EDGE;
-			else if(x >= width)
+			else if(x >= width-1)
 				return TileType::RIGHT_EDGE;
-			else if(y >= height)
+			else if(y >= height-1)
 				return TileType::BOTTOM_EDGE;
 			else if(x<0)
 				return TileType::LEFT_EDGE;

@@ -35,10 +35,31 @@ TCODMap* ForestMapGenerator::Generate(Map* map, bool generateActors){
 	int width = map->GetWidth();
 	int height = map->GetHeight();
 	TCODMap* forestMap = new TCODMap(width, height);
+	int tilesTillNextSpawn = 0;
 	for (int tileX = 0; tileX < width; tileX++) {
 			for (int tileY = 0; tileY < height; tileY++) {
 					GenerateTile(tileX, tileY, width, height, forestMap, map);
 			}
+	}
+
+	//TODO Make the generation of spawn locations more generic
+	//TODO Work on making the terrain of the forest look a little more interesting
+	for (int tilex = 0; tilex < width-1; tilex++) {
+		for (int tiley = 0; tiley < height-1; tiley++) {
+			int tileIndex = tilex+tiley*width;
+			if(!map->TileHasBeenSet(tileIndex)){
+					forestMap->setProperties(tilex, tiley, true, true);
+					GenerateGrass(tilex, tiley, width, forestMap, map);
+					if(tilesTillNextSpawn==0){
+						tilesTillNextSpawn =rng->getInt(5, 50);
+						Point spawn;
+						spawn.x = tilex;
+						spawn.y = tiley;
+						map->spawnLocations.push_back(spawn);
+					}
+					tilesTillNextSpawn--;
+				}
+		}
 	}
 
 
@@ -46,7 +67,20 @@ TCODMap* ForestMapGenerator::Generate(Map* map, bool generateActors){
 }
 
 void ForestMapGenerator::PopulateActors(Map* map){
-
+	//TODO Work on making PopulateActors a little more generic
+	map->actors.clear();
+	int nextSpawn = rng->getInt(5, 15);
+	ActorFactory::EnemyDifficulty difficulty = map->GetDifficulty();
+	for(Point spawn : map->spawnLocations){
+		nextSpawn--;
+		if(nextSpawn==0){
+			map->actors.push(ActorFactory::CreateMonster(spawn.x,
+														 spawn.y,
+														 difficulty,
+														 ActorFactory::MapType::WOODS));
+			nextSpawn = rng->getInt(5, 10);
+		}
+	}
 }
 
 /**
@@ -76,8 +110,6 @@ void ForestMapGenerator::GenerateTile(int x, int y, int width, int height, TCODM
 		rand = rng->getInt(90, 100);
 	if(rand%100==0 && x!=0 && y!=0 && x!=width-1 && y!=height-1)
 		GenerateTree(x, y, width, forestMap, map);
-	else
-		GenerateGrass(x, y, width, forestMap, map);
 
 }
 

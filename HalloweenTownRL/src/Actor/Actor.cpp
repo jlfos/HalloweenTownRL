@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "Actor.hpp"
 #include "../Ai/Ai.hpp"
 #include "../Attacker.hpp"
@@ -6,7 +7,7 @@
 #include "../Destructible/Destructible.hpp"
 #include "../Pickable/Pickable.hpp"
 
-Actor::Actor(int x, int y, int ch, const char *name, const TCODColor &col) :
+Actor::Actor(int x, int y, int ch, std::string name, const TCODColor &col) :
     x(x),y(y),ch(ch),col(col), name(name),
     blocks(true), attacker(nullptr), destructible(nullptr), ai(nullptr),
     pickable(nullptr), container(nullptr){
@@ -52,7 +53,7 @@ void Actor::Save(TCODZip &zip){
 		zip.putInt(y);
 		zip.putInt(ch);
 		zip.putColor(&col);
-		zip.putString(name);
+		zip.putString(name.c_str());
 		zip.putInt(blocks);
 		zip.putInt(attacker !=  nullptr);
 		zip.putInt(destructible != nullptr);

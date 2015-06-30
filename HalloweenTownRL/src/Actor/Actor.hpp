@@ -1,6 +1,6 @@
 #ifndef HALLOWEENTOWN_ACTOR_HPP
 #define HALLOWEENTOWN_ACTOR_HPP
-
+#include <string>
 #include "libtcod.hpp"
 #include "../Persistent.hpp"
 
@@ -18,7 +18,7 @@ public:
 	int x, y; // position on map
 	int ch; // ascii code
 	TCODColor col; // color
-	const char *name; // the actor's name
+	std::string name; // the actor's name
 	bool blocks; // can we walk on this actor?
 	Attacker *attacker; // something that deals damages
 	Destructible *destructible; // something that can be damaged
@@ -26,7 +26,7 @@ public:
 	Pickable *pickable; //something that can be picked up
 	Container *container; //something that contains
 
-	Actor(int x, int y, int ch, const char *name, const TCODColor &col);
+	Actor(int x, int y, int ch, std::string name, const TCODColor &col);
 	~Actor();
 	void Update();
 	void Render() const;

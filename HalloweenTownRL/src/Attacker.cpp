@@ -14,18 +14,18 @@ void Attacker::Attack(Actor *owner, Actor *target){
 		if(target->destructible && ! target->destructible->IsDead()){
 			if(power - target->destructible->GetDefense()>0){
 				engine.gui->PushMessage(owner==engine.player ? TileColors::red : TileColors::lightGrey,
-					"%s attacks %s for %g hit points.", owner->name, target->name,
+					"%s attacks %s for %g hit points.", (owner->name).c_str(), (target->name).c_str(),
 					power - target->destructible->GetDefense());
 			}
 			else{
 				engine.gui->PushMessage(TileColors::lightGrey,
-					"%s attacks %s but it has no effect!", owner->name, target->name);
+					"%s attacks %s but it has no effect!", (owner->name).c_str(), (target->name).c_str());
 			}
 			target->destructible->TakeDamage(target, power);
 		}
 		else{
 			engine.gui->PushMessage(TileColors::lightGrey,
-				"%s attacks %s in vain.",owner->name, target->name);
+				"%s attacks %s in vain.", (owner->name).c_str(), (target->name).c_str());
 		}
 	}
 	catch(...){

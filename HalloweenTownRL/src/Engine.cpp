@@ -373,7 +373,7 @@ void Engine::NextLevel(Map::TileType type) {
 			}
 		}
 		if (type == Map::TileType::LEFT_EDGE) {
-			heroX = DEFAULT_MAP_WIDTH - 1;
+			heroX = DEFAULT_MAP_WIDTH - 2;
 			heroY = player->y;
 			if (mapX > 0) {
 				mapX--;

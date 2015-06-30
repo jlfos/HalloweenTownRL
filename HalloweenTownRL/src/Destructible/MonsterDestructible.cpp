@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "libtcod.hpp"
 #include "../Actor/Actor.hpp"
 #include "Destructible.hpp"
@@ -7,9 +8,23 @@
 #include "MonsterDestructible.hpp"
 #include "../Tile/TileColors.hpp"
 
-MonsterDestructible::MonsterDestructible(float maxHp, float defense, int experienceReward, const char *corpseName) :
+
+MonsterDestructible::MonsterDestructible(float maxHp, float defense, int experienceReward, std::string corpseName, TCODColor corpseColor, int corpseCharacter) :
+	Destructible(maxHp, defense, experienceReward, corpseName, corpseColor, corpseCharacter) {
+
+}
+
+MonsterDestructible::MonsterDestructible(float maxHp, float defense, int experienceReward, std::string corpseName, TCODColor corpseColor) :
+	Destructible(maxHp, defense, experienceReward, corpseName, corpseColor) {
+
+}
+
+
+MonsterDestructible::MonsterDestructible(float maxHp, float defense, int experienceReward, std::string corpseName) :
     Destructible(maxHp, defense, experienceReward, corpseName) {
 }
+
+
 
 
 void MonsterDestructible::Load(TCODZip &zip){
@@ -24,7 +39,7 @@ void MonsterDestructible::Load(TCODZip &zip){
 
 void MonsterDestructible::Die(Actor *owner){
 	try{
-		engine.gui->PushMessage(TileColors::lightGrey,"%s is dead",owner->name);
+		engine.gui->PushMessage(TileColors::lightGrey,"%s is dead", (owner->name).c_str() );
 		Destructible::Die(owner);
 	}
 	catch(...){

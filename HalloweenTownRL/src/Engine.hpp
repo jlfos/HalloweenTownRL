@@ -50,8 +50,8 @@ private:
 	void ContinueGame();
 	const int DEFAULT_MAP_WIDTH = 80;
 	const int DEFAULT_MAP_HEIGHT = 43;
-	const int DEFAULT_PLAYER_START_X = 40;
-	const int DEFAULT_PLAYER_START_Y = 10;
+	const int DEFAULT_PLAYER_START_X = 5;
+	const int DEFAULT_PLAYER_START_Y = 20;
 	const int DEFAULT_MAP_X = 1;
 	const int DEFAULT_MAP_Y = 1;
 	int WORLD_SIZE_LATITUDE;

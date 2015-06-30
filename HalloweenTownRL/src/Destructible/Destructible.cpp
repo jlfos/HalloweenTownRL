@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "libtcod.hpp"
 #include "../Actor/Actor.hpp"
 #include "Destructible.hpp"
@@ -8,8 +9,37 @@
 #include "../Tile/TileCharacters.hpp"
 #include "../Tile/TileColors.hpp"
 
-Destructible::Destructible(float maxHp, float defense, int experienceReward, const char *corpseName) :
+Destructible::Destructible(float maxHp, float defense, int experienceReward, std::string corpseName, TCODColor corpseColor, int corpseCharacter):
+	maxHp(maxHp), hp(maxHp), defense(defense), experienceReward(experienceReward), corpseName(corpseName), corpseColor(corpseColor), corpseCharacter(corpseCharacter){
+
+}
+
+Destructible::Destructible(float maxHp, float defense, int experienceReward, std::string corpseName, TCODColor corpseColor):
+			maxHp(maxHp), hp(maxHp), defense(defense), experienceReward(experienceReward), corpseName(corpseName), corpseColor(corpseColor){
+		TCODRandom rng(maxHp+defense+experienceReward, TCOD_RNG_CMWC);
+		int randInt = rng.getInt(1, 2);
+		int characterCode;
+		if(randInt %2 == 0)
+			corpseCharacter = TileCharacters::Default::PERCENT;
+		else
+			corpseCharacter = TileCharacters::Default::BURST;
+
+	}
+
+
+Destructible::Destructible(float maxHp, float defense, int experienceReward, std::string corpseName):
 	maxHp(maxHp), hp(maxHp), defense(defense), experienceReward(experienceReward), corpseName(corpseName){
+
+	//TODO Pull this out into its own function
+	//TODO Work on the randomness of the corpses
+	TCODRandom rng(maxHp+defense+experienceReward, TCOD_RNG_CMWC);
+	int randInt = rng.getInt(1, 2);
+	int characterCode;
+	if(randInt %2 == 0)
+		corpseCharacter = TileCharacters::Default::PERCENT;
+	else
+		corpseCharacter = TileCharacters::Default::BURST;
+
 }
 
 
@@ -118,7 +148,7 @@ void Destructible::Save(TCODZip &zip){
 		zip.putFloat(maxHp);
 		zip.putFloat(hp);
 		zip.putFloat(defense);
-		zip.putString(corpseName);
+		zip.putString(corpseName.c_str());
 	}
 	catch(...){
 		std::cerr << "An error occurred in Destructible::Save" << std::endl;

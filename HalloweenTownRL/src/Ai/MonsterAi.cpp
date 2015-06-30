@@ -11,7 +11,11 @@
 
 static const int TRACKING_TURNS=3;
 
-MonsterAi::MonsterAi() : moveCount(0) {
+MonsterAi::MonsterAi(int trackingDistance) : moveCount(0), trackingDistance(trackingDistance) {
+
+}
+
+MonsterAi::MonsterAi() : MonsterAi(20)  {
 }
 
 void MonsterAi::Update(Actor *owner){
@@ -44,28 +48,28 @@ void MonsterAi::MoveOrAttack(Actor *owner, int targetX, int targetY){
 		int stepdx = (dx > 0 ? 1:-1);
 		int stepdy = (dy > 0 ? 1:-1);
 		float distance = sqrtf(dx*dx+dy*dy);
-		if(distance >=2){
-			if(distance >= 20){
+		if(distance >=2){ //not within striking distance
+			if(distance >= 20){ //too far for monster to track
 				dx = rng.getInt(-1, 1);
 				dy = rng.getInt(-1, 1);
 			}
-			else{
+			else{ //monster is tracking
 				dx = (int)(round(dx/distance));
 				dy = (int)(round(dy/distance));
 			}
 
-			if(engine.currentMap->CanWalk(owner->x+dx, owner->y+dy)){
+			if(engine.currentMap->CanWalk(owner->x+dx, owner->y+dy)){ //Can you move directly towards target?
 				owner->x += dx;
 				owner->y += dy;
 			}
-			else if ( engine.currentMap->CanWalk(owner->x+stepdx,owner->y) ) {
+			else if ( engine.currentMap->CanWalk(owner->x+stepdx,owner->y) ) {  //Can you move horizontally to target?
 				owner->x += stepdx;
 			}
-			else if ( engine.currentMap->CanWalk(owner->x,owner->y+stepdy) ) {
+			else if ( engine.currentMap->CanWalk(owner->x,owner->y+stepdy) ) { //Can you move vertically to target?
 				owner->y += stepdy;
 			}
 		}
-		else if ( owner->attacker ) {
+		else if ( owner->attacker ) { //within striking distance
 				owner->attacker->Attack(owner,engine.player);
 		}
 	}
