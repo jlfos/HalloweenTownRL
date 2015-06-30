@@ -4,6 +4,7 @@
 #include <string>
 #include "libtcod.hpp"
 
+//TODO Change this to main menu
 class Menu{
 public:
 

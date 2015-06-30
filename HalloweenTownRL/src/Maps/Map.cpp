@@ -199,14 +199,15 @@ Map::~Map() {
 Map::TileType Map::GetTileType(int x, int y) const {
 	try{
 
+		TCOD_keycode_t lastKey = engine.lastKey.vk;
 		if(!map->isWalkable(x, y)){
-			if(y<0)
+			if(y<0 && lastKey == TCODK_UP)
 				return TileType::TOP_EDGE;
-			else if(x >= width-1)
+			else if(x >= width-1 && lastKey == TCODK_RIGHT)
 				return TileType::RIGHT_EDGE;
-			else if(y >= height-1)
+			else if(y >= height-1 && lastKey == TCODK_DOWN)
 				return TileType::BOTTOM_EDGE;
-			else if(x<0)
+			else if(x<0 && lastKey == TCODK_LEFT)
 				return TileType::LEFT_EDGE;
 			else{
 				return TileType::WALL;

@@ -27,4 +27,4 @@ void LevelUpMenu::PopulateMenu(bool saveGameExists){
 		std::cerr << "An error occurred with LevelUpMenu::populateMenu"  << std::endl;
 		throw 0;
 	}
-};
+}

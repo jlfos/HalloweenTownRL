@@ -1,9 +1,9 @@
 /*
- * MostlyEmptyMapGenerator.cpp
+ * ForestMapGenerator.cpp
  *
  *  Created on: Feb 15, 2015
- *      Author: josh
  */
+#include <iostream>
 #include "libtcod.hpp"
 #include "ForestMapGenerator.hpp"
 #include "Map.hpp"
@@ -74,10 +74,13 @@ void ForestMapGenerator::PopulateActors(Map* map){
 	for(Point spawn : map->spawnLocations){
 		nextSpawn--;
 		if(nextSpawn==0){
-			map->actors.push(ActorFactory::CreateMonster(spawn.x,
-														 spawn.y,
-														 difficulty,
-														 ActorFactory::MapType::WOODS));
+			Actor *temp = ActorFactory::CreateMonster(spawn.x,
+					 spawn.y,
+					 difficulty,
+					 ActorFactory::MapType::WOODS);
+			if(!temp)
+				std::cout << "Null actor!" << std::endl;
+			map->actors.push(temp);
 			nextSpawn = rng->getInt(5, 10);
 		}
 	}

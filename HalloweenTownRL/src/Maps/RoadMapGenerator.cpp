@@ -23,7 +23,7 @@ TCODMap* RoadMapGenerator::Generate(Map* map, bool generateActors){
 	TCODMap* roadMap = new TCODMap(width, height);
 
 	for (int tileX = 0; tileX < width; tileX++) {
-		for (int tileY = 0; tileY < height; tileY++) {
+		for (int tileY = 0; tileY < height-1; tileY++) {
 			bool roadFlag = false;
 			switch(orientation){
 				case MapGenerator::Orientation::NORTH:

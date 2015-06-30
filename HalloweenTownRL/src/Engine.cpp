@@ -16,7 +16,7 @@
 
 Engine::Engine(int screenWidth, int screenHeight) :
 		gameStatus(STARTUP), fovRadius(10), screenWidth(screenWidth), screenHeight(screenHeight),
-		currentTime(6, 00), incrementTime(false){
+		currentTime(8, 00), incrementTime(false){
 	try {
 		currentMap = nullptr;
 		maps = nullptr;
@@ -40,7 +40,7 @@ void Engine::Init() {
 				DEFAULT_PLAYER_START_Y);
 		std::vector<std::vector<Engine::MapType>> mapTypes{
 				{Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH },
-				{Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY },
+				{Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::FOREST_NORTH },
 				{Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::ROAD_EW },
 				{Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::FOREST_SOUTH },
 				{Engine::MapType::FOREST_SOUTH, Engine::MapType::FOREST_SOUTH, Engine::MapType::FOREST_SOUTH, Engine::MapType::FOREST_SOUTH }
@@ -338,7 +338,7 @@ void Engine::NextLevel(Map::TileType type) {
 
 		if (type == Map::TileType::TOP_EDGE) {
 			heroX = player->x;
-			heroY = DEFAULT_MAP_HEIGHT - 1;
+			heroY = DEFAULT_MAP_HEIGHT - 2;
 			if (mapY > 0) {
 				mapY--;
 			} else {
@@ -434,9 +434,12 @@ void Engine::Render() {
 
 		// draw the actors
 		for (Actor *actor : actors) {
-			if (currentMap->IsInFov(actor->x, actor->y)) {
-				actor->Render();
+			if(actor){
+				if (currentMap->IsInFov(actor->x, actor->y)) {
+					actor->Render();
+				}
 			}
+//			else std::cout << "Null actor" << std::endl;
 		}
 		TCODConsole::flush();
 

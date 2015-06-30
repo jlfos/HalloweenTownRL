@@ -17,7 +17,7 @@
 
 Actor *ActorFactory::CreateHero(int x, int y){
 	try{
-		Actor *player = new Actor(x, y, TileCharacters::Default::I_LOWERCASE, "player", TileColors::violet);
+		Actor *player = new Actor(x, y, TileCharacters::Default::AT_SIGN, "player", TileColors::white);
 		player->destructible=new PlayerDestructible(30,2,"your cadaver");
 		player->attacker=new Attacker(3);
 		player->ai = new PlayerAi();
@@ -128,10 +128,12 @@ Actor *ActorFactory::CreateMonster(int x, int y, EnemyDifficulty difficulty, Map
 		case MapType::CITY:
 			monster = CreateMonsterForCity(x, y, difficulty);
 			break;
-		case MapType::ROAD:
-			break;
 		case MapType::WOODS:
 			monster = CreateMonsterForWoods(x, y, difficulty);
+			break;
+		case MapType::ROAD:
+		default:
+			throw 0;
 			break;
 		}
 		return monster;
@@ -231,9 +233,9 @@ Actor *ActorFactory::CreateMonsterForCity(int x, int y, EnemyDifficulty difficul
 		}
 		else if(randInt <= spawnChances[EnemyDifficulty::MEDIUM]){
 			if(randInt %2 == 0)
-				monster = CreateGoblin(x, y);
+				monster = CreateGremlin(x, y);//monster = CreateGoblin(x, y);
 			else
-				monster = CreateVampire(x, y, difficulty);
+				monster = CreateZombie(x, y);//CreateVampire(x, y, difficulty);
 		}
 		else if(randInt <= spawnChances[EnemyDifficulty::HARD]){
 			if(randInt %2 == 0)
@@ -292,6 +294,8 @@ Actor *ActorFactory::CreateMonsterForWoods(int x, int y, EnemyDifficulty difficu
 		else if(randInt <= spawnChances[EnemyDifficulty::NIGHTMARE]){
 			monster = CreateVampire(x, y, difficulty);
 		}
+		else
+			throw 0;
 
 		return monster;
 	}
@@ -319,7 +323,7 @@ std::map<ActorFactory::EnemyDifficulty, int>  ActorFactory::GenerateSpawnChances
 			case EnemyDifficulty::MEDIUM:
 			{
 				chancesForSpawn[EnemyDifficulty::EASY] = 25;
-				chancesForSpawn[EnemyDifficulty::MEDIUM] = 75;
+				chancesForSpawn[EnemyDifficulty::MEDIUM] = 100;
 				chancesForSpawn[EnemyDifficulty::HARD] = 0;
 				chancesForSpawn[EnemyDifficulty::VERY_HARD] = 0;
 				chancesForSpawn[EnemyDifficulty::INSANE] = 0;
@@ -330,7 +334,7 @@ std::map<ActorFactory::EnemyDifficulty, int>  ActorFactory::GenerateSpawnChances
 			{
 				chancesForSpawn[EnemyDifficulty::EASY] = 12;
 				chancesForSpawn[EnemyDifficulty::MEDIUM] = 25;
-				chancesForSpawn[EnemyDifficulty::HARD] = 75;
+				chancesForSpawn[EnemyDifficulty::HARD] = 100;
 				chancesForSpawn[EnemyDifficulty::VERY_HARD] = 0;
 				chancesForSpawn[EnemyDifficulty::INSANE] = 0;
 				chancesForSpawn[EnemyDifficulty::NIGHTMARE] = 0;
@@ -341,7 +345,7 @@ std::map<ActorFactory::EnemyDifficulty, int>  ActorFactory::GenerateSpawnChances
 				chancesForSpawn[EnemyDifficulty::EASY] = 6;
 				chancesForSpawn[EnemyDifficulty::MEDIUM] = 12;
 				chancesForSpawn[EnemyDifficulty::HARD] = 25;
-				chancesForSpawn[EnemyDifficulty::VERY_HARD] = 75;
+				chancesForSpawn[EnemyDifficulty::VERY_HARD] = 100;
 				chancesForSpawn[EnemyDifficulty::INSANE] = 0;
 				chancesForSpawn[EnemyDifficulty::NIGHTMARE] = 0;
 			}
@@ -352,7 +356,7 @@ std::map<ActorFactory::EnemyDifficulty, int>  ActorFactory::GenerateSpawnChances
 				chancesForSpawn[EnemyDifficulty::MEDIUM] = 6;
 				chancesForSpawn[EnemyDifficulty::HARD] = 12;
 				chancesForSpawn[EnemyDifficulty::VERY_HARD] = 25;
-				chancesForSpawn[EnemyDifficulty::INSANE] = 75;
+				chancesForSpawn[EnemyDifficulty::INSANE] = 100;
 				chancesForSpawn[EnemyDifficulty::NIGHTMARE] = 0;
 			}
 			break;
@@ -363,7 +367,7 @@ std::map<ActorFactory::EnemyDifficulty, int>  ActorFactory::GenerateSpawnChances
 				chancesForSpawn[EnemyDifficulty::HARD] = 6;
 				chancesForSpawn[EnemyDifficulty::VERY_HARD] = 12;
 				chancesForSpawn[EnemyDifficulty::INSANE] = 25;
-				chancesForSpawn[EnemyDifficulty::NIGHTMARE] = 75;
+				chancesForSpawn[EnemyDifficulty::NIGHTMARE] = 100;
 			}
 			break;
 		}

@@ -13,8 +13,11 @@ public :
 	void Load(TCODZip &zip);
 	void Save(TCODZip &zip);
 	void Clear();
+	void ShowLog();
 protected :
 	TCODConsole *con;
+
+	//TODO Break this out into its own class
 	struct Message {
 		char *text;
 		TCODColor col;

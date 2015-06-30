@@ -24,7 +24,7 @@ void PauseMenu::PopulateMenu(bool saveGameExists){
 
 		}
 		catch(...){
-			std::cerr << "An error occurred with Menu::populateMenu"  << std::endl;
+			std::cerr << "An error occurred with PauseMenu::PopulateMenu"  << std::endl;
 			throw 0;
 		}
 }

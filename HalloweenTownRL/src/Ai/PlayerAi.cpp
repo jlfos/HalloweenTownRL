@@ -7,6 +7,7 @@
 #include "../Container.hpp"
 #include "../Destructible/Destructible.hpp"
 #include "../Engine.hpp"
+#include "../UI/EventLog.hpp"
 #include "../UI/LevelUpMenu.hpp"
 #include "../Pickable/Pickable.hpp"
 #include "../Tile/TileColors.hpp"
@@ -263,6 +264,10 @@ void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 				PlayerLook(owner);
 			}
 			break;
+			case 'L':{
+				viewLog();
+			}
+			break;
 		}
 	}
 	catch(...){
@@ -296,6 +301,26 @@ void PlayerAi::PlayerLook(Actor* player){
 		}
 
 
+	}
+}
+
+void PlayerAi::viewLog(){
+	try{
+		bool logMode = true;
+		TCOD_key_t lastKey;
+
+			engine.gui->ShowLog();
+			while(logMode){
+				TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
+				switch(lastKey.vk){
+					case TCODK_ESCAPE :logMode = false; break;
+					default: break;
+				}
+			}
+	}
+	catch(...){
+		std::cerr << "An error occurred in PlayerAi::viewLog" << std::endl;
+		throw 0;
 	}
 }
 

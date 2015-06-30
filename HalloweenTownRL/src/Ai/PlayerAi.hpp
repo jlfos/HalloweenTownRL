@@ -26,6 +26,7 @@ private:
 	void PlayerLook(Actor* player);
 	void LevelUpPlayer(Actor* player);
 	bool LevelUpOccurred();
+	void viewLog();
 	int currentLevelGoal;
 	int currentExperience;
 	int experienceLevel;

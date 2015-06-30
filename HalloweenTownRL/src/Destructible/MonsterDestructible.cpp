@@ -39,7 +39,7 @@ void MonsterDestructible::Load(TCODZip &zip){
 
 void MonsterDestructible::Die(Actor *owner){
 	try{
-		engine.gui->PushMessage(TileColors::lightGrey,"%s is dead", (owner->name).c_str() );
+		engine.gui->PushMessage(TileColors::lightGrey,"The %s is dead", (owner->name).c_str() );
 		Destructible::Die(owner);
 	}
 	catch(...){

@@ -14,7 +14,7 @@
 static const int PANEL_HEIGHT=7;
 static const int BAR_WIDTH=20;
 static const int MSG_X=BAR_WIDTH+2;
-static const int MSG_HEIGHT=PANEL_HEIGHT-1;
+static const int MSG_HEIGHT=47;
 
 Gui::Gui() {
 	try{
@@ -59,18 +59,35 @@ void Gui::Render() {
 
 		// draw the message log
 		int y=1;
+
+		//TODO Pull this value out
 		float colorCoef=0.4f;
-		for (Message *message : log) {
-			con->setDefaultForeground(message->col * colorCoef);
-			con->print(MSG_X,y,message->text);
-			y++;
-			if ( colorCoef < 1.0f ) {
-				colorCoef+=0.3f;
-			}
+
+		int i;
+		if(log.size()-1>(PANEL_HEIGHT-1) )
+			i =(log.size()-1) - (PANEL_HEIGHT-1);
+		else
+			i = 0;
+		for(; i<log.size(); i++){
+
+			con->setDefaultForeground(log.get(i)->col * colorCoef);
+					con->print(MSG_X,y,log.get(i)->text);
+					y++;
+					if ( colorCoef < 1.0f ) {
+						colorCoef+=0.3f;
+					}
 		}
+//		for (Message *message : log) {
+//			con->setDefaultForeground(message->col * colorCoef);
+//			con->print(MSG_X,y,message->text);
+//			y++;
+//			if ( colorCoef < 1.0f ) {
+//				colorCoef+=0.3f;
+//			}
+//		}
 
 		// mouse look
-		RenderMouseLook();
+//		RenderMouseLook();
 
 
 
@@ -231,4 +248,22 @@ void Gui::PushMessage(const TCODColor &col, const char *text, ...) {
 		std::cerr << "An error occurred with Gui::message"  << std::endl;
 		throw 0;
 	}
+}
+
+void Gui::ShowLog(){
+	// draw the message log
+	int y=1;
+	TCODConsole::root->clear();
+
+	float colorCoef=0.4f;
+	for(Message *message : log) {
+		TCODConsole::root->setDefaultForeground(message->col * colorCoef);
+		TCODConsole::root->print(1, y, message->text, message->col);
+//		TCODConsole::root->setChar(1, y, 32);
+		y++;
+		if ( colorCoef < 1.0f ) {
+			colorCoef+=0.3f;
+		}
+	}
+	TCODConsole::root->flush();
 }
