@@ -7,7 +7,7 @@
 #include "../Container.hpp"
 #include "../Destructible/Destructible.hpp"
 #include "../Engine.hpp"
-#include "../UI/EventLog.hpp"
+#include "../UI/HelpScreen.hpp"
 #include "../UI/LevelUpMenu.hpp"
 #include "../Pickable/Pickable.hpp"
 #include "../Tile/TileColors.hpp"
@@ -218,6 +218,23 @@ Actor *PlayerAi::ChooseFromInventory(Actor *owner){
 	}
 }
 
+void PlayerAi::showHelp() {
+	HelpScreen help;
+	help.Show();
+	bool logMode = true;
+	TCOD_key_t lastKey;
+	while (logMode) {
+		TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
+		switch (lastKey.vk) {
+		case TCODK_ESCAPE:
+			logMode = false;
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 	try
 	{
@@ -259,13 +276,19 @@ void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 				engine.gameStatus=Engine::NEW_TURN;
 			}
 			break;
-			case 'l':
+			case 'l': //activate look mode
 			{
 				PlayerLook(owner);
 			}
 			break;
-			case 'L':{
+			case 'L': //view event log
+			{
 				viewLog();
+			}
+			break;
+			case '?' : //view help screen
+			{
+			showHelp();
 			}
 			break;
 		}

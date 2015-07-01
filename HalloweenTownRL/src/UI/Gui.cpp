@@ -77,14 +77,6 @@ void Gui::Render() {
 						colorCoef+=0.3f;
 					}
 		}
-//		for (Message *message : log) {
-//			con->setDefaultForeground(message->col * colorCoef);
-//			con->print(MSG_X,y,message->text);
-//			y++;
-//			if ( colorCoef < 1.0f ) {
-//				colorCoef+=0.3f;
-//			}
-//		}
 
 		// mouse look
 //		RenderMouseLook();
