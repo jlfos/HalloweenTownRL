@@ -14,6 +14,7 @@
 #include "Maps/RoadMapGenerator.hpp"
 #include "Tile/TileColors.hpp"
 #include "Tile/TileCharacters.hpp"
+#include "UI/VictoryScreen.hpp"
 
 Engine::Engine(int screenWidth, int screenHeight) :
 		gameStatus(STARTUP), fovRadius(10), screenWidth(screenWidth), screenHeight(screenHeight),
@@ -344,6 +345,10 @@ void Engine::Update() {
 					actor->Update();
 				}
 			}
+		}
+		else if(gameStatus == VICTORY){
+			VictoryScreen screen;
+			screen.show();
 		}
 	} catch (...) {
 		std::cerr << "An error occurred with Engine::Update" << std::endl;

@@ -10,6 +10,7 @@ HelpScreen::HelpScreen(){
 	log.push(new Gui::Message("'i'  ........ inventory", TileColors::white));
 	log.push(new Gui::Message("'l'  ........ look mode", TileColors::white));
 	log.push(new Gui::Message("'L'  ........ open Event Log", TileColors::white));
+	log.push(new Gui::Message("'g   ........ pick up item", TileColors::white));
 	log.push(new Gui::Message("'.'  ........ wait", TileColors::white));
 	log.push(new Gui::Message("Press ESC to return", TileColors::white));
 }
@@ -19,6 +20,8 @@ HelpScreen::~HelpScreen(){
 }
 
 void HelpScreen::Show(){
+
+	//TODO Pull this out and make it generic for the other screens
 
 	int y=1;
 	TCODConsole::root->clear();

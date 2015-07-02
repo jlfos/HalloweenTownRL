@@ -3,6 +3,7 @@
 #include "Actor.hpp"
 #include "ActorFactory.hpp"
 #include "../Ai/Ai.hpp"
+#include "../Destructible/BossDestructible.hpp"
 #include "../Ai/MonsterAi.hpp"
 #include "../Ai/PlayerAi.hpp"
 #include "../Attacker.hpp"
@@ -35,7 +36,7 @@ Actor *ActorFactory::CreateGiantSpider(int x, int y){
 	try{
 		Actor *giantSpider = new Actor( x, y, TileCharacters::Default::S_UPPERCASE, "giant spider",
 				TCODColor::desaturatedGreen);
-		giantSpider->destructible = new MonsterDestructible(120, 6, 96,"dead giant spider");
+		giantSpider->destructible = new BossDestructible(1, 1, 96,"dead giant spider"); //120, 6, 96
 		giantSpider->attacker = new Attacker(20);
 		giantSpider->ai = new MonsterAi(70);
 		return giantSpider;
@@ -51,33 +52,33 @@ Actor *ActorFactory::CreateVampire(int x, int y, EnemyDifficulty difficulty){
 	try{
 		Actor *vampire = nullptr;
 		if(difficulty == EnemyDifficulty::MEDIUM){
-			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "Hobo vampire", TileColors::lightestRed);
+			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "hobo vampire", TileColors::lightestRed);
 			vampire->destructible = new MonsterDestructible(15, 1, 6, "pile of ash");
 			vampire->attacker = new Attacker(3);
 			vampire->ai = new MonsterAi(35);
 
 		}
 		if(difficulty == EnemyDifficulty::HARD){
-			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "Techno vampire", TileColors::lightestRed);
+			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "techno vampire", TileColors::lightestRed);
 			vampire->destructible = new MonsterDestructible(30, 2, 12, "pile of ash");
 			vampire->attacker = new Attacker(4);
 			vampire->ai = new MonsterAi(35);
 
 		}
 		else if(difficulty == EnemyDifficulty::VERY_HARD){
-			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "Gangster vampire", TileColors::lighterRed);
+			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "gangster vampire", TileColors::lighterRed);
 			vampire->destructible = new MonsterDestructible(45, 3, 24, "pile of ash");
 			vampire->attacker = new Attacker(8);
 			vampire->ai = new MonsterAi(35);
 		}
 		else if(difficulty == EnemyDifficulty::INSANE){
-			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "Flying vampire", TileColors::lightRed);
+			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "flying vampire", TileColors::lightRed);
 			vampire->destructible = new MonsterDestructible(80, 4, 48, "pile of ash");
 			vampire->attacker = new Attacker(16);
 			vampire->ai = new MonsterAi(45);
 		}
 		else if(difficulty == EnemyDifficulty::NIGHTMARE){
-			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "Count", TileColors::darkestRed);
+			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "count", TileColors::darkestRed);
 			vampire->destructible = new MonsterDestructible(120, 6, 96, "pile of ash");
 			vampire->attacker = new Attacker(20);
 			vampire->ai = new MonsterAi(70);

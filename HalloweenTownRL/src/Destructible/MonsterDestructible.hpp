@@ -10,7 +10,6 @@ public :
 	MonsterDestructible(float maxHp, float defense, int exp, std::string corpseName, TCODColor corpseColor, int corpseCharacter);
 	MonsterDestructible(float maxHp, float defense, int exp, std::string corpseName, TCODColor corpseColor);
 	MonsterDestructible(float maxHp, float defense, int exp, std::string corpseName);
-	MonsterDestructible(float maxHp, float defense, int exp);
 	void Die(Actor *owner);
 	void Load(TCODZip &zip);
 	void Save(TCODZip &zip);

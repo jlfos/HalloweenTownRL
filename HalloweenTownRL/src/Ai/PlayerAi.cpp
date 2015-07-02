@@ -269,7 +269,7 @@ void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 					}
 				}
 				if (!found) {
-					engine.gui->PushMessage(TileColors::lightGrey,"There's nothing here that you can pick.");
+					engine.gui->PushMessage(TileColors::lightGrey,"There's nothing here that you can pick up.");
 				}
 				engine.gameStatus=Engine::NEW_TURN;
 			}

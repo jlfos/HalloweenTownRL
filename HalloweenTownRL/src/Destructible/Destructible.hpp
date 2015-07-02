@@ -26,7 +26,7 @@ public :
 	float hp; // current health points
 protected:
 	enum DestructibleType{
-		MONSTER, PLAYER
+		MONSTER, PLAYER, BOSS
 	};
 private:
 	float defense; // hit points deflected

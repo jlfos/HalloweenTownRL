@@ -2,6 +2,7 @@
 #include <string>
 #include "libtcod.hpp"
 #include "../Actor/Actor.hpp"
+#include "BossDestructible.hpp"
 #include "Destructible.hpp"
 #include "../Engine.hpp"
 #include "MonsterDestructible.hpp"
@@ -55,7 +56,8 @@ Destructible *Destructible::Create(TCODZip &zip){
 		switch(type){
 			case MONSTER: destructible = new MonsterDestructible(0,0, 0, NULL); break;
 			case PLAYER: destructible = new PlayerDestructible(0,0, NULL); break;
-			default : break;
+			case BOSS: destructible = new BossDestructible(0, 0, 0, NULL); break;
+			default : throw 0; break;
 		}
 		destructible->Load(zip);
 		return destructible;

@@ -46,6 +46,7 @@ TCODMap* RoadMapGenerator::Generate(Map* map, bool generateActors){
 	}
 	map->actors.push(ActorFactory::CreateItem(5, 21, ActorFactory::EnemyDifficulty::EASY));
 	map->actors.push(ActorFactory::CreateItem(5, 23, ActorFactory::EnemyDifficulty::HARD));
+	map->actors.push(ActorFactory::CreateGiantSpider(10, 23));
 	return roadMap;
 }
 
