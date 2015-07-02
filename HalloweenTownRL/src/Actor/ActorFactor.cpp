@@ -308,6 +308,59 @@ Actor *ActorFactory::CreateMonsterForWoods(int x, int y, EnemyDifficulty difficu
 	}
 }
 
+Actor *ActorFactory::CreateItem(int x, int y, EnemyDifficulty difficulty){
+	try{
+		TCODRandom rng(x+y, TCOD_RNG_CMWC);
+		int intRand = rng.getInt(1, 100);
+		Actor *item;
+		switch(difficulty){
+			case EnemyDifficulty::EASY:
+				if(intRand < 60)
+					item = CreateMedkit(x, y);
+				else{
+					if(intRand %2 == 0)
+						item = CreateKnife(x ,y);
+					else
+						item = CreateNightstick(x, y);
+				}
+
+				break;
+			case EnemyDifficulty::MEDIUM:
+				if(intRand < 50)
+					item = CreateMedkit(x, y);
+				else{
+					if(intRand %2 == 0)
+						item = CreateKris(x ,y);
+					else
+						item = CreateTireIron(x, y);
+				}
+
+				break;
+			case EnemyDifficulty::HARD:
+			case EnemyDifficulty::VERY_HARD:
+			case EnemyDifficulty::NIGHTMARE:
+			case EnemyDifficulty::INSANE:
+				if(intRand < 50)
+					item = CreateMedkit(x, y);
+				else{
+					if(intRand %2 == 0)
+						item = CreateMachete(x ,y);
+					else
+						item = CreateBaseballBat(x, y);
+				}
+				break;
+			default:
+				throw 0;
+				break;
+		}
+		return item;
+	}
+	catch(...){
+		std::cerr << "An error occurred in ActorFactory::CreateItem" << std::endl;
+		throw 0;
+	}
+}
+
 Actor *ActorFactory::CreateNightstick(int x, int y){
 	try{
 		Actor *nightstick = new Actor(x, y, TileCharacters::Default::EXCLAMATION, "nightstick",
@@ -317,35 +370,35 @@ Actor *ActorFactory::CreateNightstick(int x, int y){
 		return nightstick;
 	}
 	catch(...){
-		std::cerr << "An error occurred in ActorFactory::CreateNightStick" << std::endl;
+		std::cerr << "An error occurred in ActorFactory::CreateNightstick" << std::endl;
 		throw 0;
 	}
 }
 
 Actor *ActorFactory::CreateTireIron(int x, int y){
 	try{
-		Actor *nightstick = new Actor(x, y, TileCharacters::Default::EXCLAMATION, "tire iron",
+		Actor *tireIron = new Actor(x, y, TileCharacters::Default::EXCLAMATION, "tire iron",
 				TileColors::grey);
-		nightstick->blocks = false;
-		nightstick->pickable = new MeleeWeapon(18);
-		return nightstick;
+		tireIron->blocks = false;
+		tireIron->pickable = new MeleeWeapon(18);
+		return tireIron;
 	}
 	catch(...){
-		std::cerr << "An error occurred in ActorFactory::CreateNightStick" << std::endl;
+		std::cerr << "An error occurred in ActorFactory::CreateTireIron" << std::endl;
 		throw 0;
 	}
 }
 
 Actor *ActorFactory::CreateKnife(int x, int y){
 	try{
-		Actor *nightstick = new Actor(x, y, TileCharacters::Default::FORWARD_SLASH, "nightstick",
+		Actor *knife = new Actor(x, y, TileCharacters::Default::FORWARD_SLASH, "nightstick",
 				TileColors::lighterGrey);
-		nightstick->blocks = false;
-		nightstick->pickable = new MeleeWeapon(7);
-		return nightstick;
+		knife->blocks = false;
+		knife->pickable = new MeleeWeapon(7);
+		return knife;
 	}
 	catch(...){
-		std::cerr << "An error occurred in ActorFactory::CreateNightStick" << std::endl;
+		std::cerr << "An error occurred in ActorFactory::CreateKnife" << std::endl;
 		throw 0;
 	}
 }
@@ -353,11 +406,11 @@ Actor *ActorFactory::CreateKnife(int x, int y){
 
 Actor *ActorFactory::CreateKris(int x, int y){
 	try{
-		Actor *nightstick = new Actor(x, y, TileCharacters::Default::FORWARD_SLASH, "kris",
+		Actor *kris = new Actor(x, y, TileCharacters::Default::FORWARD_SLASH, "kris",
 				TileColors::grey);
-		nightstick->blocks = false;
-		nightstick->pickable = new MeleeWeapon(22);
-		return nightstick;
+		kris->blocks = false;
+		kris->pickable = new MeleeWeapon(22);
+		return kris;
 	}
 	catch(...){
 		std::cerr << "An error occurred in ActorFactory::CreateNightStick" << std::endl;
@@ -367,28 +420,28 @@ Actor *ActorFactory::CreateKris(int x, int y){
 
 Actor *ActorFactory::CreateBaseballBat(int x, int y){
 	try{
-		Actor *nightstick = new Actor(x, y, TileCharacters::Default::EXCLAMATION, "tire iron",
+		Actor *baseballBat = new Actor(x, y, TileCharacters::Default::EXCLAMATION, "tire iron",
 				TileColors::darkGrey);
-		nightstick->blocks = false;
-		nightstick->pickable = new MeleeWeapon(36);
-		return nightstick;
+		baseballBat->blocks = false;
+		baseballBat->pickable = new MeleeWeapon(36);
+		return baseballBat;
 	}
 	catch(...){
-		std::cerr << "An error occurred in ActorFactory::CreateNightStick" << std::endl;
+		std::cerr << "An error occurred in ActorFactory::CreateBaseballBat" << std::endl;
 		throw 0;
 	}
 }
 
 Actor *ActorFactory::CreateMachete(int x, int y){
 	try{
-		Actor *nightstick = new Actor(x, y, TileCharacters::Default::FORWARD_SLASH, "machete",
+		Actor *machete = new Actor(x, y, TileCharacters::Default::FORWARD_SLASH, "machete",
 				TileColors::darkGrey);
-		nightstick->blocks = false;
-		nightstick->pickable = new MeleeWeapon(38);
-		return nightstick;
+		machete->blocks = false;
+		machete->pickable = new MeleeWeapon(38);
+		return machete;
 	}
 	catch(...){
-		std::cerr << "An error occurred in ActorFactory::CreateNightStick" << std::endl;
+		std::cerr << "An error occurred in ActorFactory::CreateMachete" << std::endl;
 		throw 0;
 	}
 }
@@ -465,8 +518,4 @@ std::map<ActorFactory::EnemyDifficulty, int>  ActorFactory::GenerateSpawnChances
 		std::cerr << "An error occurred in GenerateChances" << std::endl;
 		throw 0;
 	}
-
-
 }
-
-

@@ -65,8 +65,8 @@ void Gui::Render() {
 		float colorCoef=0.4f;
 
 		int i;
-		if(log.size()-1>(PANEL_HEIGHT-1) )
-			i =(log.size()-1) - (PANEL_HEIGHT-1);
+		if(log.size()>(PANEL_HEIGHT-1) )
+			i =(log.size()) - (PANEL_HEIGHT-1);
 		else
 			i = 0;
 		for(; i<log.size(); i++){

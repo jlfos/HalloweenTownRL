@@ -6,27 +6,27 @@
 #include "UI/Gui.hpp"
 #include "Tile/TileColors.hpp"
 
-Attacker::Attacker(float power) :power(power){
+Attacker::Attacker(float basePower) :Attacker(basePower) {
 
 }
 
-Attacker::Attacker(float power, std::string weapon):power(power), weapon(weapon){
+Attacker::Attacker(float basePower, std::string weaponName):basePower(basePower), modifierPower(0), weapon(weaponName){
 
 }
 
 void Attacker::Attack(Actor *owner, Actor *target){
 	try{
 		if(target->destructible && ! target->destructible->IsDead()){
-			if(power - target->destructible->GetDefense()>0){
+			if(basePower - target->destructible->GetDefense()>0){
 				engine.gui->PushMessage(owner==engine.player ? TileColors::red : TileColors::lightGrey,
 					"%s attacks %s for %g hit points.", (owner->name).c_str(), (target->name).c_str(),
-					power - target->destructible->GetDefense());
+					basePower - target->destructible->GetDefense());
 			}
 			else{
 				engine.gui->PushMessage(TileColors::lightGrey,
 					"%s attacks %s but it has no effect!", (owner->name).c_str(), (target->name).c_str());
 			}
-			target->destructible->TakeDamage(target, power);
+			target->destructible->TakeDamage(target, basePower);
 		}
 		else{
 			engine.gui->PushMessage(TileColors::lightGrey,
@@ -41,7 +41,7 @@ void Attacker::Attack(Actor *owner, Actor *target){
 
 void Attacker::Load(TCODZip &zip){
 	try{
-		power=zip.getFloat();
+		basePower=zip.getFloat();
 	}
 	catch(...){
 		std::cerr << "An error occurred with Attacker::Load"  << std::endl;
@@ -49,12 +49,23 @@ void Attacker::Load(TCODZip &zip){
 	}
 }
 
-void Attacker::SetPower(float power){
-	this->power = power;
+void Attacker::setBasePower(float basePower){
+	this->basePower = basePower;
 }
 
-float Attacker::GetPower(){
-	return power;
+float Attacker::getBasePower(){
+	return basePower;
+}
+
+float Attacker::getModifierPower(){
+	return modifierPower;
+}
+
+void Attacker::setModifierPower(float modifierPower){
+	this->modifierPower = modifierPower;
+}
+float Attacker::getAttackPower(){
+	return basePower + modifierPower;
 }
 
 void Attacker::setWeapon(std::string weapon){
@@ -67,7 +78,7 @@ std::string Attacker::getWeapon(){
 
 void Attacker::Save(TCODZip &zip){
 	try{
-		zip.putFloat(power);
+		zip.putFloat(basePower);
 	}
 	catch(...){
 		std::cerr << "An error occurred with Attacker::Save"  << std::endl;

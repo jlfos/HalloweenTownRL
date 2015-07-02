@@ -68,16 +68,28 @@ TCODMap* CityMapGenerator::Generate(Map* map, bool generateActors){
  */
 void CityMapGenerator::PopulateActors(Map* map){
 	try{
+		int items = rng->getInt(0,2);
+		int nextItem = 0;
 		map->actors.clear();
 		int nextSpawn = rng->getInt(5, 15);
 		ActorFactory::EnemyDifficulty difficulty = map->GetDifficulty();
 		for(Point spawn : map->spawnLocations){
 			nextSpawn--;
 			if(nextSpawn==0){
-				map->actors.push(ActorFactory::CreateMonster(spawn.x,
-															 spawn.y,
-															 difficulty,
-															 ActorFactory::MapType::CITY));
+				Actor *temp;
+				if(items>0 && nextItem <= 0){
+					nextItem = rng->getInt(0, 35);
+					items--;
+					temp = ActorFactory::CreateItem(spawn.x, spawn.y, difficulty);
+				}
+				else{
+					temp = ActorFactory::CreateMonster(spawn.x,
+							 spawn.y,
+							 difficulty,
+							 ActorFactory::MapType::CITY);
+				}
+
+				map->actors.push(temp);
 				nextSpawn = rng->getInt(5, 10);
 			}
 		}

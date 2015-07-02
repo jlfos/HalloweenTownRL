@@ -44,8 +44,6 @@ TCODMap* RoadMapGenerator::Generate(Map* map, bool generateActors){
 
 		}
 	}
-
-	map->actors.push(ActorFactory::CreateMachete(5,21));
 	return roadMap;
 }
 

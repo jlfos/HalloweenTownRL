@@ -162,7 +162,7 @@ void PlayerAi::LevelUpPlayer(Actor* player){
 		std::string result = levelUpMenu.Pick();
 
 		if(result == "Strength")
-			player->attacker->SetPower(player->attacker->GetPower()+3 );
+			player->attacker->setBasePower(player->attacker->getBasePower()+3 );
 
 		else if(result == "Agility")
 			player->destructible->SetDefense(player->destructible->GetDefense()+1 );

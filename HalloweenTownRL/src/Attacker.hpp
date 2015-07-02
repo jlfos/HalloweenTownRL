@@ -8,8 +8,11 @@ class Actor;
 
 class Attacker : public Persistent {
 public :
-	void SetPower(float power);
-	float GetPower();
+	void setBasePower(float basePower);
+	void setModifierPower(float modifierPower);
+	float getBasePower();
+	float getAttackPower();
+	float getModifierPower();
 	void setWeapon(std::string string);
 	std::string getWeapon();
 	Attacker(float power);
@@ -18,7 +21,8 @@ public :
 	void Load(TCODZip &zip);
 	void Save(TCODZip &zip);
 private:
-	float power;
+	float basePower;
+	float modifierPower;
 	std::string weapon;
 };
 #endif

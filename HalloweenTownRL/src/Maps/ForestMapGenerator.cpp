@@ -5,6 +5,8 @@
  */
 #include <iostream>
 #include "libtcod.hpp"
+#include "../Actor/Actor.hpp"
+#include "../Actor/ActorFactory.hpp"
 #include "ForestMapGenerator.hpp"
 #include "Map.hpp"
 #include "MapGenerator.hpp"
@@ -69,17 +71,27 @@ TCODMap* ForestMapGenerator::Generate(Map* map, bool generateActors){
 void ForestMapGenerator::PopulateActors(Map* map){
 	//TODO Work on making PopulateActors a little more generic
 	map->actors.clear();
+
+	int items = rng->getInt(1,20);
+	int nextItem = 0;
 	int nextSpawn = rng->getInt(5, 15);
 	ActorFactory::EnemyDifficulty difficulty = map->GetDifficulty();
 	for(Point spawn : map->spawnLocations){
 		nextSpawn--;
+		nextItem--;
 		if(nextSpawn==0){
-			Actor *temp = ActorFactory::CreateMonster(spawn.x,
+			Actor *temp;
+			if(items>0 && nextItem <= 0){
+				nextItem = rng->getInt(0, 10);
+				items--;
+				temp = ActorFactory::CreateItem(spawn.x, spawn.y, difficulty);
+			}
+			else{
+				temp = ActorFactory::CreateMonster(spawn.x,
 					 spawn.y,
 					 difficulty,
 					 ActorFactory::MapType::WOODS);
-			if(!temp)
-				std::cout << "Null actor!" << std::endl;
+				}
 			map->actors.push(temp);
 			nextSpawn = rng->getInt(5, 10);
 		}

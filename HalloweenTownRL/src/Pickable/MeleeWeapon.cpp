@@ -25,7 +25,7 @@ MeleeWeapon::~MeleeWeapon(){
 bool MeleeWeapon::Use(Actor *owner, Actor *wearer){
 	try{
 		if(wearer->attacker){
-			wearer->attacker->SetPower(amount);
+			wearer->attacker->setBasePower(amount);
 			wearer->attacker->setWeapon(owner->name);
 			return true;
 		}
