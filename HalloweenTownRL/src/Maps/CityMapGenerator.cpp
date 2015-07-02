@@ -11,7 +11,7 @@
 #include "../Tile/TileCharacters.hpp"
 #include "../Tile/TileColors.hpp"
 
-CityMapGenerator::CityMapGenerator(){
+CityMapGenerator::CityMapGenerator(bool boss) :boss(boss) {
 	rng = TCODRandom::getInstance();
 
 	eastWestStreet = rng->getInt(2,4);
@@ -68,30 +68,36 @@ TCODMap* CityMapGenerator::Generate(Map* map, bool generateActors){
  */
 void CityMapGenerator::PopulateActors(Map* map){
 	try{
-		int items = rng->getInt(0,2);
-		int nextItem = 0;
 		map->actors.clear();
-		int nextSpawn = rng->getInt(5, 15);
-		ActorFactory::EnemyDifficulty difficulty = map->GetDifficulty();
-		for(Point spawn : map->spawnLocations){
-			nextSpawn--;
-			if(nextSpawn==0){
-				Actor *temp;
-				if(items>0 && nextItem <= 0){
-					nextItem = rng->getInt(0, 35);
-					items--;
-					temp = ActorFactory::CreateItem(spawn.x, spawn.y, difficulty);
-				}
-				else{
-					temp = ActorFactory::CreateMonster(spawn.x,
-							 spawn.y,
-							 difficulty,
-							 ActorFactory::MapType::CITY);
-				}
+		if(!boss){
+			int items = rng->getInt(0,2);
+			int nextItem = 0;
+			int nextSpawn = rng->getInt(5, 15);
+			ActorFactory::EnemyDifficulty difficulty = map->GetDifficulty();
+			for(Point spawn : map->spawnLocations){
+				nextSpawn--;
+				if(nextSpawn==0){
+					Actor *temp;
+					if(items>0 && nextItem <= 0){
+						nextItem = rng->getInt(0, 35);
+						items--;
+						temp = ActorFactory::CreateItem(spawn.x, spawn.y, difficulty);
+					}
+					else{
+						temp = ActorFactory::CreateMonster(spawn.x,
+								 spawn.y,
+								 difficulty,
+								 ActorFactory::MapType::CITY);
+					}
 
-				map->actors.push(temp);
-				nextSpawn = rng->getInt(5, 10);
+					map->actors.push(temp);
+					nextSpawn = rng->getInt(5, 10);
+				}
 			}
+		}
+		else{
+			int bossSpawn = rng->getInt(0, map->spawnLocations.size()-1);
+			map->actors.push(ActorFactory::CreateGiantSpider(map->spawnLocations[bossSpawn].x, map->spawnLocations[bossSpawn].y));
 		}
 	}
 	catch(...){

@@ -17,7 +17,7 @@ class Map;
 class CityMapGenerator : public MapGenerator{
 	public:
 		TCODMap* Generate(Map* map, bool generateActors);
-		CityMapGenerator();
+		CityMapGenerator(bool boss);
 		~CityMapGenerator();
 		void PopulateActors(Map* map);
 	private:
@@ -27,6 +27,7 @@ class CityMapGenerator : public MapGenerator{
 		void GenerateBuildingColors(TCODColor& visible, TCODColor& fog);
 		int eastWestStreet;
 		int northSouthStreet;
+		bool boss;
 };
 
 

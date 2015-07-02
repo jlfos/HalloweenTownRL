@@ -35,8 +35,8 @@ int Time::ElapsedMinutes(Time previousTime){
 			throw 0;
 		}
 
-		elapsedTime = (tempCurrentHour - tempPreviousHour)*60;
-		elapsedTime += (minutes - previousTime.GetMinutes());
+
+		elapsedTime = (tempCurrentHour*60 + minutes) - (tempPreviousHour*60 + previousTime.GetMinutes());
 		return elapsedTime;
 	}
 	catch(...){

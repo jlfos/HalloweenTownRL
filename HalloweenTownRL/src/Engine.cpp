@@ -44,8 +44,10 @@ void Engine::Init() {
 				DEFAULT_PLAYER_START_Y);
 		std::vector<std::vector<Engine::MapType>> mapTypes{
 				{Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH },
+				{Engine::MapType::CITY_BOSS , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::FOREST_NORTH },
 				{Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::FOREST_NORTH },
 				{Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::ROAD_EW },
+				{Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::FOREST_SOUTH },
 				{Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::FOREST_SOUTH },
 				{Engine::MapType::FOREST_SOUTH, Engine::MapType::FOREST_SOUTH, Engine::MapType::FOREST_SOUTH, Engine::MapType::FOREST_SOUTH }
 		};
@@ -87,12 +89,20 @@ std::vector<std::vector<Map*>> *Engine::CreateMaps(std::vector<std::vector<Engin
 					break;
 				case Engine::MapType::ROAD_EW:
 					firstMapFlag = true;
-					mapX = j;
-					mapY = i;
+					playerMapX = j;
+					playerMapY = i;
 					generator = new RoadMapGenerator(MapGenerator::Orientation::EAST);
 					break;
 				case Engine::MapType::CITY:
-					generator = new CityMapGenerator();
+					generator = new CityMapGenerator(false);
+					break;
+				case Engine::MapType::CITY_BOSS:
+					generator = new CityMapGenerator(true);
+					bossMapX = j;
+					bossMapY = i;
+					break;
+				default:
+					throw 0;
 					break;
 				}
 
@@ -104,26 +114,6 @@ std::vector<std::vector<Map*>> *Engine::CreateMaps(std::vector<std::vector<Engin
 				(*maps).back().push_back(temp);
 			}
 		}
-
-//		for (int i = 0; i < WORLD_SIZE_LATITUDE; i++) {
-//			for (int j = 0; j < WORLD_SIZE_LONGITUDE; j++) {
-//				 if (i  == 1) {
-//					Map* temp = new Map(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT,
-//							new RoadMapGenerator());
-//					if (temp) {
-//						maps->at(i).push_back(temp);
-//					}
-//				} else {
-//					Map* temp = new Map(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT,
-//							new ForestMapGenerator(MapGenerator::Orientation::SOUTH));
-//					if (temp) {
-//						maps->at(i).push_back(temp);
-//					}
-//				}
-//				(*maps)[i][j]->Init();
-//
-//			}
-//		}
 
 		return maps;
 	} catch (...) {
@@ -164,8 +154,8 @@ void Engine::Save() {
 			//save the map first
 			zip.putInt(currentMap->GetWidth());
 			zip.putInt(currentMap->GetHeight());
-			zip.putInt(mapX);
-			zip.putInt(mapY);
+			zip.putInt(playerMapX);
+			zip.putInt(playerMapY);
 			zip.putInt(WORLD_SIZE_LATITUDE);
 			zip.putInt(WORLD_SIZE_LONGITUDE);
 			player->Save(zip);
@@ -245,8 +235,8 @@ void Engine::ContinueGame() {
 
 			int width = zip.getInt();
 			int height = zip.getInt();
-			mapX = zip.getInt();
-			mapY = zip.getInt();
+			playerMapX = zip.getInt();
+			playerMapY = zip.getInt();
 			int tempLatitudeSize = zip.getInt();
 			int tempLongitudeSize = zip.getInt();
 			if (tempLatitudeSize != WORLD_SIZE_LATITUDE
@@ -263,7 +253,7 @@ void Engine::ContinueGame() {
 				for (int j = 0; j < tempLongitudeSize; j++) {
 					(*maps)[i].push_back(new Map(width, height));
 					(*maps)[i][j]->Load(zip);
-					if (mapX == i && mapY == j) {
+					if (playerMapX == i && playerMapY == j) {
 						currentMap = (*maps)[i][j];
 						actors = (*maps)[i][j]->actors;
 						actors.push(player);
@@ -295,7 +285,7 @@ Engine::~Engine() {
 
 		for (int i = 0; i < WORLD_SIZE_LATITUDE; i++) {
 			for (int j = 0; j < WORLD_SIZE_LONGITUDE; j++) {
-				if (i == mapX && j == mapY && player != nullptr) {
+				if (i == playerMapX && j == playerMapY && player != nullptr) {
 					(*maps)[i][j]->actors.remove(player);
 				}
 				delete (*maps)[i][j];
@@ -313,8 +303,33 @@ Engine::~Engine() {
 	}
 }
 
+void Engine::bossUpdate() {
+	int xDiffAbs = abs(playerMapX - bossMapX);
+	int yDiffAbs = abs(playerMapY - bossMapY);
+	if(xDiffAbs == 0 && yDiffAbs == 0)
+		return;
+	if (xDiffAbs >= yDiffAbs) {
+		if (bossMapX < playerMapX) {
+			engine.gui->PushMessage(TileColors::lightGrey,
+					"Fate pulls you to the East");
+		} else {
+			engine.gui->PushMessage(TileColors::lightGrey,
+					"Fate pulls you to the West");
+		}
+	} else {
+		if (bossMapY < playerMapY) {
+			engine.gui->PushMessage(TileColors::lightGrey,
+					"Fate pulls you to the North");
+		} else {
+			engine.gui->PushMessage(TileColors::lightGrey,
+					"Fate pulls you to the South");
+		}
+	}
+}
+
 void Engine::Update() {
 	try {
+
 		if (gameStatus == STARTUP)
 			currentMap->ComputeFov();
 		gameStatus = IDLE;
@@ -345,8 +360,8 @@ void Engine::NextLevel(Map::TileType type) {
 		if (type == Map::TileType::TOP_EDGE) {
 			heroX = player->x;
 			heroY = DEFAULT_MAP_HEIGHT - 2;
-			if (mapY > 0) {
-				mapY--;
+			if (playerMapY > 0) {
+				playerMapY--;
 			} else {
 				gui->PushMessage(TileColors::red,
 						"An invisible force keeps you from moving forward");
@@ -357,8 +372,8 @@ void Engine::NextLevel(Map::TileType type) {
 		if (type == Map::TileType::RIGHT_EDGE) {
 			heroX = 0;
 			heroY = player->y;
-			if (mapX < WORLD_SIZE_LONGITUDE - 1) {
-				mapX++;
+			if (playerMapX < WORLD_SIZE_LONGITUDE - 1) {
+				playerMapX++;
 			} else {
 				gui->PushMessage(TileColors::red,
 						"An invisible force keeps you from moving forward");
@@ -369,8 +384,8 @@ void Engine::NextLevel(Map::TileType type) {
 		if (type == Map::TileType::BOTTOM_EDGE) {
 			heroX = player->x;
 			heroY = 0;
-			if (mapY < WORLD_SIZE_LATITUDE -1) {
-				mapY++;
+			if (playerMapY < WORLD_SIZE_LATITUDE -1) {
+				playerMapY++;
 			} else {
 				gui->PushMessage(TileColors::red,
 						"An invisible force keeps you from moving forward");
@@ -381,8 +396,8 @@ void Engine::NextLevel(Map::TileType type) {
 		if (type == Map::TileType::LEFT_EDGE) {
 			heroX = DEFAULT_MAP_WIDTH - 2;
 			heroY = player->y;
-			if (mapX > 0) {
-				mapX--;
+			if (playerMapX > 0) {
+				playerMapX--;
 			} else {
 				gui->PushMessage(TileColors::red,
 						"An invisible force keeps you from moving forward");
@@ -391,17 +406,18 @@ void Engine::NextLevel(Map::TileType type) {
 			}
 		}
 		actors.remove(player);
-		currentMap = (*maps)[mapY][mapX];
+		currentMap->TimeLastSeen(new Time(currentTime.GetHour(), currentTime.GetMinutes()));
+		currentMap = (*maps)[playerMapY][playerMapX];
 		bool populateFlag = false;
 		if(currentMap->TimeLastSeen()){
 			if(currentTime.ElapsedMinutes((*currentMap->TimeLastSeen())) >= 60)
 				populateFlag = true;
 		}
-		else{
-			currentMap->TimeLastSeen(new Time(currentTime.GetHour(), currentTime.GetMinutes()));
+		else{ //Assume player has never visited
 			populateFlag = true;
 		}
 
+		bossUpdate();
 		if(populateFlag)
 			currentMap->PopulateActors();
 		actors = currentMap->actors;

@@ -31,6 +31,21 @@ Actor *ActorFactory::CreateHero(int x, int y){
 	}
 }
 
+Actor *ActorFactory::CreateGiantSpider(int x, int y){
+	try{
+		Actor *giantSpider = new Actor( x, y, TileCharacters::Default::S_UPPERCASE, "giant spider",
+				TCODColor::desaturatedGreen);
+		giantSpider->destructible = new MonsterDestructible(120, 6, 96,"dead giant spider");
+		giantSpider->attacker = new Attacker(20);
+		giantSpider->ai = new MonsterAi(70);
+		return giantSpider;
+	}
+	catch(...){
+		std::cerr << "An error occurred in ActorFactory::CreateGiantSpider" << std::endl;
+		throw 0;
+	}
+}
+
 
 Actor *ActorFactory::CreateVampire(int x, int y, EnemyDifficulty difficulty){
 	try{
@@ -391,7 +406,7 @@ Actor *ActorFactory::CreateTireIron(int x, int y){
 
 Actor *ActorFactory::CreateKnife(int x, int y){
 	try{
-		Actor *knife = new Actor(x, y, TileCharacters::Default::FORWARD_SLASH, "nightstick",
+		Actor *knife = new Actor(x, y, TileCharacters::Default::FORWARD_SLASH, "knife",
 				TileColors::lighterGrey);
 		knife->blocks = false;
 		knife->pickable = new MeleeWeapon(7);
