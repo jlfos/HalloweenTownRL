@@ -6,14 +6,19 @@
 
 class Actor;
 
+//TODO Change to item
 class Pickable : public Persistent {
 public :
+	enum PickableType {
+		HEALER,
+		MELEE_WEAPON
+	};
 	bool Pick(Actor *owner, Actor *wearer);
 	virtual bool Use(Actor *owner, Actor *wearer);
 	static Pickable *Create(TCODZip &zip);
-protected:
-	enum PickableType {
-		HEALER
-	};
+	PickableType getType();
+private:
+	PickableType type;
+
 };
 #endif

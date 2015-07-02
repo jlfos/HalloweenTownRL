@@ -5,10 +5,11 @@
 #include "libtcod.hpp"
 #include "../Actor/Actor.hpp"
 #include "../Ai/Ai.hpp"
-#include "../Ai/PlayerAi.hpp"
+#include "../Attacker.hpp"
 #include "../Destructible/Destructible.hpp"
 #include "../Engine.hpp"
 #include "Gui.hpp"
+#include "../Ai/PlayerAi.hpp"
 #include "../Tile/TileColors.hpp"
 
 static const int PANEL_HEIGHT=7;
@@ -86,6 +87,9 @@ void Gui::Render() {
 		// blit the GUI console on the root console
 		TCODConsole::blit(con,0,0,engine.screenWidth,PANEL_HEIGHT,
 			TCODConsole::root,0,engine.screenHeight-PANEL_HEIGHT);
+
+		TCODConsole::root->print(1, 50 - 2, "weapon: %s",
+				engine.player->attacker->getWeapon().c_str());
 
 	}
 	catch(...){

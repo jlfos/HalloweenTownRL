@@ -12,6 +12,9 @@ class HelpScreen {
 public:
 	HelpScreen();
 	void Show();
+	~HelpScreen();
+private:
+	TCODList<Gui::Message *> log;
 };
 
 

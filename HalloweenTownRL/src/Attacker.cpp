@@ -7,6 +7,11 @@
 #include "Tile/TileColors.hpp"
 
 Attacker::Attacker(float power) :power(power){
+
+}
+
+Attacker::Attacker(float power, std::string weapon):power(power), weapon(weapon){
+
 }
 
 void Attacker::Attack(Actor *owner, Actor *target){
@@ -50,6 +55,14 @@ void Attacker::SetPower(float power){
 
 float Attacker::GetPower(){
 	return power;
+}
+
+void Attacker::setWeapon(std::string weapon){
+	this->weapon = weapon;
+}
+
+std::string Attacker::getWeapon(){
+	return weapon;
 }
 
 void Attacker::Save(TCODZip &zip){

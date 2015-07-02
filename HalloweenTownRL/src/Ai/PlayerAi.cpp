@@ -9,6 +9,7 @@
 #include "../Engine.hpp"
 #include "../UI/HelpScreen.hpp"
 #include "../UI/LevelUpMenu.hpp"
+#include "../UI/MonsterLogMenu.hpp"
 #include "../Pickable/Pickable.hpp"
 #include "../Tile/TileColors.hpp"
 #include "PlayerAi.hpp"
@@ -179,6 +180,7 @@ bool PlayerAi::LevelUpOccurred(){
 	return currentExperience > currentLevelGoal;
 }
 
+//TODO move this functionality to the GUI
 Actor *PlayerAi::ChooseFromInventory(Actor *owner){
 	try{
 
@@ -288,7 +290,15 @@ void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 			break;
 			case '?' : //view help screen
 			{
-			showHelp();
+				showHelp();
+			}
+			break;
+			case 'm' :
+			{
+				MonsterLogMenu monsterLog;
+				monsterLog.PopulateMenu(false);
+				std::string result = monsterLog.Pick();
+
 			}
 			break;
 		}

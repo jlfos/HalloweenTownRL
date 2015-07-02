@@ -10,13 +10,14 @@
 #include "Maps/CityMapGenerator.hpp"
 #include "Maps/ForestMapGenerator.hpp"
 #include "Maps/MapGenerator.hpp"
+#include "MonsterEntry.hpp"
 #include "Maps/RoadMapGenerator.hpp"
 #include "Tile/TileColors.hpp"
-
+#include "Tile/TileCharacters.hpp"
 
 Engine::Engine(int screenWidth, int screenHeight) :
 		gameStatus(STARTUP), fovRadius(10), screenWidth(screenWidth), screenHeight(screenHeight),
-		currentTime(8, 00), incrementTime(false){
+		currentTime(6, 00), incrementTime(false){
 	try {
 		currentMap = nullptr;
 		maps = nullptr;
@@ -26,6 +27,9 @@ Engine::Engine(int screenWidth, int screenHeight) :
 				false);
 
 		gui = new Gui();
+		MonsterEntry temp("goblin", "lizard thing", "????", TileCharacters::Default::G_LOWERCASE, TileColors::white);
+//		monsterLog.insert(temp);
+
 
 	} catch (...) {
 		std::cerr << "An error occurred with Engine::Engine" << std::endl;
@@ -428,10 +432,6 @@ void Engine::Render() {
 
 		gui->Render();
 
-		TCODConsole::root->print(1, screenHeight - 2, "HP: %d/%d",
-				(int) player->destructible->hp,
-				(int) player->destructible->maxHp);
-
 		// draw the actors
 		for (Actor *actor : actors) {
 			if(actor){
@@ -439,7 +439,6 @@ void Engine::Render() {
 					actor->Render();
 				}
 			}
-//			else std::cout << "Null actor" << std::endl;
 		}
 		TCODConsole::flush();
 

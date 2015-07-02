@@ -41,8 +41,11 @@ TCODMap* RoadMapGenerator::Generate(Map* map, bool generateActors){
 			else
 				GenerateGrass(tileX, tileY, width, roadMap, map);
 
+
 		}
 	}
+
+	map->actors.push(ActorFactory::CreateMachete(5,21));
 	return roadMap;
 }
 

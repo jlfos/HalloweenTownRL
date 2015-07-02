@@ -1,8 +1,10 @@
 #ifndef HALLOWEENTOWN_ENGINE_HPP
 #define HALLOWEENTOWN_ENGINE_HPP
 #include <vector>
+#include <set>
 #include "libtcod.hpp"
 #include "Maps/Map.hpp"
+#include "MonsterEntry.hpp"
 #include "Time.hpp"
 
 class Actor;
@@ -60,6 +62,7 @@ private:
 	int mapX;
 	int mapY;
 	bool incrementTime;
+//	std::set<MonsterEntry, MonsterEntry::MonsterEntry_compare> monsterLog;
 };
  
 

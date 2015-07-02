@@ -12,6 +12,7 @@
 #include "../Destructible/MonsterDestructible.hpp"
 #include "../Pickable/Pickable.hpp"
 #include "../Pickable/Healer.hpp"
+#include "../Pickable/MeleeWeapon.hpp"
 #include "../Tile/TileCharacters.hpp"
 #include "../Tile/TileColors.hpp"
 
@@ -19,7 +20,7 @@ Actor *ActorFactory::CreateHero(int x, int y){
 	try{
 		Actor *player = new Actor(x, y, TileCharacters::Default::AT_SIGN, "player", TileColors::white);
 		player->destructible=new PlayerDestructible(30,2,"your cadaver");
-		player->attacker=new Attacker(3);
+		player->attacker=new Attacker(3, "fists");
 		player->ai = new PlayerAi();
 		player->container= new Container(26);
 		return player;
@@ -233,9 +234,9 @@ Actor *ActorFactory::CreateMonsterForCity(int x, int y, EnemyDifficulty difficul
 		}
 		else if(randInt <= spawnChances[EnemyDifficulty::MEDIUM]){
 			if(randInt %2 == 0)
-				monster = CreateGremlin(x, y);//monster = CreateGoblin(x, y);
+				monster = CreateGoblin(x, y);
 			else
-				monster = CreateZombie(x, y);//CreateVampire(x, y, difficulty);
+				monster = CreateVampire(x, y, difficulty);
 		}
 		else if(randInt <= spawnChances[EnemyDifficulty::HARD]){
 			if(randInt %2 == 0)
@@ -252,6 +253,8 @@ Actor *ActorFactory::CreateMonsterForCity(int x, int y, EnemyDifficulty difficul
 		else if(randInt <= spawnChances[EnemyDifficulty::NIGHTMARE]){
 			monster = CreateVampire(x, y, difficulty);
 		}
+		else
+			throw 0;
 
 
 		return monster;
@@ -280,7 +283,7 @@ Actor *ActorFactory::CreateMonsterForWoods(int x, int y, EnemyDifficulty difficu
 			if(randInt %2 == 0)
 				monster = CreateGoblin(x, y);
 			else
-				monster = CreateZombie(x, y);
+				monster = CreateVampire(x, y, difficulty);
 		}
 		else if(randInt <= spawnChances[EnemyDifficulty::HARD]){
 			monster = CreateGiantInsect(x, y);
@@ -305,6 +308,90 @@ Actor *ActorFactory::CreateMonsterForWoods(int x, int y, EnemyDifficulty difficu
 	}
 }
 
+Actor *ActorFactory::CreateNightstick(int x, int y){
+	try{
+		Actor *nightstick = new Actor(x, y, TileCharacters::Default::EXCLAMATION, "nightstick",
+				TileColors::lighterGrey);
+		nightstick->blocks = false;
+		nightstick->pickable = new MeleeWeapon(9);
+		return nightstick;
+	}
+	catch(...){
+		std::cerr << "An error occurred in ActorFactory::CreateNightStick" << std::endl;
+		throw 0;
+	}
+}
+
+Actor *ActorFactory::CreateTireIron(int x, int y){
+	try{
+		Actor *nightstick = new Actor(x, y, TileCharacters::Default::EXCLAMATION, "tire iron",
+				TileColors::grey);
+		nightstick->blocks = false;
+		nightstick->pickable = new MeleeWeapon(18);
+		return nightstick;
+	}
+	catch(...){
+		std::cerr << "An error occurred in ActorFactory::CreateNightStick" << std::endl;
+		throw 0;
+	}
+}
+
+Actor *ActorFactory::CreateKnife(int x, int y){
+	try{
+		Actor *nightstick = new Actor(x, y, TileCharacters::Default::FORWARD_SLASH, "nightstick",
+				TileColors::lighterGrey);
+		nightstick->blocks = false;
+		nightstick->pickable = new MeleeWeapon(7);
+		return nightstick;
+	}
+	catch(...){
+		std::cerr << "An error occurred in ActorFactory::CreateNightStick" << std::endl;
+		throw 0;
+	}
+}
+
+
+Actor *ActorFactory::CreateKris(int x, int y){
+	try{
+		Actor *nightstick = new Actor(x, y, TileCharacters::Default::FORWARD_SLASH, "kris",
+				TileColors::grey);
+		nightstick->blocks = false;
+		nightstick->pickable = new MeleeWeapon(22);
+		return nightstick;
+	}
+	catch(...){
+		std::cerr << "An error occurred in ActorFactory::CreateNightStick" << std::endl;
+		throw 0;
+	}
+}
+
+Actor *ActorFactory::CreateBaseballBat(int x, int y){
+	try{
+		Actor *nightstick = new Actor(x, y, TileCharacters::Default::EXCLAMATION, "tire iron",
+				TileColors::darkGrey);
+		nightstick->blocks = false;
+		nightstick->pickable = new MeleeWeapon(36);
+		return nightstick;
+	}
+	catch(...){
+		std::cerr << "An error occurred in ActorFactory::CreateNightStick" << std::endl;
+		throw 0;
+	}
+}
+
+Actor *ActorFactory::CreateMachete(int x, int y){
+	try{
+		Actor *nightstick = new Actor(x, y, TileCharacters::Default::FORWARD_SLASH, "machete",
+				TileColors::darkGrey);
+		nightstick->blocks = false;
+		nightstick->pickable = new MeleeWeapon(38);
+		return nightstick;
+	}
+	catch(...){
+		std::cerr << "An error occurred in ActorFactory::CreateNightStick" << std::endl;
+		throw 0;
+	}
+}
 
 std::map<ActorFactory::EnemyDifficulty, int>  ActorFactory::GenerateSpawnChances(EnemyDifficulty difficulty){
 	try{
@@ -381,3 +468,5 @@ std::map<ActorFactory::EnemyDifficulty, int>  ActorFactory::GenerateSpawnChances
 
 
 }
+
+

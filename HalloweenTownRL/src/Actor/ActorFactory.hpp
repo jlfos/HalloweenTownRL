@@ -19,7 +19,12 @@ class ActorFactory {
 		static Actor *CreateMedkit(int x, int y);
 //		static Actor *CreateGiantSpider(int x, int y);
 		static Actor *CreateMonster(int x, int y, EnemyDifficulty difficulty, MapType mapType);
-
+		static Actor *CreateNightstick(int x, int y);
+		static Actor *CreateTireIron(int x, int y);
+		static Actor *CreateBaseballBat(int x, int y);
+		static Actor *CreateKnife(int x, int y);
+		static Actor *CreateKris(int x, int y);
+		static Actor *CreateMachete(int x, int y);
 	private:
 		static Actor *CreateMonsterForCity(int x, int y, EnemyDifficulty difficulty);
 		static Actor *CreateMonsterForWoods(int x, int y, EnemyDifficulty difficulty);

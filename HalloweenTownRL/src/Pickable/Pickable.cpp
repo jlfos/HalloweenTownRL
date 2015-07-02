@@ -24,8 +24,10 @@ bool Pickable::Use(Actor *owner, Actor *wearer){
 	try
 	{
 		if(wearer->container){
-			wearer->container->Remove(owner);
-			delete owner;
+			if(getType() == PickableType::HEALER){
+				wearer->container->Remove(owner);
+				delete owner;
+			}
 			return true;
 		}
 		return false;
@@ -42,7 +44,7 @@ Pickable *Pickable::Create(TCODZip &zip){
 		PickableType type = (PickableType)zip.getInt();
 		Pickable *pickable=nullptr;
 		switch(type){
-			case HEALER: pickable = new Healer(0); break;
+			case PickableType::HEALER: pickable = new Healer(0); break;
 		}
 		pickable->Load(zip);
 		return pickable;
@@ -51,4 +53,8 @@ Pickable *Pickable::Create(TCODZip &zip){
 		std::cerr << "An error occurred with Pickable::Create"  << std::endl;
 		throw 0;
 	}
+}
+
+Pickable::PickableType Pickable::getType(){
+	return type;
 }
