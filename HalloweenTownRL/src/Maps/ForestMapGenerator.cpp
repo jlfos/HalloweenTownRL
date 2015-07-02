@@ -72,7 +72,7 @@ void ForestMapGenerator::PopulateActors(Map* map){
 	//TODO Work on making PopulateActors a little more generic
 	map->actors.clear();
 
-	int items = rng->getInt(1,20);
+	int items = rng->getInt(1,3);
 	int nextItem = 0;
 	int nextSpawn = rng->getInt(5, 15);
 	ActorFactory::EnemyDifficulty difficulty = map->GetDifficulty();

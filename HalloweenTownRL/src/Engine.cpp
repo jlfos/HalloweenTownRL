@@ -135,7 +135,7 @@ void Engine::Term() {
 
 	try {
 
-		actors.clearAndDelete();
+		//actors.clearAndDelete();
 		if (maps != nullptr) {
 			for (int i = 0; i < WORLD_SIZE_LATITUDE; i++) {
 				for (int j = 0; j < WORLD_SIZE_LONGITUDE; j++) {
@@ -147,6 +147,8 @@ void Engine::Term() {
 			maps = nullptr;
 		}
 		gui->Clear();
+		Time temp(6, 00);
+		currentTime = temp;
 	} catch (...) {
 		std::cerr << "An error occurred with Engine::Term" << std::endl;
 		throw 0;

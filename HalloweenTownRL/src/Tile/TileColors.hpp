@@ -57,6 +57,8 @@ namespace TileColors{
 	static const TCODColor black = TCODColor::black;
 
 	static const TCODColor darkYellow = TCODColor(200, 180, 50);
+
+	static const TCODColor blue = TCODColor::blue;
 };
 
 

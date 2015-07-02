@@ -24,18 +24,28 @@ PlayerAi::PlayerAi() :experienceLevel(1), currentExperience(0), currentLevelGoal
 
 void PlayerAi::Update(Actor *owner){
 	try{
-
+		bool isDead = false;
 		if(owner->destructible && owner->destructible->IsDead()){
-			return;
+			isDead = true;
 		}
-		switch(engine.lastKey.vk) {
-		case TCODK_UP : MoveUp(owner); break;
-		case TCODK_DOWN : MoveDown(owner); break;
-		case TCODK_LEFT : MoveLeft(owner); break;
-		case TCODK_RIGHT : MoveRight(owner); break;
-		case TCODK_ESCAPE :LoadMenu(); break;
-		case TCODK_CHAR : HandleActionKey(owner, engine.lastKey.c); break;
-			default:break;
+		if(!isDead){
+			switch(engine.lastKey.vk) {
+			case TCODK_UP : MoveUp(owner); break;
+			case TCODK_DOWN : MoveDown(owner); break;
+			case TCODK_LEFT : MoveLeft(owner); break;
+			case TCODK_RIGHT : MoveRight(owner); break;
+			case TCODK_ESCAPE :LoadMenu(); break;
+			case TCODK_CHAR : HandleActionKey(owner, engine.lastKey.c); break;
+				default:break;
+			}
+		}
+		else{
+			switch(engine.lastKey.vk) {
+			case TCODK_ESCAPE :
+				LoadMenu();
+			break;
+				default:break;
+			}
 		}
 	}
 	catch(...){
@@ -160,7 +170,7 @@ void PlayerAi::LevelUpPlayer(Actor* player){
 		currentLevelGoal += LEVEL_UP_INCREASE;
 		LevelUpMenu levelUpMenu;
 		std::string result = levelUpMenu.Pick();
-
+		engine.gui->PushMessage(TileColors::blue,"You leveled up! You are now level %d.", experienceLevel );
 		if(result == "Strength")
 			player->attacker->setBasePower(player->attacker->getBasePower()+3 );
 
@@ -249,7 +259,7 @@ void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 					if ( actor->pickable && actor->x == owner->x && actor->y == owner->y ) {
 						if (actor->pickable->Pick(actor,owner)) {
 							found=true;
-							engine.gui->PushMessage(TileColors::lightGrey,"You pick the %s.",
+							engine.gui->PushMessage(TileColors::lightGrey,"You picked up the %s.",
 								(actor->name).c_str());
 							break;
 						} else if (! found) {

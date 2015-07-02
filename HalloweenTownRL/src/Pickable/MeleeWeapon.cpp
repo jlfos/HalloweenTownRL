@@ -13,7 +13,10 @@
 #include "../Attacker.hpp"
 #include "../Actor/Actor.hpp"
 #include "../Destructible/Destructible.hpp"
+#include "../Engine.hpp"
+#include "../UI/Gui.hpp"
 #include "Pickable.hpp"
+#include "../Tile/TileColors.hpp"
 MeleeWeapon::MeleeWeapon(float amount) : amount(amount){
 
 }
@@ -25,6 +28,8 @@ MeleeWeapon::~MeleeWeapon(){
 bool MeleeWeapon::Use(Actor *owner, Actor *wearer){
 	try{
 		if(wearer->attacker){
+			//TODO move this out
+			engine.gui->PushMessage(TileColors::grey,"You equipped the %s.", owner->name.c_str() );
 			wearer->attacker->setBasePower(amount);
 			wearer->attacker->setWeapon(owner->name);
 			return true;

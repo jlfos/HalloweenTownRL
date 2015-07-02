@@ -16,7 +16,7 @@ PlayerDestructible::PlayerDestructible(float maxHp, float defense, std::string c
 
 void PlayerDestructible::Die(Actor *owner){
 	try{
-		engine.gui->PushMessage(TileColors::red,"You died!");
+		engine.gui->PushMessage(TileColors::red,"You died! Press ESC to continue.");
 		Destructible::Die(owner);
 		engine.gameStatus=Engine::DEFEAT;
 	}

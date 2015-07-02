@@ -6,7 +6,7 @@
 #include "UI/Gui.hpp"
 #include "Tile/TileColors.hpp"
 
-Attacker::Attacker(float basePower) :Attacker(basePower) {
+Attacker::Attacker(float basePower) :Attacker(basePower, "") {
 
 }
 
@@ -17,16 +17,16 @@ Attacker::Attacker(float basePower, std::string weaponName):basePower(basePower)
 void Attacker::Attack(Actor *owner, Actor *target){
 	try{
 		if(target->destructible && ! target->destructible->IsDead()){
-			if(basePower - target->destructible->GetDefense()>0){
+			if(getAttackPower() - target->destructible->GetDefense()>0){
 				engine.gui->PushMessage(owner==engine.player ? TileColors::red : TileColors::lightGrey,
 					"%s attacks %s for %g hit points.", (owner->name).c_str(), (target->name).c_str(),
-					basePower - target->destructible->GetDefense());
+					getAttackPower() - target->destructible->GetDefense());
 			}
 			else{
 				engine.gui->PushMessage(TileColors::lightGrey,
 					"%s attacks %s but it has no effect!", (owner->name).c_str(), (target->name).c_str());
 			}
-			target->destructible->TakeDamage(target, basePower);
+			target->destructible->TakeDamage(target, getAttackPower());
 		}
 		else{
 			engine.gui->PushMessage(TileColors::lightGrey,

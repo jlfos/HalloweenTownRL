@@ -17,12 +17,14 @@ Destructible::Destructible(float maxHp, float defense, int experienceReward, std
 Destructible::Destructible(float maxHp, float defense, int experienceReward, std::string corpseName, TCODColor corpseColor):
 			maxHp(maxHp), hp(maxHp), defense(defense), experienceReward(experienceReward), corpseName(corpseName), corpseColor(corpseColor){
 		TCODRandom rng(maxHp+defense+experienceReward, TCOD_RNG_CMWC);
-		int randInt = rng.getInt(1, 2);
-		int characterCode;
+		int randInt = rng.getInt(1, 3);
 		if(randInt %2 == 0)
 			corpseCharacter = TileCharacters::Default::PERCENT;
-		else
+		else if(randInt %3 == 0)
 			corpseCharacter = TileCharacters::Default::BURST;
+		else
+			corpseCharacter = TileCharacters::Default::SWIRL;
+
 
 	}
 
@@ -33,13 +35,15 @@ Destructible::Destructible(float maxHp, float defense, int experienceReward, std
 	//TODO Pull this out into its own function
 	//TODO Work on the randomness of the corpses
 	TCODRandom rng(maxHp+defense+experienceReward, TCOD_RNG_CMWC);
-	int randInt = rng.getInt(1, 2);
-	int characterCode;
+	int randInt = rng.getInt(1, 3);
 	if(randInt %2 == 0)
 		corpseCharacter = TileCharacters::Default::PERCENT;
-	else
+	else if(randInt %3 == 0)
 		corpseCharacter = TileCharacters::Default::BURST;
+	else
+		corpseCharacter = TileCharacters::Default::SWIRL;
 
+	corpseColor = TileColors::darkRed;
 }
 
 
@@ -109,8 +113,8 @@ float Destructible::Heal(float amount){
 
 void Destructible::Die(Actor *owner){
 	try{
-		owner->ch=TileCharacters::Default::PERCENT;
-		owner->col=TileColors::darkRed;
+		owner->ch=corpseCharacter;
+		owner->col=corpseColor;
 		owner->name=corpseName;
 		owner->blocks=false;
 		engine.SendToBack(owner);
