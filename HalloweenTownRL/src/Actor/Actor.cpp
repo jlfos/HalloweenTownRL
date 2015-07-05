@@ -10,7 +10,7 @@
 Actor::Actor(int x, int y, int ch, std::string name, const TCODColor &col) :
     x(x),y(y),ch(ch),col(col), name(name),
     blocks(true), attacker(nullptr), destructible(nullptr), ai(nullptr),
-    pickable(nullptr), container(nullptr){
+    pickable(nullptr), container(nullptr), lightsource(nullptr){
 }
  
 Actor::~Actor(){
@@ -20,6 +20,7 @@ Actor::~Actor(){
 		if(ai) delete ai;
 		if(pickable) delete pickable;
 		if(container) delete container;
+		if(lightsource) delete lightsource;
 	}
 	catch(...){
 		std::cerr << "An error occurred with Actor::~Actor"  << std::endl;
@@ -62,9 +63,10 @@ void Actor::Save(TCODZip &zip){
 		zip.putInt(container != nullptr);
 		if(attacker) attacker->Save(zip);
 		if(destructible) destructible->Save(zip);
-		if(ai)ai->Save(zip);
-		if(pickable)pickable->Save(zip);
-		if(container)container->Save(zip);
+		if(ai) ai->Save(zip);
+		if(pickable) pickable->Save(zip);
+		if(container) container->Save(zip);
+		if(lightsource) lightsource->Save(zip);
 	}
 	catch(...){
 		std::cerr << "An error occurred with Actor::Save"  << std::endl;

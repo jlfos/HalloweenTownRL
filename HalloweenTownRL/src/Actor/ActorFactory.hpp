@@ -20,6 +20,8 @@ class ActorFactory {
 		static Actor *CreateGiantSpider(int x, int y);
 		static Actor *CreateMonster(int x, int y, EnemyDifficulty difficulty, MapType mapType);
 		static Actor *CreateItem(int x, int y, EnemyDifficulty difficulty);
+		static Actor *CreateMachete(int x, int y);
+		static Actor *CreateLampPost(int x, int y);
 	private:
 		static Actor *CreateMonsterForCity(int x, int y, EnemyDifficulty difficulty);
 		static Actor *CreateMonsterForWoods(int x, int y, EnemyDifficulty difficulty);
@@ -35,7 +37,7 @@ class ActorFactory {
 		static Actor *CreateBaseballBat(int x, int y);
 		static Actor *CreateKnife(int x, int y);
 		static Actor *CreateKris(int x, int y);
-		static Actor *CreateMachete(int x, int y);
+
 		static std::map<ActorFactory::EnemyDifficulty, int> GenerateSpawnChances(EnemyDifficulty difficulty);
 
 };

@@ -11,6 +11,7 @@
 #include "../Destructible/Destructible.hpp"
 #include "../Destructible/PlayerDestructible.hpp"
 #include "../Destructible/MonsterDestructible.hpp"
+#include "../Lightsource.hpp"
 #include "../Pickable/Pickable.hpp"
 #include "../Pickable/Healer.hpp"
 #include "../Pickable/MeleeWeapon.hpp"
@@ -24,6 +25,7 @@ Actor *ActorFactory::CreateHero(int x, int y){
 		player->attacker=new Attacker(3, "fists");
 		player->ai = new PlayerAi();
 		player->container= new Container(26);
+		player->lightsource = new Lightsource(10);
 		return player;
 	}
 	catch(...){
@@ -32,11 +34,23 @@ Actor *ActorFactory::CreateHero(int x, int y){
 	}
 }
 
+Actor *ActorFactory::CreateLampPost(int x, int y){
+	try{
+		Actor* lampPost = new Actor(x, y, TileCharacters::Default::I_DIAERESIS_UPPERCASE, "lamp post", TileColors::grey);
+		lampPost->blocks = true;
+		lampPost->lightsource = new Lightsource(25);
+	}
+	catch(...){
+		std::cerr << "An error occurred in ActorFactory::CreateLampPost" << std::endl;
+		throw 0;
+	}
+}
+
 Actor *ActorFactory::CreateGiantSpider(int x, int y){
 	try{
 		Actor *giantSpider = new Actor( x, y, TileCharacters::Default::S_UPPERCASE, "giant spider",
 				TCODColor::desaturatedGreen);
-		giantSpider->destructible = new BossDestructible(1, 1, 96,"dead giant spider"); //120, 6, 96
+		giantSpider->destructible = new BossDestructible(120, 6, 0,"dead giant spider");
 		giantSpider->attacker = new Attacker(20);
 		giantSpider->ai = new MonsterAi(70);
 		return giantSpider;

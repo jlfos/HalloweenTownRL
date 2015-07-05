@@ -17,7 +17,7 @@
 #include "UI/VictoryScreen.hpp"
 
 Engine::Engine(int screenWidth, int screenHeight) :
-		gameStatus(STARTUP), fovRadius(10), screenWidth(screenWidth), screenHeight(screenHeight),
+		gameStatus(STARTUP), fovRadius(15), screenWidth(screenWidth), screenHeight(screenHeight),
 		currentTime(6, 00), incrementTime(false){
 	try {
 		currentMap = nullptr;
@@ -28,8 +28,7 @@ Engine::Engine(int screenWidth, int screenHeight) :
 				false);
 
 		gui = new Gui();
-		MonsterEntry temp("goblin", "lizard thing", "????", TileCharacters::Default::G_LOWERCASE, TileColors::white);
-//		monsterLog.insert(temp);
+
 
 
 	} catch (...) {
@@ -55,7 +54,6 @@ void Engine::Init() {
 		maps = CreateMaps(mapTypes);
 		WORLD_SIZE_LATITUDE = mapTypes.size();
 		WORLD_SIZE_LONGITUDE = mapTypes.front().size();
-//		currentMap = (*maps)[mapX][mapY];
 		actors = currentMap->actors;
 		actors.push(player);
 		gui->PushMessage(TileColors::red,
@@ -337,6 +335,7 @@ void Engine::Update() {
 		TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
 		player->Update();
 		if (gameStatus == NEW_TURN) {
+//			currentMap->computeNonplayerLights();
 			if(incrementTime)
 				currentTime.IncrementMinutes();
 			incrementTime = !incrementTime;

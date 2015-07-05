@@ -1,3 +1,5 @@
+#include "math.h"
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include "../Actor/Actor.hpp"
@@ -5,12 +7,6 @@
 #include "Map.hpp"
 #include "MapGenerator.hpp"
 #include "../Tile/TileColors.hpp"
-
-
-static const int ROOM_MAX_SIZE = 14;
-static const int ROOM_MIN_SIZE = 8;
-static const int MAX_ROOM_MONSTERS = 4;
-static const int MAX_ROOM_ITEMS = 2;
 
 
 Map::Map(int width, int height) :
@@ -63,6 +59,13 @@ void Map::Init() {
 		else if(map == nullptr){
 			map = generator->Generate(this, true);
 			generator->PopulateActors(this);
+
+
+//			for(Actor *actor : actors){
+//				if(actor->lightsource!=nullptr){
+//					computeLight(actor, true);
+//				}
+//			}
 		}
 	}
 	catch(...){
@@ -296,7 +299,7 @@ bool Map::IsInFov(int x, int y) const {
 			return false;
 		}
 
-		if (map->isInFov(x, y)) {
+		if (map->isInFov(x, y)/*&&tiles[x + y * width].lit*/ ) {
 			tiles[x + y * width].explored = true;
 			return true;
 		}
@@ -309,7 +312,7 @@ bool Map::IsInFov(int x, int y) const {
 
 }
 
-void Map::ComputeFov() {
+void Map::ComputeFov()  {
 	try{
 		map->computeFov(engine.player->x, engine.player->y, engine.fovRadius);
 	}
@@ -323,7 +326,9 @@ void Map::Render() const {
 	try{
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				if (IsInFov(x, y)) {
+
+
+				 if (IsInFov(x, y)) {
 					TCODConsole::root->setChar(x,y, tiles[x+y*width].character);
 					TCODConsole::root->setCharForeground(x,y,tiles[x+y*width].visibleColor);
 				}
@@ -339,4 +344,56 @@ void Map::Render() const {
 		throw 0;
 	}
 
+}
+
+void Map::computeLight(Actor* owner, bool isVisible, int radius){
+	try{
+		int startX = owner->x;
+		int startY = owner->y;
+		int width = GetWidth();
+		int ewr = radius;
+			for(int y=0,pointY= std::max(startY-ewr,0);y<radius*2;y++,pointY++){
+				for(int x = 0,pointX= std::max(startX-ewr,0); x<radius*2;x++,pointX++ ){
+					float distance = sqrt((startX-pointX)*(startX-pointX) + (startY-pointY)*(startY-pointY)) ;
+					if(distance < radius && (pointX + pointY* width) ){
+						tiles[pointX + pointY* width].lit = isVisible;
+					}
+
+
+				}
+			}
+	}
+	catch(...){
+		std::cerr << "An error occurred with Map::computeLight"  << std::endl;
+		throw 0;
+	}
+}
+
+void Map::computeLight(Actor* owner, bool isVisible){
+	try{
+		if(owner->lightsource)
+			computeLight(owner, isVisible, owner->lightsource->getRadius());
+		else{
+			std::cerr << "You cannot computeLight on an actor that is not a lightsource" << std::endl;
+			throw 0;
+		}
+	}
+	catch(...){
+		std::cerr << "An error occurred with Map::computeLight"  << std::endl;
+		throw 0;
+	}
+}
+
+void Map::computeNonplayerLights(){
+	try{
+		for(Actor* actor : actors){
+			if(actor!=engine.player)
+				computeLight(actor, true);
+		}
+		computeLight(engine.player, true);
+	}
+	catch(...){
+		std::cerr << "An error occurred with Map::computeLights"  << std::endl;
+		throw 0;
+	}
 }

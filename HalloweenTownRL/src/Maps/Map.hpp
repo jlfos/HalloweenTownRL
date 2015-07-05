@@ -10,11 +10,12 @@ class MapGenerator;
 class Actor;
 
 struct Tile {
-    bool explored; // has the player already seen this tile ?
-    Tile() : explored(false), character(TileCharacters::Default::RAINBOW) {}
+    Tile() : explored(false), character(TileCharacters::Default::RAINBOW), lit(false) {}
     TCODColor visibleColor;
     TCODColor fogColor;
-    int character;
+    int character; //character representing the tile
+    bool lit; //is the tile currently lit?
+    bool explored; // has the player already seen this tile ?
 };
 
 struct Point {
@@ -31,6 +32,7 @@ private:
     long seed;
     TCODRandom *rng;
     TCODMap *map;
+    int a = 0;
 public :
     Map(int width, int height);
     Map(int width, int height, MapGenerator* generator);
@@ -55,5 +57,8 @@ public :
     bool TileHasBeenSet(int tileIndex);
     std::vector<Point> spawnLocations;
     ActorFactory::EnemyDifficulty GetDifficulty();
+    void computeLight(Actor *owner, bool isVisible);
+    void computeLight(Actor *owner, bool isVisible, int radius);
+    void computeNonplayerLights();
 };
 #endif

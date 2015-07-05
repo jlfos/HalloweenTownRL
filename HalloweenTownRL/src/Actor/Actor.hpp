@@ -3,7 +3,7 @@
 #include <string>
 #include "libtcod.hpp"
 #include "../Persistent.hpp"
-
+#include "../Lightsource.hpp"
 
 
 class Attacker;
@@ -25,7 +25,7 @@ public:
 	Ai *ai; // something self-updating
 	Pickable *pickable; //something that can be picked up
 	Container *container; //something that contains
-
+	Lightsource * lightsource;//something that emits light
 	Actor(int x, int y, int ch, std::string name, const TCODColor &col);
 	~Actor();
 	void Update();

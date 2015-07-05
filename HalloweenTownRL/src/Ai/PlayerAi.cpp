@@ -150,6 +150,7 @@ bool PlayerAi::MoveOrAttack(Actor *owner, int targetX, int targetY){
 				engine.gui->PushMessage(TileColors::lightGrey,"There's a %s here", (actor->name).c_str() );
 			}
 		}
+//		engine.currentMap->computeLight(owner, false, engine.fovRadius);
 		owner->x=targetX;
 		owner->y=targetY;
 		return true;
@@ -339,6 +340,16 @@ void PlayerAi::PlayerLook(Actor* player){
 		case TCODK_LEFT : cursorX--; break;
 		case TCODK_RIGHT : cursorX++; break;
 		case TCODK_ESCAPE :lookMode = false; break;
+		case TCODK_ENTER :
+			//TODO break this out, its used elsewhere
+			for(Actor* actor : engine.actors){
+				if(actor->x == cursorX && actor->y == cursorY){
+
+					engine.gui->PushMessage(TileColors::grey, "A %s", actor->name.c_str());
+				}
+			}
+
+			break;
 //		case TCODK_CHAR : handleActionKey(owner, engine.lastKey.c); break;
 			default:break;
 		}
