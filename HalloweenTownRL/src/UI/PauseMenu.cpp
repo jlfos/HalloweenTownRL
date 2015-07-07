@@ -5,7 +5,7 @@
  *      Author: josh
  */
 #include <iostream>
-#include "Menu.hpp"
+#include "MenuUI.hpp"
 #include "PauseMenu.hpp"
 
 

@@ -15,7 +15,7 @@
 #include "../Destructible/Destructible.hpp"
 #include "../Engine.hpp"
 #include "../UI/Gui.hpp"
-#include "Pickable.hpp"
+#include "Item.hpp"
 #include "../Tile/TileColors.hpp"
 MeleeWeapon::MeleeWeapon(float amount) : amount(amount){
 
@@ -54,7 +54,7 @@ void MeleeWeapon::Load(TCODZip &zip){
 
 void MeleeWeapon::Save(TCODZip &zip){
 	try{
-		zip.putInt(PickableType::MELEE_WEAPON);
+		zip.putInt(ItemType::MELEE_WEAPON);
 		zip.putFloat(amount);
 	}
 	catch(...){

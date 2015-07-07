@@ -1,11 +1,10 @@
-#ifndef HALLOWEENTOWN_MENU_HPP
-#define HALLOWEENTOWN_MENU_HPP
+#ifndef HALLOWEENTOWN_MENUUI_HPP
+#define HALLOWEENTOWN_MENUUI_HPP
 
 #include <string>
 #include "libtcod.hpp"
 
-//TODO Change this to main menu
-class Menu{
+class MenuUI{
 public:
 
 
@@ -18,8 +17,8 @@ public:
 	//TODO remove the saveGameExists parameter
 	virtual void PopulateMenu(bool saveGameExists) = 0;
 	std::string Pick();
-	Menu();
-	~Menu();
+	MenuUI();
+	~MenuUI();
 	void Clear();
 
 protected:

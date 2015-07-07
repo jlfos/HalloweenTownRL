@@ -12,9 +12,9 @@
 #include "../Destructible/PlayerDestructible.hpp"
 #include "../Destructible/MonsterDestructible.hpp"
 #include "../Lightsource.hpp"
-#include "../Pickable/Pickable.hpp"
-#include "../Pickable/Healer.hpp"
-#include "../Pickable/MeleeWeapon.hpp"
+#include "../Item/Item.hpp"
+#include "../Item/Healer.hpp"
+#include "../Item/MeleeWeapon.hpp"
 #include "../Tile/TileCharacters.hpp"
 #include "../Tile/TileColors.hpp"
 
@@ -143,7 +143,7 @@ Actor *ActorFactory::CreateMedkit(int x, int y){
 		Actor *healthPotion = new Actor(x, y, TileCharacters::Default::PLUS, "medkit",
 				TileColors::red);
 		healthPotion->blocks = false;
-		healthPotion->pickable = new Healer(4);
+		healthPotion->item = new Healer(4);
 		return healthPotion;
 	}
 	catch(...){
@@ -396,7 +396,7 @@ Actor *ActorFactory::CreateNightstick(int x, int y){
 		Actor *nightstick = new Actor(x, y, TileCharacters::Default::EXCLAMATION, "nightstick",
 				TileColors::lighterGrey);
 		nightstick->blocks = false;
-		nightstick->pickable = new MeleeWeapon(9);
+		nightstick->item = new MeleeWeapon(9);
 		return nightstick;
 	}
 	catch(...){
@@ -410,7 +410,7 @@ Actor *ActorFactory::CreateTireIron(int x, int y){
 		Actor *tireIron = new Actor(x, y, TileCharacters::Default::EXCLAMATION, "tire iron",
 				TileColors::grey);
 		tireIron->blocks = false;
-		tireIron->pickable = new MeleeWeapon(18);
+		tireIron->item = new MeleeWeapon(18);
 		return tireIron;
 	}
 	catch(...){
@@ -424,7 +424,7 @@ Actor *ActorFactory::CreateKnife(int x, int y){
 		Actor *knife = new Actor(x, y, TileCharacters::Default::FORWARD_SLASH, "knife",
 				TileColors::lighterGrey);
 		knife->blocks = false;
-		knife->pickable = new MeleeWeapon(7);
+		knife->item = new MeleeWeapon(7);
 		return knife;
 	}
 	catch(...){
@@ -439,7 +439,7 @@ Actor *ActorFactory::CreateKris(int x, int y){
 		Actor *kris = new Actor(x, y, TileCharacters::Default::FORWARD_SLASH, "kris",
 				TileColors::grey);
 		kris->blocks = false;
-		kris->pickable = new MeleeWeapon(22);
+		kris->item = new MeleeWeapon(22);
 		return kris;
 	}
 	catch(...){
@@ -453,7 +453,7 @@ Actor *ActorFactory::CreateBaseballBat(int x, int y){
 		Actor *baseballBat = new Actor(x, y, TileCharacters::Default::EXCLAMATION, "tire iron",
 				TileColors::darkGrey);
 		baseballBat->blocks = false;
-		baseballBat->pickable = new MeleeWeapon(36);
+		baseballBat->item = new MeleeWeapon(36);
 		return baseballBat;
 	}
 	catch(...){
@@ -467,7 +467,7 @@ Actor *ActorFactory::CreateMachete(int x, int y){
 		Actor *machete = new Actor(x, y, TileCharacters::Default::FORWARD_SLASH, "machete",
 				TileColors::darkGrey);
 		machete->blocks = false;
-		machete->pickable = new MeleeWeapon(38);
+		machete->item = new MeleeWeapon(38);
 		return machete;
 	}
 	catch(...){

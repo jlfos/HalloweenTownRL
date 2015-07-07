@@ -7,7 +7,7 @@
 #include <iostream>
 
 #include "LevelUpMenu.hpp"
-#include "Menu.hpp"
+#include "MenuUI.hpp"
 
 LevelUpMenu::LevelUpMenu(){
 	PopulateMenu(false);

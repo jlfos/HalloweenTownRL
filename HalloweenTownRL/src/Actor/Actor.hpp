@@ -10,7 +10,7 @@ class Attacker;
 class Ai;
 class Destructible;
 class Container;
-class Pickable;
+class Item;
 class Actor: public Persistent {
 public:
 
@@ -23,7 +23,7 @@ public:
 	Attacker *attacker; // something that deals damages
 	Destructible *destructible; // something that can be damaged
 	Ai *ai; // something self-updating
-	Pickable *pickable; //something that can be picked up
+	Item *item; //something that can be picked up
 	Container *container; //something that contains
 	Lightsource * lightsource;//something that emits light
 	Actor(int x, int y, int ch, std::string name, const TCODColor &col);

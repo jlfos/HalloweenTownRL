@@ -10,7 +10,7 @@
 #include "../UI/HelpScreen.hpp"
 #include "../UI/LevelUpMenu.hpp"
 #include "../UI/MonsterLogMenu.hpp"
-#include "../Pickable/Pickable.hpp"
+#include "../Item/Item.hpp"
 #include "../Tile/TileColors.hpp"
 #include "PlayerAi.hpp"
 
@@ -145,7 +145,7 @@ bool PlayerAi::MoveOrAttack(Actor *owner, int targetX, int targetY){
 		}
 
 		for(Actor* actor : engine.actors){
-			bool corpseOrItem =(actor->destructible && actor->destructible->IsDead()) || actor->pickable;
+			bool corpseOrItem =(actor->destructible && actor->destructible->IsDead()) || actor->item;
 			if(corpseOrItem && actor->x == targetX && actor->y == targetY){
 				engine.gui->PushMessage(TileColors::lightGrey,"There's a %s here", (actor->name).c_str() );
 			}
@@ -257,8 +257,8 @@ void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 			{
 				bool found=false;
 				for (Actor *actor : engine.actors) {
-					if ( actor->pickable && actor->x == owner->x && actor->y == owner->y ) {
-						if (actor->pickable->Pick(actor,owner)) {
+					if ( actor->item && actor->x == owner->x && actor->y == owner->y ) {
+						if (actor->item->Pick(actor,owner)) {
 							found=true;
 							engine.gui->PushMessage(TileColors::lightGrey,"You picked up the %s.",
 								(actor->name).c_str());
@@ -279,7 +279,7 @@ void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 			{
 				Actor *actor=ChooseFromInventory(owner);
 				if ( actor ) {
-					actor->pickable->Use(actor,owner);
+					actor->item->Use(actor,owner);
 					engine.gameStatus=Engine::NEW_TURN;
 				}
 			}

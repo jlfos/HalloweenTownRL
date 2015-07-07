@@ -14,8 +14,8 @@
 CityMapGenerator::CityMapGenerator(bool boss) :boss(boss) {
 	rng = TCODRandom::getInstance();
 
-	eastWestStreet = rng->getInt(2,4);
-	northSouthStreet = rng->getInt(2,4);
+	eastWestStreet = rng->getInt(0,3);
+	northSouthStreet = rng->getInt(3,5);
 }
 
 CityMapGenerator::~CityMapGenerator(){
@@ -36,7 +36,6 @@ TCODMap* CityMapGenerator::Generate(Map* map, bool generateActors){
 	int buildingSize = 5;
 	int tilesTillNextSpawn = 0;
 	for(int j =1;(eastWestStreet*j)+(buildingSize*(j-1))<height;j++){
-
 		for(int i = 1;(northSouthStreet*i)+(buildingSize*(i-1))<width; i++){
 			CreateBuilding(map, cityMap, 0+(eastWestStreet*i)+(buildingSize*(i-1)),
 										 0+(northSouthStreet*j)+(buildingSize*(j-1)));

@@ -2,11 +2,11 @@
 #define HALLOWEENTOWN_HEALER_HPP
 
 #include "libtcod.hpp"
-#include "Pickable.hpp"
+#include "Item.hpp"
 
 class Actor;
 
-class Healer : public Pickable {
+class Healer : public Item {
 public :
 	float amount; // how many hp
 

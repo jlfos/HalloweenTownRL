@@ -5,12 +5,12 @@
 #include "../Attacker.hpp"
 #include "../Container.hpp"
 #include "../Destructible/Destructible.hpp"
-#include "../Pickable/Pickable.hpp"
+#include "../Item/Item.hpp"
 
 Actor::Actor(int x, int y, int ch, std::string name, const TCODColor &col) :
     x(x),y(y),ch(ch),col(col), name(name),
     blocks(true), attacker(nullptr), destructible(nullptr), ai(nullptr),
-    pickable(nullptr), container(nullptr), lightsource(nullptr){
+    item(nullptr), container(nullptr), lightsource(nullptr){
 }
  
 Actor::~Actor(){
@@ -18,7 +18,7 @@ Actor::~Actor(){
 		if(attacker) delete attacker;
 		if(destructible) delete destructible;
 		if(ai) delete ai;
-		if(pickable) delete pickable;
+		if(item) delete item;
 		if(container) delete container;
 		if(lightsource) delete lightsource;
 	}
@@ -59,12 +59,12 @@ void Actor::Save(TCODZip &zip){
 		zip.putInt(attacker !=  nullptr);
 		zip.putInt(destructible != nullptr);
 		zip.putInt(ai != nullptr);
-		zip.putInt(pickable != nullptr);
+		zip.putInt(item != nullptr);
 		zip.putInt(container != nullptr);
 		if(attacker) attacker->Save(zip);
 		if(destructible) destructible->Save(zip);
 		if(ai) ai->Save(zip);
-		if(pickable) pickable->Save(zip);
+		if(item) item->Save(zip);
 		if(container) container->Save(zip);
 		if(lightsource) lightsource->Save(zip);
 	}
@@ -99,7 +99,7 @@ void Actor::Load(TCODZip &zip){
 			ai = Ai::Create(zip);
 		}
 		if(hasPickable){
-			pickable = Pickable::Create(zip);
+			item = Item::Create(zip);
 		}
 		if(hasContainer){
 			container = new Container(0);

@@ -8,9 +8,9 @@
 #define MONSTERLOG_HPP
 #include "libtcod.hpp"
 #include "Gui.hpp"
-#include "Menu.hpp"
+#include "MenuUI.hpp"
 
-class MonsterLogMenu : public Menu {
+class MonsterLogMenu : public MenuUI {
 	public:
 	MonsterLogMenu();
 	void PopulateMenu(bool hardMode);

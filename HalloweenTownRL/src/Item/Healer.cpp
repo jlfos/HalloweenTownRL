@@ -3,7 +3,7 @@
 #include "../Ai/Ai.hpp"
 #include "../Actor/Actor.hpp"
 #include "../Destructible/Destructible.hpp"
-#include "Pickable.hpp"
+#include "Item.hpp"
 Healer::Healer(float amount) : amount(amount){
 
 }
@@ -17,7 +17,7 @@ bool Healer::Use(Actor *owner, Actor *wearer){
 		if(wearer->destructible){
 			float amountHealed = wearer->destructible->Heal(amount);
 			if(amountHealed > 0){
-				return Pickable::Use(owner, wearer);
+				return Item::Use(owner, wearer);
 			}
 		}
 		return false;

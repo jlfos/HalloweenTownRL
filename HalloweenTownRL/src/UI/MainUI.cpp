@@ -1,8 +1,8 @@
 #include <iostream>
-#include "Menu.hpp"
+#include "MenuUI.hpp"
 #include "../Tile/TileColors.hpp"
 
-Menu::Menu() {
+MenuUI::MenuUI() {
 	try {
 
 	} catch (...) {
@@ -11,7 +11,7 @@ Menu::Menu() {
 	}
 }
 
-Menu::~Menu() {
+MenuUI::~MenuUI() {
 	try {
 		Clear();
 	} catch (...) {
@@ -20,7 +20,7 @@ Menu::~Menu() {
 	}
 }
 
-void Menu::Clear() {
+void MenuUI::Clear() {
 	try {
 		items.clear();
 	} catch (...) {
@@ -29,7 +29,7 @@ void Menu::Clear() {
 	}
 }
 
-void Menu::AddItem(std::string item) {
+void MenuUI::AddItem(std::string item) {
 	try {
 		items.push(item);
 	} catch (...) {
@@ -38,11 +38,11 @@ void Menu::AddItem(std::string item) {
 	}
 }
 
-void Menu::SetHeader(std::string header) {
+void MenuUI::SetHeader(std::string header) {
 	this->header = header;
 }
 
-std::string Menu::Pick() {
+std::string MenuUI::Pick() {
 	try {
 //		static TCODImage img("tree.png");
 		int selectedItem = 0;

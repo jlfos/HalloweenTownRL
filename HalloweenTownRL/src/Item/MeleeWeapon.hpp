@@ -8,10 +8,10 @@
 #define MELEEWEAPON_HPP
 #include "libtcod.hpp"
 #include "../Persistent.hpp"
-#include "Pickable.hpp"
+#include "Item.hpp"
 class Actor;
 
-class MeleeWeapon : public Pickable{
+class MeleeWeapon : public Item{
 
 private:
 	float amount;
