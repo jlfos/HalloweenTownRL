@@ -4,8 +4,7 @@
 #include "../Actor/Actor.hpp"
 #include "../Destructible/Destructible.hpp"
 #include "Item.hpp"
-Healer::Healer(float amount) : amount(amount){
-
+Healer::Healer(float amount) : Item(ItemType::HEALER), amount(amount){
 }
 
 Healer::~Healer(){

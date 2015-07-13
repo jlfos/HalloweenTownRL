@@ -17,7 +17,7 @@
 #include "../UI/Gui.hpp"
 #include "Item.hpp"
 #include "../Tile/TileColors.hpp"
-MeleeWeapon::MeleeWeapon(float amount) : amount(amount){
+MeleeWeapon::MeleeWeapon(float amount) : Item(ItemType::MELEE_WEAPON), amount(amount){
 
 }
 

@@ -45,7 +45,6 @@ TCODMap* ForestMapGenerator::Generate(Map* map, bool generateActors){
 	}
 
 	//TODO Make the generation of spawn locations more generic
-	//TODO Work on making the terrain of the forest look a little more interesting
 	for (int tilex = 0; tilex < width-1; tilex++) {
 		for (int tiley = 0; tiley < height-1; tiley++) {
 			int tileIndex = tilex+tiley*width;

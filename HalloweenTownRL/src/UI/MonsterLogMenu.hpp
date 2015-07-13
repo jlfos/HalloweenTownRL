@@ -10,12 +10,14 @@
 #include "Gui.hpp"
 #include "MenuUI.hpp"
 
+class Message;
+
 class MonsterLogMenu : public MenuUI {
 	public:
 	MonsterLogMenu();
 	void PopulateMenu(bool hardMode);
 	private:
-	TCODList<Gui::Message*> log;
+	TCODList<Message*> log;
 };
 
 

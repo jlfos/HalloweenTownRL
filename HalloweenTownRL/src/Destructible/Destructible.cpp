@@ -12,41 +12,36 @@
 
 Destructible::Destructible(float maxHp, float defense, int experienceReward, std::string corpseName, TCODColor corpseColor, int corpseCharacter):
 	maxHp(maxHp), hp(maxHp), defense(defense), experienceReward(experienceReward), corpseName(corpseName), corpseColor(corpseColor), corpseCharacter(corpseCharacter){
-
 }
 
 Destructible::Destructible(float maxHp, float defense, int experienceReward, std::string corpseName, TCODColor corpseColor):
 			maxHp(maxHp), hp(maxHp), defense(defense), experienceReward(experienceReward), corpseName(corpseName), corpseColor(corpseColor){
-		TCODRandom rng(maxHp+defense+experienceReward, TCOD_RNG_CMWC);
-		int randInt = rng.getInt(1, 3);
-		if(randInt %2 == 0)
-			corpseCharacter = TileCharacters::Default::PERCENT;
-		else if(randInt %3 == 0)
-			corpseCharacter = TileCharacters::Default::BURST;
-		else
-			corpseCharacter = TileCharacters::Default::SWIRL;
-
-
-	}
+	corpseCharacter = generateCorpseCharacter();
+}
 
 
 Destructible::Destructible(float maxHp, float defense, int experienceReward, std::string corpseName):
 	maxHp(maxHp), hp(maxHp), defense(defense), experienceReward(experienceReward), corpseName(corpseName){
 
-	//TODO Pull this out into its own function
-	//TODO Work on the randomness of the corpses
-	TCODRandom rng(maxHp+defense+experienceReward, TCOD_RNG_CMWC);
-	int randInt = rng.getInt(1, 3);
-	if(randInt %2 == 0)
-		corpseCharacter = TileCharacters::Default::PERCENT;
-	else if(randInt %3 == 0)
-		corpseCharacter = TileCharacters::Default::BURST;
-	else
-		corpseCharacter = TileCharacters::Default::SWIRL;
-
+	corpseCharacter = generateCorpseCharacter();
 	corpseColor = TileColors::darkRed;
 }
 
+int Destructible::generateCorpseCharacter() {
+	int character;
+	TCODRandom rng(TCODSystem::getElapsedMilli());
+	int randInt = rng.getInt(2, 4);
+	if (randInt % 2 == 0)
+		character = TileCharacters::Default::PERCENT;
+	else if (randInt % 3 == 0)
+		character = TileCharacters::Default::BURST;
+	else
+		character = TileCharacters::Default::SWIRL;
+
+	return character;
+
+
+}
 
 Destructible *Destructible::Create(TCODZip &zip){
 	try{

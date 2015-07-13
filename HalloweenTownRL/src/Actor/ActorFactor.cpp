@@ -20,7 +20,7 @@
 
 Actor *ActorFactory::CreateHero(int x, int y){
 	try{
-		Actor *player = new Actor(x, y, TileCharacters::Default::AT_SIGN, "player", TileColors::white);
+		Actor *player = new Actor(x, y, TileCharacters::Default::BLOCK_BOTTOM_HALF, "player", TileColors::brown);
 		player->destructible=new PlayerDestructible(30,2,"your cadaver");
 		player->attacker=new Attacker(3, "fists");
 		player->ai = new PlayerAi();
@@ -36,7 +36,7 @@ Actor *ActorFactory::CreateHero(int x, int y){
 
 Actor *ActorFactory::CreateLampPost(int x, int y){
 	try{
-		Actor* lampPost = new Actor(x, y, TileCharacters::Default::I_DIAERESIS_UPPERCASE, "lamp post", TileColors::grey);
+		Actor* lampPost = new Actor(x, y, TileCharacters::Default::H_LOWERCASE, "lamp post", TileColors::brown);
 		lampPost->blocks = true;
 		lampPost->lightsource = new Lightsource(25);
 	}
@@ -464,8 +464,8 @@ Actor *ActorFactory::CreateBaseballBat(int x, int y){
 
 Actor *ActorFactory::CreateMachete(int x, int y){
 	try{
-		Actor *machete = new Actor(x, y, TileCharacters::Default::FORWARD_SLASH, "machete",
-				TileColors::darkGrey);
+		Actor *machete = new Actor(x, y, TileCharacters::Default::AT_SIGN, "machete",
+				TileColors::white);
 		machete->blocks = false;
 		machete->item = new MeleeWeapon(38);
 		return machete;

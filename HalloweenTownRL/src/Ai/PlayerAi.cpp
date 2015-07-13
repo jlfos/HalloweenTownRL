@@ -14,6 +14,7 @@
 #include "../Tile/TileColors.hpp"
 #include "PlayerAi.hpp"
 
+#include "../UI/Console/InventoryConsole.hpp"//TODO remove
 
 const int LEVEL_UP_BASE=1;
 const int LEVEL_UP_INCREASE=20;
@@ -262,6 +263,7 @@ void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 							found=true;
 							engine.gui->PushMessage(TileColors::lightGrey,"You picked up the %s.",
 								(actor->name).c_str());
+							engine.currentMap->actors.remove(actor);
 							break;
 						} else if (! found) {
 							found=true;
@@ -297,6 +299,14 @@ void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 			case 'L': //view event log
 			{
 				viewLog();
+			}
+			break;
+			case 'w':
+			{
+
+				InventoryConsole inventory;
+
+
 			}
 			break;
 			case '?' : //view help screen

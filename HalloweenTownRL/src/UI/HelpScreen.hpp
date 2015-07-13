@@ -7,6 +7,8 @@
 #ifndef HELPSCREEN_HPP
 #define HELPSCREEN_HPP
 
+class Message;
+
 class HelpScreen {
 
 public:
@@ -14,7 +16,7 @@ public:
 	void Show();
 	~HelpScreen();
 private:
-	TCODList<Gui::Message *> log;
+	TCODList<Message *> log;
 };
 
 

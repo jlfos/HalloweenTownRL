@@ -56,7 +56,7 @@ TCODMap* CityMapGenerator::Generate(Map* map, bool generateActors){
 						map->spawnLocations.push_back(spawn);
 					}
 					tilesTillNextSpawn--;
-				}
+			}
 		}
 	}
 

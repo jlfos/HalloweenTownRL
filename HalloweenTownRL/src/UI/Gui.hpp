@@ -1,9 +1,10 @@
 #ifndef HALLOWEENTOWN_GUI_HPP
 #define HALLOWEENTOWN_GUI_HPP
 #include <string>
+#include <vector>
 #include "PauseMenu.hpp"
 #include "../Persistent.hpp"
-
+#include "Console/Message.hpp"
 class Gui : public Persistent {
 public :
 	PauseMenu menu;
@@ -15,13 +16,7 @@ public :
 	void Save(TCODZip &zip);
 	void Clear();
 	void ShowLog();
-	//TODO Break this out into its own class
-	struct Message {
-		char *text;
-		TCODColor col;
-		Message(const char *text, const TCODColor &col);
-		~Message();
-	};
+	static std::vector<Message> wordWrapText(std::string, int lineSize);
 
 protected :
 	TCODConsole *con;

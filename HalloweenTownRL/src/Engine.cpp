@@ -18,7 +18,7 @@
 
 Engine::Engine(int screenWidth, int screenHeight) :
 		gameStatus(STARTUP), fovRadius(15), screenWidth(screenWidth), screenHeight(screenHeight),
-		currentTime(6, 00), incrementTime(false){
+		currentTime(10, 00), incrementTime(false){
 	try {
 		currentMap = nullptr;
 		maps = nullptr;
@@ -450,10 +450,10 @@ void Engine::Render() {
 	try {
 		TCODConsole::root->clear();
 		// draw the map
-		currentMap->Render();
+
 
 		gui->Render();
-
+		currentMap->Render();
 		// draw the actors
 		for (Actor *actor : actors) {
 			if(actor){

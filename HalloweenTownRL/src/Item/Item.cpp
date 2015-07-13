@@ -6,6 +6,11 @@
 #include "Healer.hpp"
 #include "Item.hpp"
 
+Item::Item(ItemType type){
+	this->type = type;
+}
+
+
 bool Item::Pick(Actor *owner, Actor *wearer){
 	try{
 		if(wearer->container && wearer->container->Add(owner)){

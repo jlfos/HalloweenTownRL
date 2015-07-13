@@ -34,5 +34,7 @@ private:
 	std::string corpseName; // the actor's name once dead/destroyed
 	TCODColor corpseColor; // the actor's color once dead/destroyed
 	int corpseCharacter; // the actor's character once dead/destroyed
+
+	int generateCorpseCharacter();
 };
 #endif

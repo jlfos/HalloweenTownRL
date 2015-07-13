@@ -44,7 +44,7 @@ void MenuUI::SetHeader(std::string header) {
 
 std::string MenuUI::Pick() {
 	try {
-//		static TCODImage img("tree.png");
+		//static TCODImage img("tree.png");
 		int selectedItem = 0;
 		TCODConsole::root->clear();
 		TCODConsole::root->setDefaultForeground(TileColors::darkOrange);
@@ -52,7 +52,7 @@ std::string MenuUI::Pick() {
 				TCOD_bkgnd_flag_t::TCOD_BKGND_COLOR_BURN,
 				TCOD_alignment_t::TCOD_LEFT, header.c_str());
 		while (!TCODConsole::isWindowClosed()) {
-//			img.blit2x(TCODConsole::root, 0, 0);
+			//img.blit2x(TCODConsole::root, 0, 0);
 			int currentItem = 0;
 			for (std::string it : items) {
 				if (currentItem == selectedItem) {

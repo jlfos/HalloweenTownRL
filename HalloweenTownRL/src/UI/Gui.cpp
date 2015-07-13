@@ -9,6 +9,7 @@
 #include "../Destructible/Destructible.hpp"
 #include "../Engine.hpp"
 #include "Gui.hpp"
+#include "Console/Message.hpp"
 #include "../Ai/PlayerAi.hpp"
 #include "../Tile/TileColors.hpp"
 
@@ -19,7 +20,8 @@ static const int MSG_HEIGHT=47;
 
 Gui::Gui() {
 	try{
-		con = new TCODConsole(engine.screenWidth,PANEL_HEIGHT);
+//		con = new TCODConsole(0, 0);
+		con = new TCODConsole(engine.screenWidth, PANEL_HEIGHT);
 	}
 	catch(...){
 		std::cerr << "An error occurred with Gui::Gui"  << std::endl;
@@ -45,7 +47,6 @@ void Gui::Render() {
 		// clear the GUI console
 		con->setDefaultBackground(TileColors::black);
 		con->clear();
-
 		// draw the health bar
 		RenderBar(1,1,BAR_WIDTH,"HP",engine.player->destructible->hp,
 			engine.player->destructible->maxHp,
@@ -70,17 +71,13 @@ void Gui::Render() {
 		else
 			i = 0;
 		for(; i<log.size(); i++){
-
-			con->setDefaultForeground(log.get(i)->col * colorCoef);
-					con->print(MSG_X,y,log.get(i)->text);
+			con->setDefaultForeground(log.get(i)->getBackgroundColor() * colorCoef);
+					con->print(MSG_X,y,log.get(i)->getText().c_str());
 					y++;
 					if ( colorCoef < 1.0f ) {
 						colorCoef+=0.3f;
 					}
 		}
-
-		// mouse look
-//		RenderMouseLook();
 
 
 
@@ -134,16 +131,15 @@ void Gui::Clear(){
 	}
 }
 
-Gui::Message::Message(const char *text, const TCODColor &col) :
-	text(strdup(text)),col(col) {
-}
+
 
 void Gui::Save(TCODZip &zip){
 	try{
 		zip.putInt(log.size());
 		for(Message *it : log){
-			zip.putString((it)->text);
-			zip.putColor(&(it)->col);
+			zip.putString((it)->getText().c_str());
+			//TODO uncomment this and fix it for save to work
+//			zip.putColor(&(it)->getBackgroundColor());
 		}
 	}
 	catch(...){
@@ -168,15 +164,7 @@ void Gui::Load(TCODZip &zip){
 	}
 }
 
-Gui::Message::~Message() {
-	try{
-		free(text);
-	}
-	catch(...){
-		std::cerr << "An error occurred with Gui::~Message"  << std::endl;
-		throw 0;
-	}
-}
+
 
 void Gui::RenderMouseLook() {
 	try{
@@ -253,8 +241,8 @@ void Gui::ShowLog(){
 
 	float colorCoef=0.4f;
 	for(Message *message : log) {
-		TCODConsole::root->setDefaultForeground(message->col * colorCoef);
-		TCODConsole::root->print(1, y, message->text, message->col);
+		TCODConsole::root->setDefaultForeground(message->getBackgroundColor() * colorCoef);
+		TCODConsole::root->print(1, y, message->getText().c_str(), message->getBackgroundColor());
 //		TCODConsole::root->setChar(1, y, 32);
 		y++;
 		if ( colorCoef < 1.0f ) {
@@ -262,4 +250,52 @@ void Gui::ShowLog(){
 		}
 	}
 	TCODConsole::root->flush();
+}
+
+
+std::vector<Message> Gui::wordWrapText(std::string text, int lineSize){
+	try{
+		std::vector<Message> messages;
+		std::string buffer = "";
+		std::string currentWord = "";
+		for(char& c : text){
+
+			if(c != ' '){ //Character is not whitespace, part of current word
+				if(buffer.length() + currentWord.length()+1 < lineSize){ //Can safely add another character to this line
+					currentWord.append(1, c);
+				}
+				else{ //Line has run out of room
+					Message temp(buffer);
+					messages.push_back(temp);
+					buffer = "";
+					currentWord.append(1, c);
+				}
+			}
+			else{ //Whitespace character indicates end of current word
+				if(buffer.length() + currentWord.length()+1 < lineSize){ //adding whitespace
+					buffer.append(1, c);
+					buffer += currentWord;
+					currentWord = "";
+				}
+				else{ //Whitespace is at the end of a line, just ignore.
+					Message temp(buffer);
+					messages.push_back(temp);
+					buffer = "";
+				}
+			}
+		}
+		if(currentWord.length()>0){
+			buffer += currentWord;
+			currentWord = "";
+			Message temp(buffer);
+			messages.push_back(temp);
+		}
+
+
+		return messages;
+	}
+	catch(...){
+		std::cerr << "An error occurred in ConsoleUI::wordWrapText" << std::endl;
+	}
+
 }

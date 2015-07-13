@@ -12,6 +12,8 @@ public :
 		HEALER,
 		MELEE_WEAPON
 	};
+	Item(ItemType type);
+
 	bool Pick(Actor *owner, Actor *wearer);
 	virtual bool Use(Actor *owner, Actor *wearer);
 	static Item *Create(TCODZip &zip);
