@@ -19,7 +19,8 @@ public :
 	InventoryConsole();
 private:
 	void userInput();
-	void getItem(int itemIndex);
+	Actor* getItem(int itemIndex);
+	void useItem(Actor* item);
 	Actor* player;
 	std::map<char, int> keyMapping;
 	void populateKeyMapping();

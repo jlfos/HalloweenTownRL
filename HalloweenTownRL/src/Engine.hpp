@@ -45,6 +45,7 @@ public :
     void SendToBack(Actor *actor);
     void NextLevel(Map::TileType type);
 	Time currentTime;
+	std::string getItemDescription(std::string name);
 private:
 	enum class MapType {FOREST_NORTH, FOREST_SOUTH, ROAD_EW, CITY, CITY_BOSS };
 	void ExitGame();

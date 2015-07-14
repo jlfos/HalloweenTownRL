@@ -470,3 +470,18 @@ void Engine::Render() {
 		throw 0;
 	}
 }
+
+std::string Engine::getItemDescription(std::string name){
+	std::map<std::string, std::string> itemDescriptions;
+	itemDescriptions["knife"] = "A blade and a handle to hold it, what more could you need?";
+	itemDescriptions["nightstick"] = "A short, heavy club often used in law enforcement.";
+	itemDescriptions["kris"] = "A wavy-bladed dagger originating in Southeast Asia said to contain blessings... or curses.";
+	itemDescriptions["tire iron"] = "A useful tool for changing tires made of steel, also useful for bashing in skulls.";
+	itemDescriptions["tree branch"] = "It may just be a chunk of wood, but it's heavy enough to make an effective bludgeon.";
+	itemDescriptions["machete"] = "With a blade longer than a foot, this is great for chopping underbrush.";
+
+	itemDescriptions["medkit"] = "A kit with medical supplies for patching medium injuries";
+	itemDescriptions["baseball bat"] = "Nearly a yard long, this Louisville Slugger is weighted for maximum smashing!";
+	return itemDescriptions[name];
+
+}

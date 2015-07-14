@@ -17,7 +17,7 @@ public :
 	void Clear();
 	void ShowLog();
 	static std::vector<Message> wordWrapText(std::string, int lineSize);
-
+	static std::vector<ConsoleLine*> createConsoleLines(std::vector<Message> messages);
 protected :
 	TCODConsole *con;
 

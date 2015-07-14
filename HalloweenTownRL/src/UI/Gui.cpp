@@ -239,6 +239,7 @@ void Gui::ShowLog(){
 	int y=1;
 	TCODConsole::root->clear();
 
+
 	float colorCoef=0.4f;
 	for(Message *message : log) {
 		TCODConsole::root->setDefaultForeground(message->getBackgroundColor() * colorCoef);
@@ -284,10 +285,16 @@ std::vector<Message> Gui::wordWrapText(std::string text, int lineSize){
 				}
 			}
 		}
-		if(currentWord.length()>0){
-			buffer += currentWord;
+		if(currentWord.length()>0 && buffer.length() + currentWord.length()+2 < lineSize){
+			buffer += " " + currentWord;
 			currentWord = "";
 			Message temp(buffer);
+			messages.push_back(temp);
+		}
+		else{
+			Message tempBuffer(buffer);
+			Message temp(" " + currentWord);
+			messages.push_back(tempBuffer);
 			messages.push_back(temp);
 		}
 
@@ -298,4 +305,13 @@ std::vector<Message> Gui::wordWrapText(std::string text, int lineSize){
 		std::cerr << "An error occurred in ConsoleUI::wordWrapText" << std::endl;
 	}
 
+}
+
+std::vector<ConsoleLine*> Gui::createConsoleLines(std::vector<Message> messages){
+	std::vector<ConsoleLine*> consoleLines;
+	for(Message m : messages){
+		ConsoleLine* cl = new ConsoleLine(m);
+		consoleLines.push_back(cl);
+	}
+	return consoleLines;
 }
