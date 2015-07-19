@@ -10,21 +10,11 @@
 #include "MenuUI.hpp"
 
 LevelUpMenu::LevelUpMenu(){
-	PopulateMenu(false);
+	Clear();
+
+	SetHeader("You leveled up! Pick an attribute to increase:");
+	AddItem("Strength");
+	AddItem("Constitution");
+	AddItem("Agility");
 }
 
-void LevelUpMenu::PopulateMenu(bool saveGameExists){
-	try{
-		Clear();
-
-		SetHeader("You leveled up! Pick an attribute to increase:");
-		AddItem("Strength");
-		AddItem("Constitution");
-		AddItem("Agility");
-
-	}
-	catch(...){
-		std::cerr << "An error occurred with LevelUpMenu::populateMenu"  << std::endl;
-		throw 0;
-	}
-}

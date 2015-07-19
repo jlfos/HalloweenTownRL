@@ -8,7 +8,7 @@
 
 #include "MonsterEntry.hpp"
 MonsterEntry::MonsterEntry(std::string name, std::string description, std::string initialYear, int characterCode, TCODColor characterColor):
-	name(name), description(description), initialYear(initialYear), characterCode(characterCode), characterColor(characterColor){
+	name(name), description(description), initialYear(initialYear), characterCode(characterCode), characterColor(characterColor), encountered(false){
 }
 
 bool MonsterEntry::Compare(const MonsterEntry &left, const MonsterEntry &right){

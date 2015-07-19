@@ -2,12 +2,14 @@
 #define HALLOWEENTOWN_GUI_HPP
 #include <string>
 #include <vector>
+#include "Console/ConsoleLine.hpp"
+#include "Console/Message.hpp"
 #include "PauseMenu.hpp"
 #include "../Persistent.hpp"
-#include "Console/Message.hpp"
+
 class Gui : public Persistent {
 public :
-	PauseMenu menu;
+	PauseMenu* menu;
 	Gui();
 	~Gui();
 	void Render();
@@ -16,11 +18,12 @@ public :
 	void Save(TCODZip &zip);
 	void Clear();
 	void ShowLog();
-	static std::vector<Message> wordWrapText(std::string, int lineSize);
-	static std::vector<ConsoleLine*> createConsoleLines(std::vector<Message> messages);
+	void PopulatePauseMenu(bool saveFileExists);
+	std::string PauseMenuPick();
+	void PauseMenuClear();
 protected :
 	TCODConsole *con;
-
+	float colorCoef;
 
 	TCODList<Message *> log;
 

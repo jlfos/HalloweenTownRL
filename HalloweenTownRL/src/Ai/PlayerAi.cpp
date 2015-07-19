@@ -192,61 +192,10 @@ bool PlayerAi::LevelUpOccurred(){
 	return currentExperience > currentLevelGoal;
 }
 
-//TODO move this functionality to the GUI
-Actor *PlayerAi::ChooseFromInventory(Actor *owner){
-	try{
-
-		static const int INVENTORY_WIDTH=50;
-		static const int INVENTORY_HEIGHT=28;
-		static TCODConsole con(INVENTORY_WIDTH, INVENTORY_HEIGHT);
-		con.setDefaultForeground(TileColors::darkYellow);
-		con.printFrame(0, 0, INVENTORY_WIDTH, INVENTORY_HEIGHT, true, TCOD_BKGND_DEFAULT, "inventory");
-
-		con.setDefaultForeground(TileColors::white);
-
-		int shortcut = 'a';
-		int y = 1;
-		for(Actor *actor : owner->container->inventory){
-			con.print(2, y, "(%c) %s", shortcut, (actor->name).c_str());
-			y++;
-			shortcut++;
-		}
-		TCODConsole::blit(&con, 0, 0, INVENTORY_WIDTH, INVENTORY_HEIGHT, TCODConsole::root,
-					engine.screenWidth/2 - INVENTORY_WIDTH/2, engine.screenHeight/2 - INVENTORY_HEIGHT/2);
-		TCODConsole::flush();
-
-		TCOD_key_t key;
-		TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL, true);
-
-		if(key.vk == TCODK_CHAR){
-			int actorIndex=key.c - 'a';
-			if(actorIndex >= 0 && actorIndex < owner->container->inventory.size()){
-				return owner->container->inventory.get(actorIndex);
-			}
-		}
-		return nullptr;
-	}
-	catch(...){
-		std::cerr << "An error occurred in PlayerAi::chooseFromInventory" << std::endl;
-		throw 0;
-	}
-}
 
 void PlayerAi::showHelp() {
 	HelpScreen help;
 	help.Show();
-	bool logMode = true;
-	TCOD_key_t lastKey;
-	while (logMode) {
-		TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
-		switch (lastKey.vk) {
-		case TCODK_ESCAPE:
-			logMode = false;
-			break;
-		default:
-			break;
-		}
-	}
 }
 
 void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
@@ -279,11 +228,7 @@ void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 			break;
 			case 'i' : // display inventory
 			{
-				Actor *actor=ChooseFromInventory(owner);
-				if ( actor ) {
-					actor->item->Use(actor,owner);
-					engine.gameStatus=Engine::NEW_TURN;
-				}
+				InventoryConsole inventory;
 			}
 			break;
 			case '.' : //wait
@@ -299,14 +244,6 @@ void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 			case 'L': //view event log
 			{
 				viewLog();
-			}
-			break;
-			case 'w':
-			{
-
-				InventoryConsole inventory;
-
-
 			}
 			break;
 			case '?' : //view help screen
@@ -351,7 +288,6 @@ void PlayerAi::PlayerLook(Actor* player){
 		case TCODK_RIGHT : cursorX++; break;
 		case TCODK_ESCAPE :lookMode = false; break;
 		case TCODK_ENTER :
-			//TODO break this out, its used elsewhere
 			for(Actor* actor : engine.actors){
 				if(actor->x == cursorX && actor->y == cursorY){
 

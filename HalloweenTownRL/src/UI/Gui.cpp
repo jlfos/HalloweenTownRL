@@ -6,6 +6,8 @@
 #include "../Actor/Actor.hpp"
 #include "../Ai/Ai.hpp"
 #include "../Attacker.hpp"
+#include "Console/ConsoleLine.hpp"
+#include "Console/ConsoleUI.hpp"
 #include "../Destructible/Destructible.hpp"
 #include "../Engine.hpp"
 #include "Gui.hpp"
@@ -20,8 +22,9 @@ static const int MSG_HEIGHT=47;
 
 Gui::Gui() {
 	try{
-//		con = new TCODConsole(0, 0);
+		colorCoef = 0.4f; //This came from the tutorial
 		con = new TCODConsole(engine.screenWidth, PANEL_HEIGHT);
+		menu = nullptr;
 	}
 	catch(...){
 		std::cerr << "An error occurred with Gui::Gui"  << std::endl;
@@ -32,7 +35,10 @@ Gui::Gui() {
 
 Gui::~Gui() {
 	try{
-		delete con;
+		if(con)
+			delete con;
+		if(menu)
+			delete menu;
 		log.clearAndDelete();
 	}
 	catch(...){
@@ -62,8 +68,6 @@ void Gui::Render() {
 		// draw the message log
 		int y=1;
 
-		//TODO Pull this value out
-		float colorCoef=0.4f;
 
 		int i;
 		if(log.size()>(PANEL_HEIGHT-1) )
@@ -164,7 +168,36 @@ void Gui::Load(TCODZip &zip){
 	}
 }
 
+std::string Gui::PauseMenuPick() {
+	try{
+		if(menu)
+			return menu->Pick();
+		else{
+			std::cerr << "You attempted to call Pick on an uninitialized PauseMenu" << std::endl;
+			throw 0;
+		}
+	}
+	catch(...){
+		std::cerr << "An error occurred in PauseMenuPick()" << std::endl;
+		throw 0;
+	}
+}
 
+void Gui::PauseMenuClear() {
+	try{
+		if(menu)
+			return menu->Clear();
+		else{
+			std::cerr << "You attempted to call Clear on an uninitialized PauseMenu" << std::endl;
+			throw 0;
+		}
+	}
+	catch(...){
+		std::cerr << "An error occurred in PauseMenuClear()" << std::endl;
+		throw 0;
+	}
+
+}
 
 void Gui::RenderMouseLook() {
 	try{
@@ -239,8 +272,6 @@ void Gui::ShowLog(){
 	int y=1;
 	TCODConsole::root->clear();
 
-
-	float colorCoef=0.4f;
 	for(Message *message : log) {
 		TCODConsole::root->setDefaultForeground(message->getBackgroundColor() * colorCoef);
 		TCODConsole::root->print(1, y, message->getText().c_str(), message->getBackgroundColor());
@@ -253,65 +284,9 @@ void Gui::ShowLog(){
 	TCODConsole::root->flush();
 }
 
-
-std::vector<Message> Gui::wordWrapText(std::string text, int lineSize){
-	try{
-		std::vector<Message> messages;
-		std::string buffer = "";
-		std::string currentWord = "";
-		for(char& c : text){
-
-			if(c != ' '){ //Character is not whitespace, part of current word
-				if(buffer.length() + currentWord.length()+1 < lineSize){ //Can safely add another character to this line
-					currentWord.append(1, c);
-				}
-				else{ //Line has run out of room
-					Message temp(buffer);
-					messages.push_back(temp);
-					buffer = "";
-					currentWord.append(1, c);
-				}
-			}
-			else{ //Whitespace character indicates end of current word
-				if(buffer.length() + currentWord.length()+1 < lineSize){ //adding whitespace
-					buffer.append(1, c);
-					buffer += currentWord;
-					currentWord = "";
-				}
-				else{ //Whitespace is at the end of a line, just ignore.
-					Message temp(buffer);
-					messages.push_back(temp);
-					buffer = "";
-				}
-			}
-		}
-		if(currentWord.length()>0 && buffer.length() + currentWord.length()+2 < lineSize){
-			buffer += " " + currentWord;
-			currentWord = "";
-			Message temp(buffer);
-			messages.push_back(temp);
-		}
-		else{
-			Message tempBuffer(buffer);
-			Message temp(" " + currentWord);
-			messages.push_back(tempBuffer);
-			messages.push_back(temp);
-		}
-
-
-		return messages;
-	}
-	catch(...){
-		std::cerr << "An error occurred in ConsoleUI::wordWrapText" << std::endl;
-	}
-
-}
-
-std::vector<ConsoleLine*> Gui::createConsoleLines(std::vector<Message> messages){
-	std::vector<ConsoleLine*> consoleLines;
-	for(Message m : messages){
-		ConsoleLine* cl = new ConsoleLine(m);
-		consoleLines.push_back(cl);
-	}
-	return consoleLines;
+void Gui::PopulatePauseMenu(bool saveFileExists) {
+	if(menu)
+		menu->PopulateMenu(saveFileExists);
+	else
+		menu = new PauseMenu(saveFileExists);
 }

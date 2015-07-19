@@ -12,7 +12,7 @@
 class PauseMenu : public MenuUI {
 public:
 
-	PauseMenu();
+	PauseMenu(bool saveGameExists);
 	void PopulateMenu(bool saveGameExists);
 };
 

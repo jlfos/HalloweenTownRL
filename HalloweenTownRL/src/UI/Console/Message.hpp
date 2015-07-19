@@ -6,8 +6,11 @@
 
 #ifndef MESSAGE_HPP
 #define MESSAGE_HPP
+
+#include <color.hpp>
 #include <string>
-#include "libtcod.hpp"
+#include <vector>
+
 class Message {
 public:
 	Message(std::string text);
@@ -17,7 +20,7 @@ public:
 	std::string getText();
 	TCODColor getBackgroundColor();
 	TCODColor getForegroundColor();
-
+	static std::vector<Message> wordWrapText(std::string, unsigned int lineSize);
 private:
 	std::string text;
 	TCODColor backgroundColor;

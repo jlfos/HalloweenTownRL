@@ -18,7 +18,8 @@
 
 Engine::Engine(int screenWidth, int screenHeight) :
 		gameStatus(STARTUP), fovRadius(15), screenWidth(screenWidth), screenHeight(screenHeight),
-		currentTime(10, 00), incrementTime(false){
+		currentTime(10, 00), incrementTime(false), bossMapX(0), bossMapY(0), playerMapX(0), playerMapY(0),
+		WORLD_SIZE_LATITUDE(0), WORLD_SIZE_LONGITUDE(0){
 	try {
 		currentMap = nullptr;
 		maps = nullptr;
@@ -69,12 +70,10 @@ std::vector<std::vector<Map*>> *Engine::CreateMaps(std::vector<std::vector<Engin
 	try {
 		std::vector<std::vector<Map*>> *maps = new std::vector<std::vector<Map*>>();
 		for(int i = 0; i<mapTypes.size(); i++)
-//		(std::vector<Engine::MapType> v : mapTypes)
 		{
 
 			maps->push_back(std::vector<Map*>());
 			for(int j = 0; j<mapTypes.at(i).size(); j++)
-//			(Engine::MapType mt : v)
 			{
 
 				bool firstMapFlag = false;
@@ -117,6 +116,7 @@ std::vector<std::vector<Map*>> *Engine::CreateMaps(std::vector<std::vector<Engin
 		return maps;
 	} catch (...) {
 		std::cerr << "An error occurred in Engine::CreateMaps" << std::endl;
+		throw 0;
 	}
 }
 
@@ -183,9 +183,9 @@ void Engine::Load() {
 			saveGameExists = true;
 
 		}
-		engine.gui->menu.PopulateMenu(saveGameExists);
+		engine.gui->PopulatePauseMenu(saveGameExists);
 
-		std::string menuItem = engine.gui->menu.Pick();
+		std::string menuItem = engine.gui->PauseMenuPick();
 
 		if (menuItem == "Exit" || menuItem == "NONE") {
 			ExitGame();
@@ -266,7 +266,7 @@ void Engine::ContinueGame() {
 		}
 		else{
 			std::cout << "Return to game" << std::endl;
-			engine.gui->menu.Clear();
+			engine.gui->PauseMenuClear();
 
 		}
 	} catch (...) {
@@ -347,7 +347,7 @@ void Engine::Update() {
 		}
 		else if(gameStatus == VICTORY){
 			VictoryScreen screen;
-			screen.show();
+			screen.Show();
 		}
 	} catch (...) {
 		std::cerr << "An error occurred with Engine::Update" << std::endl;

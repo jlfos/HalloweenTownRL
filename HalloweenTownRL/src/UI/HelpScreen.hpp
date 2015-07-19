@@ -6,17 +6,17 @@
 
 #ifndef HELPSCREEN_HPP
 #define HELPSCREEN_HPP
+#include <vector>
+#include "ScreenUI.hpp"
 
 class Message;
 
-class HelpScreen {
+class HelpScreen : public ScreenUI {
 
 public:
 	HelpScreen();
-	void Show();
 	~HelpScreen();
 private:
-	TCODList<Message *> log;
 };
 
 

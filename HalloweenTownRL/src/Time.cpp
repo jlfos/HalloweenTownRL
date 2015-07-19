@@ -41,6 +41,7 @@ int Time::ElapsedMinutes(Time previousTime){
 	}
 	catch(...){
 		std::cerr << "An error occurred in Time::elapsedMinutes()" << std::endl;
+		throw 0;
 	}
 }
 int Time::GetHour(){
@@ -50,6 +51,7 @@ int Time::GetHour(){
 	}
 	catch(...){
 		std::cerr << "An error occurred in Time::getHour()" << std::endl;
+		throw 0;
 	}
 }
 int Time::GetMinutes(){
@@ -58,6 +60,7 @@ int Time::GetMinutes(){
 	}
 	catch(...){
 		std::cerr << "An error occurred in Time::getMinutes()" << std::endl;
+		throw 0;
 	}
 }
 
@@ -82,6 +85,7 @@ void Time::IncrementMinutes(){
 	}
 	catch(...){
 		std::cerr << "An error occurred in Time::incrementMinutes()" << std::endl;
+		throw 0;
 	}
 }
 
@@ -101,6 +105,7 @@ const char* Time::c_str(){
 	}
 	catch(...){
 		std::cerr << "An error occurred in Time::c_str()" << std::endl;
+		throw 0;
 	}
 }
 
@@ -118,5 +123,6 @@ std::string Time::ConvertMinutes(){
 	}
 	catch(...){
 		std::cerr << "An error occurred in Time::convertMinutes" << std::endl;
+		throw 0;
 	}
 }

@@ -14,8 +14,6 @@ public:
 		CONTINUE,
 		EXIT
 	};
-	//TODO remove the saveGameExists parameter
-	virtual void PopulateMenu(bool saveGameExists) = 0;
 	std::string Pick();
 	MenuUI();
 	~MenuUI();

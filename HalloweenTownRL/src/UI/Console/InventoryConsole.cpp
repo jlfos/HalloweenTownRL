@@ -9,6 +9,8 @@
 #include <iostream>
 #include "libtcod.hpp"
 #include "../../Actor/Actor.hpp"
+#include "ConsoleFrame.hpp"
+#include "ConsoleSelection.hpp"
 #include "ConsoleUI.hpp"
 #include "../../Container.hpp"
 #include "ConsoleUI.hpp"
@@ -20,32 +22,34 @@
 #include "../../Tile/TileColors.hpp"
 
 namespace InventoryConstants{
-static const int WIDTH=50;
+static const int WIDTH=25;
 static const int HEIGHT=28;
 }
 
 InventoryConsole::InventoryConsole():
-	ConsoleUI(InventoryConstants::WIDTH, InventoryConstants::HEIGHT, engine.screenWidth/2 - InventoryConstants::WIDTH/2, engine.screenHeight/2 - InventoryConstants::HEIGHT/2, true, true, "inventory")
+	ConsoleUI(InventoryConstants::WIDTH, InventoryConstants::HEIGHT, engine.screenWidth/2 - InventoryConstants::WIDTH/2, engine.screenHeight/2 - InventoryConstants::HEIGHT/2)
 {
 
+	frame = new ConsoleFrame("Inventory", TileColors::white);
 	try{
 		std::vector<ConsoleLine*> cl;
-
-
 
 		player = engine.player;
 		char charIndex = 'a';
 
+		//TODO Create a generic function to generate messages and takes a generic indexer. You'll have to switch from TCODList or commit to it.
 		for(Actor* item : player->container->inventory){
 			std::string stuff = "(";
-			Message message(stuff.append(1, charIndex) + ") " + item->name, TileColors::white, TileColors::grey);
+			Message message(stuff.append(1, charIndex) + ") " + item->name, TileColors::white);
 			ConsoleLine *line = new ConsoleLine(message);
 			cl.push_back(line);
 			charIndex++;
 		}
+		selection = new ConsoleSelection(cl.size(), TileColors::blue);
 		populateKeyMapping();
 		setConsoleLines(cl);
 		display();
+		flush();
 		userInput();
 	}
 	catch(...){
@@ -62,17 +66,28 @@ void InventoryConsole::userInput(){
 			TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
 			switch(lastKey.vk){
 			case TCODK_UP:
-				if(decrementSelection())
-					display();
+				if(selection){
+					if(selection->decrementSelection()){
+						display();
+						flush();
+					}
+				}
 				break;
 			case TCODK_DOWN:
-				if(incrementSelection())
-					display();
+				if(selection){
+					if(selection->incrementSelection()){
+						display();
+						flush();
+					}
+				}
 				break;
 			case TCODK_ENTER:
 			{
-				useItem(getItem(getSelection()-1));
-				inventoryMode = false;
+				if(selection){
+					useItem(getItem(selection->getSelection()-1));
+					inventoryMode = false;
+				}
+
 			}
 			break;
 				break;
@@ -91,37 +106,35 @@ void InventoryConsole::userInput(){
 
 			case TCODK_SPACE: {
 
-				Actor* item = getItem(getSelection()-1);
+				if(selection){
+					Actor* item = getItem(selection->getSelection()-1);
 
-				if(item!= nullptr){
-					std::string itemName = item->name;
-					int descriptionWidth = 30;
-					std::string m = engine.getItemDescription(itemName);
-					std::vector<Message> messages = Gui::wordWrapText(m, descriptionWidth);
-					ConsoleUI description(descriptionWidth, messages.size()+2, 30, 20, true, false, itemName);
-					std::vector<ConsoleLine*> cls;
-					for(Message m : messages){
-						ConsoleLine* cl = new ConsoleLine(m);
-						cls.push_back(cl);
-					}
+					if(item!= nullptr){
+						std::string itemName = item->name;
+						unsigned int descriptionWidth = 30;
+						std::string m = engine.getItemDescription(itemName);
+						//TODO remove this hard coded '5'. Try to get the size of the map portion of the screen OR subtract the size of the player UI console from the startY value
+						ConsoleUI description(m, descriptionWidth, engine.screenWidth/2, engine.screenHeight/2 - 5);
+						description.frame = new ConsoleFrame(item->name, TileColors::white);
+						description.display();
+						description.flush();
+						bool descriptionMode = true;
+						while(descriptionMode){
+							TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
+							switch(lastKey.vk){
+							case TCODK_ESCAPE:{
+								descriptionMode = false;
+								break;
+							}
+							default:
+								break;
+							}
 
-					description.setConsoleLines(cls);
-					description.display();
-					bool descriptionMode = true;
-					while(descriptionMode){
-						TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
-						switch(lastKey.vk){
-						case TCODK_ESCAPE:{
-							descriptionMode = false;
-							break;
 						}
-						default:
-							break;
-						}
-
+						description.clear();
+						display();
+						flush();
 					}
-					description.clear();
-					display();
 				}
 			}
 			break;
@@ -152,6 +165,7 @@ Actor* InventoryConsole::getItem(int itemIndex){
 	}
 	catch(...){
 		std::cerr << "An error occurred in InventoryConsole::getItem" << std::endl;
+		throw 0;
 	}
 }
 

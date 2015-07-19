@@ -16,6 +16,7 @@ Map::Map(int width, int height) :
 		tiles = nullptr;
 		rng = nullptr;
 		lastSeen = nullptr;
+		generator = nullptr;
 		seed = TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);
 		actors = new TCODList<Actor>();
 	}
@@ -107,6 +108,7 @@ ActorFactory::EnemyDifficulty Map::GetDifficulty(){
 	}
 	catch(...){
 		std::cerr << "An error occurred in Map::GetDifficulty" << std::endl;
+		throw 0;
 	}
 }
 
@@ -232,6 +234,7 @@ int Map::GetWidth(){
 	}
 	catch(...){
 		std::cerr << "An error occurred in Map::GetWidth" << std::endl;
+		throw 0;
 	}
 }
 
@@ -241,6 +244,7 @@ int Map::GetHeight(){
 	}
 	catch(...){
 		std::cerr << "An error occurred in Map::GetHeight" << std::endl;
+		throw 0;
 	}
 }
 

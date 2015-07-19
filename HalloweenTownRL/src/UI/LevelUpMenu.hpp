@@ -12,7 +12,6 @@
 class LevelUpMenu : public MenuUI {
 public:
 	LevelUpMenu();
-	void PopulateMenu(bool saveGameExists);
 };
 
 

@@ -7,12 +7,12 @@
 #ifndef VICTORYSCREEN_HPP
 #define VICTORYSCREEN_HPP
 #include <string>
+#include "ScreenUI.hpp"
 
-class VictoryScreen {
+class VictoryScreen : public ScreenUI{
 
 public:
 	VictoryScreen();
-	void show();
 private:
 	std::string text;
 };

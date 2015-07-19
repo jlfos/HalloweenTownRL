@@ -46,8 +46,8 @@ TCODMap* RoadMapGenerator::Generate(Map* map, bool generateActors){
 	}
 //	map->actors.push(ActorFactory::CreateLampPost(10, 20));
 	map->actors.push(ActorFactory::CreateMachete(10, 21));
-	map->actors.push(ActorFactory::CreateItem(10, 20, map->GetDifficulty()));
-	map->actors.push(ActorFactory::CreateItem(10, 21, map->GetDifficulty()));
+	map->actors.push(ActorFactory::CreateItem(13, 20, map->GetDifficulty()));
+	map->actors.push(ActorFactory::CreateItem(13, 21, map->GetDifficulty()));
 	return roadMap;
 }
 

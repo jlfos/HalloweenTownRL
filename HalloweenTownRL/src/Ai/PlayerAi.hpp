@@ -16,7 +16,6 @@ public:
 protected:
 	bool MoveOrAttack(Actor *owner, int targetX, int targetY);
 	void HandleActionKey(Actor *owner, int ascii);
-	Actor *ChooseFromInventory(Actor *owner);
 	void MoveLeft(Actor *owner);
 	void MoveDown(Actor *owner);
 	void MoveRight(Actor *owner);
@@ -28,9 +27,8 @@ private:
 	bool LevelUpOccurred();
 	void viewLog();
 	void showHelp();
-
-	int currentLevelGoal;
-	int currentExperience;
 	int experienceLevel;
+	int currentExperience;
+	int currentLevelGoal;
 };
 #endif

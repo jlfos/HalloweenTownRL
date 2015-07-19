@@ -10,28 +10,28 @@
 #include <string>
 #include "libtcod.hpp"
 #include "ConsoleLine.hpp"
+#include "ConsoleSelection.hpp"
+
+class ConsoleFrame;
 class ConsoleUI {
 public:
-	ConsoleUI(int width, int height, int startX, int startY, bool frame, bool selection, std::string frameTitle);
-	ConsoleUI(std::vector<ConsoleLine*> consoleLines, TCODColor backgroundColor, int width, int height, int startX, int startY);
-	ConsoleUI(std::vector<ConsoleLine*> consoleLines, TCODColor backgroundColor, int width, int height, int startX, int startY, bool frame, std::string frameTitle);
+	ConsoleUI(int width, int height, int startX, int startY);
+	ConsoleUI(std::string text, int width, int startX, int startY);
+	ConsoleUI(std::vector<Message> messages, int width, int startX, int startY);
+	ConsoleUI(std::vector<ConsoleLine*> consoleLines, int width, int startX, int startY);
 	~ConsoleUI();
 	void display();
+	void flush();
 	void setConsoleLines(std::vector<ConsoleLine*> consoleLines);
-	bool incrementSelection();
-	bool decrementSelection();
-	int getSelection();
 	void clear();
+	ConsoleFrame* frame;
+	ConsoleSelection* selection;
 private:
 	std::vector<ConsoleLine*> consoleLines;
 	TCODColor backgroundColor;
 	TCODConsole* console;
 	int startX;
 	int startY;
-	int currentSelection;
-	bool selectionFlag;
-	bool frame;
-	std::string frameTitle;
 
 };
 

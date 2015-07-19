@@ -28,7 +28,6 @@ MeleeWeapon::~MeleeWeapon(){
 bool MeleeWeapon::Use(Actor *owner, Actor *wearer){
 	try{
 		if(wearer->attacker){
-			//TODO move this out
 			engine.gui->PushMessage(TileColors::grey,"You equipped the %s.", owner->name.c_str() );
 			wearer->attacker->setBasePower(amount);
 			wearer->attacker->setWeapon(owner->name);

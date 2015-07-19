@@ -39,6 +39,7 @@ Actor *ActorFactory::CreateLampPost(int x, int y){
 		Actor* lampPost = new Actor(x, y, TileCharacters::Default::H_LOWERCASE, "lamp post", TileColors::brown);
 		lampPost->blocks = true;
 		lampPost->lightsource = new Lightsource(25);
+		return lampPost;
 	}
 	catch(...){
 		std::cerr << "An error occurred in ActorFactory::CreateLampPost" << std::endl;

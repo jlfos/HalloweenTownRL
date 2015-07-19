@@ -13,9 +13,10 @@ struct Tile {
     Tile() : explored(false), character(TileCharacters::Default::RAINBOW), lit(false) {}
     TCODColor visibleColor;
     TCODColor fogColor;
+    bool explored; // has the player already seen this tile ?
     int character; //character representing the tile
     bool lit; //is the tile currently lit?
-    bool explored; // has the player already seen this tile ?
+
 };
 
 struct Point {
@@ -25,10 +26,10 @@ struct Point {
 class Map : public Persistent{
 private:
     bool NotOnMap(int x, int y) const;
+    int width,height;
     MapGenerator* generator;
     Time* lastSeen;
     Tile *tiles;
-    int width,height;
     long seed;
     TCODRandom *rng;
     TCODMap *map;

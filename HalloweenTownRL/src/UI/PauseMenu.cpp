@@ -9,12 +9,14 @@
 #include "PauseMenu.hpp"
 
 
-PauseMenu::PauseMenu(){
-	SetHeader("HalloweenTown");
+PauseMenu::PauseMenu(bool saveFileExists){
+
+	PopulateMenu(saveFileExists);
 }
 
 void PauseMenu::PopulateMenu(bool saveGameExists){
 		try{
+			SetHeader("HalloweenTown");
 			Clear();
 			AddItem("New Game");
 			if(saveGameExists){

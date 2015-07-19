@@ -57,16 +57,18 @@ private:
 	const int DEFAULT_PLAYER_START_Y = 20;
 	const int DEFAULT_MAP_X = 1;
 	const int DEFAULT_MAP_Y = 1;
+	bool incrementTime;
+	int bossMapX;
+	int bossMapY;
+	int playerMapX;
+	int playerMapY;
 	int WORLD_SIZE_LATITUDE;
 	int WORLD_SIZE_LONGITUDE;
+
 	std::vector<std::vector<Map*>> *CreateMaps(std::vector<std::vector<Engine::MapType>>);
 	void bossUpdate();
 
-	int playerMapX;
-	int playerMapY;
-	int bossMapX;
-	int bossMapY;
-	bool incrementTime;
+
 //	std::set<MonsterEntry, MonsterEntry::MonsterEntry_compare> monsterLog;
 };
  
