@@ -25,6 +25,8 @@ public :
 	void PopulatePauseMenu(bool saveFileExists);
 	std::string PauseMenuPick();
 	void PauseMenuClear();
+	void setCharAdjusted(int x, int y, int c);
+	void setForegroundAdjusted(int x, int y, TCODColor color);
 protected :
 	TCODConsole *con;
 	float colorCoef;

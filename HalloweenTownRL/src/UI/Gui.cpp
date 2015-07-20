@@ -62,6 +62,8 @@ void Gui::Render() {
 			engine.player->destructible->maxHp,
 			TileColors::lightRed, TileColors::darkerRed);
 
+
+
 		con->print(1, 2, engine.currentTime.c_str());
 
 		PlayerAi *playerAi = (PlayerAi*)engine.player->ai;
@@ -76,7 +78,7 @@ void Gui::Render() {
 		TCODConsole::blit(con,0,0,engine.screenWidth,PANEL_HEIGHT,
 			TCODConsole::root,0,engine.screenHeight-PANEL_HEIGHT);
 
-		TCODConsole::root->print(1, engine.screenHeight-PANEL_HEIGHT+4, "weapon: %s",
+		TCODConsole::root->print(1, engine.screenHeight-PANEL_HEIGHT+4, "weapon: fists",
 				engine.player->attacker->getWeapon().c_str());
 
 	}
@@ -274,6 +276,14 @@ void Gui::PopulatePauseMenu(bool saveFileExists) {
 		menu->PopulateMenu(saveFileExists);
 	else
 		menu = new PauseMenu(saveFileExists);
+}
+
+void Gui::setCharAdjusted(int x, int y, int c) {
+	TCODConsole::root->setChar(x, y + 7, c);
+}
+
+void Gui::setForegroundAdjusted(int x, int y, TCODColor color) {
+	TCODConsole::root->setCharForeground(x, y + 7, color);
 }
 
 std::vector<Message> Gui::getActiveLog() {

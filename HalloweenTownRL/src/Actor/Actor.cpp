@@ -5,6 +5,8 @@
 #include "../Attacker.hpp"
 #include "../Container.hpp"
 #include "../Destructible/Destructible.hpp"
+#include "../Engine.hpp"
+#include "../UI/Gui.hpp"
 #include "../Item/Item.hpp"
 
 Actor::Actor(int x, int y, int ch, std::string name, const TCODColor &col) :
@@ -29,8 +31,8 @@ Actor::~Actor(){
 }
 void Actor::Render() const {
 	try{
-		TCODConsole::root->setChar(x,y + 7,ch);
-		TCODConsole::root->setCharForeground(x,y + 7,col);
+		engine.gui->setCharAdjusted(x, y, ch);
+		engine.gui->setForegroundAdjusted(x, y, col);
 	}
 	catch(...){
 		std::cerr << "An error occurred with Actor::Render"  << std::endl;

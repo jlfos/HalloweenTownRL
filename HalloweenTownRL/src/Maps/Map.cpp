@@ -4,6 +4,7 @@
 #include <string>
 #include "../Actor/Actor.hpp"
 #include "../Engine.hpp"
+#include "../UI/Gui.hpp"
 #include "Map.hpp"
 #include "MapGenerator.hpp"
 #include "../Tile/TileColors.hpp"
@@ -333,12 +334,12 @@ void Map::Render() const {
 
 
 				 if (IsInFov(x, y)) {
-					TCODConsole::root->setChar(x, y + 7, tiles[x+y*width].character);
-					TCODConsole::root->setCharForeground(x, y + 7, tiles[x+y*width].visibleColor);
+					engine.gui->setCharAdjusted(x, y, tiles[x+y*width].character);
+					engine.gui->setForegroundAdjusted(x, y, tiles[x+y*width].visibleColor);
 				}
 				else if (IsExplored(x, y)) {
-					TCODConsole::root->setChar(x, y + 7, tiles[x+y*width].character);
-					TCODConsole::root->setCharForeground(x, y + 7, tiles[x+y*width].fogColor);
+					engine.gui->setCharAdjusted(x, y, tiles[x+y*width].character);
+					engine.gui->setForegroundAdjusted(x, y, tiles[x+y*width].fogColor);
 				}
 			}
 		}

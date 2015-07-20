@@ -8,11 +8,9 @@ int main() {
 	try{
 		engine.Load();
 		while ( !TCODConsole::isWindowClosed() ) {
-
 			engine.Update();
 
 			engine.Render();
-
 		}
 		//engine.save();
 		return 0;
