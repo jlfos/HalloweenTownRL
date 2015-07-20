@@ -29,8 +29,8 @@ Actor::~Actor(){
 }
 void Actor::Render() const {
 	try{
-		TCODConsole::root->setChar(x,y,ch);
-		TCODConsole::root->setCharForeground(x,y,col);
+		TCODConsole::root->setChar(x,y + 7,ch);
+		TCODConsole::root->setCharForeground(x,y + 7,col);
 	}
 	catch(...){
 		std::cerr << "An error occurred with Actor::Render"  << std::endl;

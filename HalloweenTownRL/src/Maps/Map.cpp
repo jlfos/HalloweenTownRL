@@ -333,12 +333,12 @@ void Map::Render() const {
 
 
 				 if (IsInFov(x, y)) {
-					TCODConsole::root->setChar(x,y, tiles[x+y*width].character);
-					TCODConsole::root->setCharForeground(x,y,tiles[x+y*width].visibleColor);
+					TCODConsole::root->setChar(x, y + 7, tiles[x+y*width].character);
+					TCODConsole::root->setCharForeground(x, y + 7, tiles[x+y*width].visibleColor);
 				}
 				else if (IsExplored(x, y)) {
-					TCODConsole::root->setChar(x,y, tiles[x+y*width].character);
-					TCODConsole::root->setCharForeground(x,y,tiles[x+y*width].fogColor);
+					TCODConsole::root->setChar(x, y + 7, tiles[x+y*width].character);
+					TCODConsole::root->setCharForeground(x, y + 7, tiles[x+y*width].fogColor);
 				}
 			}
 		}

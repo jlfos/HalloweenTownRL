@@ -2,7 +2,7 @@
 #include "Engine.hpp"
 
 
-Engine engine(80, 50);
+Engine engine(80, 57);
 
 int main() {
 	try{

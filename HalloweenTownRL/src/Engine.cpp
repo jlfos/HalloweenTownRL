@@ -69,11 +69,11 @@ void Engine::Init() {
 std::vector<std::vector<Map*>> *Engine::CreateMaps(std::vector<std::vector<Engine::MapType>> mapTypes) {
 	try {
 		std::vector<std::vector<Map*>> *maps = new std::vector<std::vector<Map*>>();
-		for(int i = 0; i<mapTypes.size(); i++)
+		for(unsigned int i = 0; i<mapTypes.size(); i++)
 		{
 
 			maps->push_back(std::vector<Map*>());
-			for(int j = 0; j<mapTypes.at(i).size(); j++)
+			for(unsigned int j = 0; j<mapTypes.at(i).size(); j++)
 			{
 
 				bool firstMapFlag = false;

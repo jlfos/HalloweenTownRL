@@ -2,10 +2,14 @@
 #define HALLOWEENTOWN_GUI_HPP
 #include <string>
 #include <vector>
-#include "Console/ConsoleLine.hpp"
+#include <deque>
+#include <memory>
 #include "Console/Message.hpp"
+#include "Console/ConsoleUI.hpp"
 #include "PauseMenu.hpp"
 #include "../Persistent.hpp"
+
+class ConsoleUI;
 
 class Gui : public Persistent {
 public :
@@ -25,11 +29,14 @@ protected :
 	TCODConsole *con;
 	float colorCoef;
 
-	TCODList<Message *> log;
+	std::unique_ptr<std::deque<Message>> log;
 
 	void RenderBar(int x, int y, int width, const char *name,
 		float value, float maxValue, const TCODColor &barColor,
 		const TCODColor &backColor);
 	void RenderMouseLook();
+private:
+	ConsoleUI *activeLog;
+	std::vector<Message> getActiveLog();
 };
 #endif

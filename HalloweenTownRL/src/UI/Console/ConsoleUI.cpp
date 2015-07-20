@@ -71,12 +71,13 @@ void ConsoleUI::display(){
 			console->setDefaultBackground(selection->getColor());
 			console->rect(x, y, console->getWidth()-2, 1, false, TCOD_BKGND_SET);
 		}
+		console->setDefaultForeground(consoleLine->getMessage().getBackgroundColor());
 		console->print(x, y, consoleLine->getMessage().getText().c_str());
 		y++;
 	}
 
 	console->setDefaultBackground(TileColors::black);
-	TCODConsole::blit(console, 0, 0, console->getWidth(), console->getHeight(),TCODConsole::root, startX-10, startY);
+	TCODConsole::blit(console, 0, 0, console->getWidth(), console->getHeight(),TCODConsole::root, startX, startY);
 }
 
 

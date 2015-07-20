@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <deque>
+#include <memory>
 #include "libtcod.hpp"
 #include "../Actor/Actor.hpp"
 #include "../Ai/Ai.hpp"
@@ -20,11 +22,13 @@ static const int BAR_WIDTH=20;
 static const int MSG_X=BAR_WIDTH+2;
 static const int MSG_HEIGHT=47;
 
-Gui::Gui() {
+Gui::Gui() :log(new std::deque<Message>()) {
 	try{
 		colorCoef = 0.4f; //This came from the tutorial
 		con = new TCODConsole(engine.screenWidth, PANEL_HEIGHT);
 		menu = nullptr;
+		activeLog = new ConsoleUI(engine.screenWidth, PANEL_HEIGHT, 0, 0);
+
 	}
 	catch(...){
 		std::cerr << "An error occurred with Gui::Gui"  << std::endl;
@@ -39,7 +43,7 @@ Gui::~Gui() {
 			delete con;
 		if(menu)
 			delete menu;
-		log.clearAndDelete();
+		log->clear();
 	}
 	catch(...){
 		std::cerr << "An error occurred with Gui::~Gui"  << std::endl;
@@ -65,31 +69,14 @@ void Gui::Render() {
 		levelText += std::to_string(playerAi->GetLevel());
 		con->print(1, 3, levelText.c_str());
 
-		// draw the message log
-		int y=1;
-
-
-		int i;
-		if(log.size()>(PANEL_HEIGHT-1) )
-			i =(log.size()) - (PANEL_HEIGHT-1);
-		else
-			i = 0;
-		for(; i<log.size(); i++){
-			con->setDefaultForeground(log.get(i)->getBackgroundColor() * colorCoef);
-					con->print(MSG_X,y,log.get(i)->getText().c_str());
-					y++;
-					if ( colorCoef < 1.0f ) {
-						colorCoef+=0.3f;
-					}
-		}
-
-
+			activeLog->setConsoleLines(ConsoleLine::createConsoleLines(getActiveLog()));
+			activeLog->display();
 
 		// blit the GUI console on the root console
 		TCODConsole::blit(con,0,0,engine.screenWidth,PANEL_HEIGHT,
 			TCODConsole::root,0,engine.screenHeight-PANEL_HEIGHT);
 
-		TCODConsole::root->print(1, 50 - 2, "weapon: %s",
+		TCODConsole::root->print(1, engine.screenHeight-PANEL_HEIGHT+4, "weapon: %s",
 				engine.player->attacker->getWeapon().c_str());
 
 	}
@@ -127,7 +114,7 @@ void Gui::RenderBar(int x, int y, int width, const char *name,
 
 void Gui::Clear(){
 	try{
-		log.clearAndDelete();
+		log->clear();
 	}
 	catch(...){
 		std::cerr << "An error occurred with Gui::clear"  << std::endl;
@@ -139,9 +126,9 @@ void Gui::Clear(){
 
 void Gui::Save(TCODZip &zip){
 	try{
-		zip.putInt(log.size());
-		for(Message *it : log){
-			zip.putString((it)->getText().c_str());
+		zip.putInt(log->size());
+		for(Message it : (*log)){
+			zip.putString((it).getText().c_str());
 			//TODO uncomment this and fix it for save to work
 //			zip.putColor(&(it)->getBackgroundColor());
 		}
@@ -241,10 +228,8 @@ void Gui::PushMessage(const TCODColor &col, const char *text, ...) {
 		char *lineEnd;
 		do {
 			// make room for the new message
-			if ( log.size() == MSG_HEIGHT ) {
-				Message *toRemove=log.get(0);
-				log.remove(toRemove);
-				delete toRemove;
+			if ( log->size() == MSG_HEIGHT ) {
+				log->pop_back();
 			}
 
 			// detect end of the line
@@ -254,8 +239,8 @@ void Gui::PushMessage(const TCODColor &col, const char *text, ...) {
 			}
 
 			// add a new message to the log
-			Message *msg=new Message(lineBegin, col);
-			log.push(msg);
+			Message msg(lineBegin, col);
+			log->push_front(msg);
 
 			// go to next line
 			lineBegin=lineEnd+1;
@@ -272,9 +257,9 @@ void Gui::ShowLog(){
 	int y=1;
 	TCODConsole::root->clear();
 
-	for(Message *message : log) {
-		TCODConsole::root->setDefaultForeground(message->getBackgroundColor() * colorCoef);
-		TCODConsole::root->print(1, y, message->getText().c_str(), message->getBackgroundColor());
+	for(Message message : (*log)) {
+		TCODConsole::root->setDefaultForeground(message.getBackgroundColor() * colorCoef);
+		TCODConsole::root->print(1, y, message.getText().c_str(), message.getBackgroundColor());
 //		TCODConsole::root->setChar(1, y, 32);
 		y++;
 		if ( colorCoef < 1.0f ) {
@@ -289,4 +274,14 @@ void Gui::PopulatePauseMenu(bool saveFileExists) {
 		menu->PopulateMenu(saveFileExists);
 	else
 		menu = new PauseMenu(saveFileExists);
+}
+
+std::vector<Message> Gui::getActiveLog() {
+	std::vector<Message> activeLog;
+//	int i = 0;
+	for(unsigned int i = 0; i < 5 && i < log->size() ; i++){
+
+		activeLog.push_back(log->at(i));
+	}
+	return activeLog;
 }
