@@ -32,7 +32,8 @@ Actor::~Actor(){
 void Actor::Render() const {
 	try{
 		engine.gui->setCharAdjusted(x, y, ch);
-		engine.gui->setForegroundAdjusted(x, y, col);
+		float visibility = engine.currentMap->getTileVisibility(x, y);
+		engine.gui->setForegroundAdjusted(x, y, col * visibility);
 	}
 	catch(...){
 		std::cerr << "An error occurred with Actor::Render"  << std::endl;

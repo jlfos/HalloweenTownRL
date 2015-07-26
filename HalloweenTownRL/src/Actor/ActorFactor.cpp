@@ -20,12 +20,12 @@
 
 Actor *ActorFactory::CreateHero(int x, int y){
 	try{
-		Actor *player = new Actor(x, y, TileCharacters::Default::BLOCK_BOTTOM_HALF, "player", TileColors::brown);
+		Actor *player = new Actor(x, y, TileCharacters::Default::AT_SIGN, "player", TileColors::white);
 		player->destructible=new PlayerDestructible(30,2,"your cadaver");
 		player->attacker=new Attacker(3, "fists");
 		player->ai = new PlayerAi();
 		player->container= new Container(26);
-		player->lightsource = new Lightsource(10);
+		player->lightsource = new Lightsource(15);
 		return player;
 	}
 	catch(...){
@@ -38,7 +38,7 @@ Actor *ActorFactory::CreateLampPost(int x, int y){
 	try{
 		Actor* lampPost = new Actor(x, y, TileCharacters::Default::H_LOWERCASE, "lamp post", TileColors::brown);
 		lampPost->blocks = true;
-		lampPost->lightsource = new Lightsource(25);
+		lampPost->lightsource = new Lightsource(15);
 		return lampPost;
 	}
 	catch(...){

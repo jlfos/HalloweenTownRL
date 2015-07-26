@@ -6,6 +6,7 @@ Engine engine(80, 57);
 
 int main() {
 	try{
+
 		engine.Load();
 		while ( !TCODConsole::isWindowClosed() ) {
 			engine.Update();

@@ -151,7 +151,7 @@ bool PlayerAi::MoveOrAttack(Actor *owner, int targetX, int targetY){
 				engine.gui->PushMessage(TileColors::lightGrey,"There's a %s here", (actor->name).c_str() );
 			}
 		}
-//		engine.currentMap->computeLight(owner, false, engine.fovRadius);
+		engine.currentMap->computeLight(owner, false, engine.fovRadius);
 		owner->x=targetX;
 		owner->y=targetY;
 		return true;
@@ -268,39 +268,57 @@ void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 }
 
 void PlayerAi::PlayerLook(Actor* player){
-	bool lookMode = true;
-	int cursorX = player->x;
-	int cursorY = player->y;
+	try{
+		bool lookMode = true;
+		int cursorX = player->x;
+		int cursorY = player->y;
+		unsigned int currentTime;
+		bool cursorOn = true;
+		unsigned int previousTime = TCODSystem::getElapsedMilli();
+	//	int previousTime = ;
+		while(lookMode){
 
-	while(lookMode){
-		engine.Render();
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		TCODConsole::root->setChar(cursorX, cursorY, 219);
-		TCODConsole::root->setCharForeground(cursorX, cursorY, TileColors::white);
-		TCODConsole::flush();
-		std::this_thread::sleep_for(std::chrono::milliseconds(3));
-		TCOD_key_t lastKey;
-		TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
-		switch(lastKey.vk) {
-		case TCODK_UP : cursorY--; break;
-		case TCODK_DOWN : cursorY++; break;
-		case TCODK_LEFT : cursorX--; break;
-		case TCODK_RIGHT : cursorX++; break;
-		case TCODK_ESCAPE :lookMode = false; break;
-		case TCODK_ENTER :
-			for(Actor* actor : engine.actors){
-				if(actor->x == cursorX && actor->y == cursorY){
+			currentTime = TCODSystem::getElapsedMilli();
+			if(currentTime >= previousTime + 230){
 
-					engine.gui->PushMessage(TileColors::grey, "A %s", actor->name.c_str());
+				if(cursorOn){
+					TCODConsole::root->setChar(cursorX, cursorY, 219);
+					TCODConsole::root->setCharForeground(cursorX, cursorY, TileColors::white);
+					TCODConsole::flush();
+					cursorOn = false;
 				}
+				else{
+					engine.Render();
+					cursorOn = true;
+				}
+				previousTime = currentTime;
+
 			}
 
-			break;
-//		case TCODK_CHAR : handleActionKey(owner, engine.lastKey.c); break;
-			default:break;
+			TCOD_key_t lastKey;
+			TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
+			switch(lastKey.vk) {
+			case TCODK_UP : cursorY--; engine.Render(); break;
+			case TCODK_DOWN : cursorY++; engine.Render(); break;
+			case TCODK_LEFT : cursorX--; engine.Render(); break;
+			case TCODK_RIGHT : cursorX++; engine.Render(); break;
+			case TCODK_ESCAPE :lookMode = false; engine.Render(); break;
+			case TCODK_ENTER :
+				for(Actor* actor : engine.actors){
+					if(actor->x == cursorX && actor->y == cursorY){
+						engine.gui->PushMessage(TileColors::grey, "A %s", actor->name.c_str());
+					}
+				}
+
+				break;
+				default:break;
+			}
+
+
 		}
-
-
+	}
+	catch(...){
+		std::cerr << "An error occured in PlayerAi::PlayerLook" << std::endl;
 	}
 }
 

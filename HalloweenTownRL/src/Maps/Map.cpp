@@ -9,12 +9,13 @@
 #include "MapGenerator.hpp"
 #include "../Tile/TileColors.hpp"
 
+const float fogOfWarModifer = 0.1;
+const float edgeOfVision = 0.2;
 
 Map::Map(int width, int height) :
-		width(width), height(height) {
+		width(width), height(height), tiles(width * height, Tile()) {
 	try{
 		map = nullptr;
-		tiles = nullptr;
 		rng = nullptr;
 		lastSeen = nullptr;
 		generator = nullptr;
@@ -28,11 +29,10 @@ Map::Map(int width, int height) :
 }
 
 Map::Map(int width, int height, MapGenerator* generator):
-		width(width), height(height), generator(generator)
+		width(width), height(height), generator(generator), tiles(width * height, Tile())
 		{
 	try{
 		map = nullptr;
-		tiles = nullptr;
 		rng = nullptr;
 		lastSeen = nullptr;
 		seed = TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);
@@ -51,10 +51,6 @@ void Map::Init() {
 		if(rng== nullptr)
 			rng = new TCODRandom(seed, TCOD_RNG_MT);
 
-		if(tiles == nullptr){
-			tiles = new Tile[width * height];
-		}
-
 		if(generator == nullptr){
 			throw 0;
 		}
@@ -63,11 +59,11 @@ void Map::Init() {
 			generator->PopulateActors(this);
 
 
-//			for(Actor *actor : actors){
-//				if(actor->lightsource!=nullptr){
-//					computeLight(actor, true);
-//				}
-//			}
+			for(Actor *actor : actors){
+				if(actor->lightsource!=nullptr){
+					computeLight(actor, true);
+				}
+			}
 		}
 	}
 	catch(...){
@@ -128,7 +124,7 @@ void Map::Save(TCODZip &zip) {
 	try{
 		zip.putInt(seed);
 		for (int i = 0; i < width * height; i++) {
-			zip.putInt(tiles[i].explored);
+			zip.putInt(tiles.at(i).explored);
 		}
 		int size = actors.size();
 		zip.putInt(size);
@@ -156,11 +152,9 @@ void Map::Load(TCODZip &zip) {
 
 		seed = zip.getInt();
 		rng = new TCODRandom(seed, TCOD_RNG_MT);
-		tiles = new Tile[width * height];
-//		generator = new EmptyMapGenerator();
 		map = generator->Generate(this, false);
 		for (int i = 0; i < width * height; i++) {
-			tiles[i].explored = zip.getInt();
+			tiles.at(i).explored = zip.getInt();
 		}
 		int nbActors = zip.getInt();
 		while(nbActors > 0){
@@ -178,13 +172,6 @@ void Map::Load(TCODZip &zip) {
 
 Map::~Map() {
 	try{
-
-		if(tiles != nullptr){
-			delete[] tiles;
-			tiles = nullptr;
-		}
-
-
 		if(map != nullptr){
 			delete map;
 			map = nullptr;
@@ -252,30 +239,41 @@ int Map::GetHeight(){
 
 
 void Map::SetTileProperties(int tileIndex, TCODColor visible, TCODColor fog, int character){
-	tiles[tileIndex].visibleColor = visible;
-	tiles[tileIndex].fogColor = fog;
-	tiles[tileIndex].character = character;
+	try{
+
+		tiles.at(tileIndex).visibleColor = visible;
+		tiles.at(tileIndex).fogColor = fog;
+		tiles.at(tileIndex).character = character;
+	}
+	catch(...){
+		std::cerr << "An error occurred in Map::SetTileProperties" << std::endl;
+		throw 0;
+	}
 
 }
 
 bool Map::TileHasBeenSet(int tileIndex){
-	if(tiles[tileIndex].character == TileCharacters::Default::RAINBOW)
-		return false;
-	else
-		return true;
+	try{
+		if(tiles.at(tileIndex).character == TileCharacters::Default::RAINBOW)
+			return false;
+		else
+			return true;
+	}
+	catch(...){
+		std::cerr << "An error occurred in Map::TileHasBeenSet" << std::endl;
+		throw 0;
+	}
 
 }
 
 bool Map::CanWalk(int x, int y) const {
 	try{
 		TileType type = GetTileType(x, y);
-		if(type != TileType::GROUND){
-			// this is a wall or edge
+		if(type != TileType::GROUND){// this is a wall or edge
 			return false;
 		}
 		for (Actor *actor : engine.actors) {
-			if (actor->blocks && actor->x == x && actor->y == y) {
-				// there is a blocking actor here. cannot walk
+			if (actor->blocks && actor->x == x && actor->y == y) {// there is a blocking actor here. cannot walk
 				return false;
 			}
 		}
@@ -289,7 +287,7 @@ bool Map::CanWalk(int x, int y) const {
 
 bool Map::IsExplored(int x, int y) const {
 	try{
-		return tiles[x + y * width].explored;
+		return tiles.at(x + y * width).explored;
 	}
 	catch(...){
 		std::cerr << "An error occurred with Map::IsExplored"  << std::endl;
@@ -297,15 +295,15 @@ bool Map::IsExplored(int x, int y) const {
 	}
 }
 
-bool Map::IsInFov(int x, int y) const {
+bool Map::IsInFov(int x, int y) {
 	try{
 
-		if (x < 0 || x >= width || y < 0 || y >= height) {
+		if (x < 0 || x >= width || y < 0 || y >= height) { //position is off of the map
 			return false;
 		}
 
-		if (map->isInFov(x, y)/*&&tiles[x + y * width].lit*/ ) {
-			tiles[x + y * width].explored = true;
+		if (map->isInFov(x, y) && tiles.at(x + y * width).lit && tiles.at(x + y * width).visibility > edgeOfVision) { //position is in fov, currently lit & has a visibility of 20%
+			tiles.at(x + y * width).explored = true;
 			return true;
 		}
 		return false;
@@ -327,19 +325,19 @@ void Map::ComputeFov()  {
 	}
 }
 
-void Map::Render() const {
+void Map::Render() {
 	try{
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 
 
 				 if (IsInFov(x, y)) {
-					engine.gui->setCharAdjusted(x, y, tiles[x+y*width].character);
-					engine.gui->setForegroundAdjusted(x, y, tiles[x+y*width].visibleColor);
+					engine.gui->setCharAdjusted(x, y, tiles.at(x + y * width).character);
+					engine.gui->setForegroundAdjusted(x, y, tiles.at(x + y * width).visibleColor * tiles.at(x + y * width).visibility);
 				}
 				else if (IsExplored(x, y)) {
-					engine.gui->setCharAdjusted(x, y, tiles[x+y*width].character);
-					engine.gui->setForegroundAdjusted(x, y, tiles[x+y*width].fogColor);
+					engine.gui->setCharAdjusted(x, y, tiles.at(x + y * width).character);
+					engine.gui->setForegroundAdjusted(x, y, tiles.at(x + y * width).visibleColor * fogOfWarModifer);
 				}
 			}
 		}
@@ -353,26 +351,47 @@ void Map::Render() const {
 
 void Map::computeLight(Actor* owner, bool isVisible, int radius){
 	try{
-		int startX = owner->x;
-		int startY = owner->y;
-		int width = GetWidth();
-		int ewr = radius;
-			for(int y=0,pointY= std::max(startY-ewr,0);y<radius*2;y++,pointY++){
-				for(int x = 0,pointX= std::max(startX-ewr,0); x<radius*2;x++,pointX++ ){
-					float distance = sqrt((startX-pointX)*(startX-pointX) + (startY-pointY)*(startY-pointY)) ;
-					if(distance < radius && (pointX + pointY* width) ){
-						tiles[pointX + pointY* width].lit = isVisible;
+		if(owner){ //checks to see if owner is null
+			if(owner->lightsource){ // checks to see if lightsource is null
+				int centerX = owner->x;
+				int centerY = owner->y;
+				int startX = std::max(centerX - radius,0);
+				int startY = std::max(centerY - radius,0);
+				int diameter = radius * 2;
+					for(int y=0, pointY = startY; y < diameter && y < height ; y++, pointY++){
+						for(int x = 0, pointX = startX; x < diameter && x < width ;x++, pointX++ ){
+							float distance = sqrt((centerX-pointX)*(centerX-pointX) + (centerY-pointY)*(centerY-pointY)) ;
+							unsigned int tileIndex = pointX + pointY* width;
+							if(distance < radius &&  tileIndex < tiles.size() ){ //checks to see if current tile distance is within the radius
+								if(isVisible){  // if visible then modify the visibility of the tile
+									tiles.at(tileIndex).lit = isVisible;
+									float distanceRatio = (1.0 - distance/radius);
+									tiles.at(tileIndex).visibility = std::max(distanceRatio , tiles.at(tileIndex).visibility); //we want to use the highest visibility value
+								}
+								else{ //if not visible then set values accordingly
+									tiles.at(tileIndex).lit = false;
+									tiles.at(tileIndex).visibility = 0;
+								}
+							}
+						}
 					}
-
-
-				}
 			}
+			else{
+				std::cerr << "Lightsource cannot be null" << std::endl;
+				throw 0;
+			}
+		}
+		else{
+			std::cerr << "Owner cannot be null" << std::endl;
+			throw 0;
+		}
 	}
 	catch(...){
-		std::cerr << "An error occurred with Map::computeLight"  << std::endl;
+		std::cerr << "An error occurred in Map::computeLight"  << std::endl;
 		throw 0;
 	}
 }
+
 
 void Map::computeLight(Actor* owner, bool isVisible){
 	try{
@@ -384,21 +403,33 @@ void Map::computeLight(Actor* owner, bool isVisible){
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred with Map::computeLight"  << std::endl;
+		std::cerr << "An error occurred in Map::computeLight"  << std::endl;
 		throw 0;
 	}
 }
 
 void Map::computeNonplayerLights(){
 	try{
+
 		for(Actor* actor : actors){
-			if(actor!=engine.player)
+			if(actor!=engine.player && actor->lightsource)
 				computeLight(actor, true);
 		}
 		computeLight(engine.player, true);
+
 	}
 	catch(...){
-		std::cerr << "An error occurred with Map::computeLights"  << std::endl;
+		std::cerr << "An error occurred in Map::computeLights"  << std::endl;
+		throw 0;
+	}
+}
+
+float Map::getTileVisibility(int x, int y){
+	try{
+		return tiles.at(x + y * width).visibility;
+	}
+	catch(...){
+		std::cerr << "An error occurred in Map::getTileVisibility" << std::endl;
 		throw 0;
 	}
 }

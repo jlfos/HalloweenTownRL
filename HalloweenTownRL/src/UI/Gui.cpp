@@ -57,30 +57,57 @@ void Gui::Render() {
 		// clear the GUI console
 		con->setDefaultBackground(TileColors::black);
 		con->clear();
+		std::string str;
+
 		// draw the health bar
-		RenderBar(1,1,BAR_WIDTH,"HP",engine.player->destructible->hp,
+		RenderBar(1,2,BAR_WIDTH,"HP",engine.player->destructible->hp,
 			engine.player->destructible->maxHp,
 			TileColors::lightRed, TileColors::darkerRed);
+		str = "Traveling Magician: Majestico";
+		con->print(1, 1, str.c_str());
 
+		int startStats = 33;
+		RenderBar(startStats, 1, BAR_WIDTH, "Level 1", 5,
+			engine.player->destructible->maxHp,
+			TCODColor::lightBlue, TCODColor::darkerBlue);
 
-
-		con->print(1, 2, engine.currentTime.c_str());
-
+		con->print(1, 3, engine.currentTime.c_str());
+		str = "STR: " + std::to_string(1);
+		con->print(startStats, 2, str.c_str());
+		str = "DEX: " + std::to_string(2);
+		con->print(startStats, 3, str.c_str());
+		str = "CON: " + std::to_string(1);
+		con->print(startStats + 8, 2, str.c_str());
+		str = "INT: " + std::to_string(1);
+		con->print(startStats + 8, 3, str.c_str());
 		PlayerAi *playerAi = (PlayerAi*)engine.player->ai;
-		std::string levelText = "Level: ";
-		levelText += std::to_string(playerAi->GetLevel());
-		con->print(1, 3, levelText.c_str());
 
-			activeLog->setConsoleLines(ConsoleLine::createConsoleLines(getActiveLog()));
-			activeLog->display();
+//		std::string levelText = "Level: ";
+//		levelText += std::to_string(playerAi->GetLevel());
+//		con->print(1, 3, levelText.c_str());
+
+		int equipment = 55;
+		RenderBar(equipment, 1, BAR_WIDTH, "Flashlight", 15,
+			engine.player->destructible->maxHp,
+			TCODColor::lightYellow, TCODColor::darkerYellow);
+//		str = "Lightsource: flashlight";
+//		con->print(equipment, 2, str.c_str());
+		str = "weapon: fists";
+		con->print(equipment, 2, str.c_str());
+		str = "Ammo: (N/A)";
+		con->print(equipment, 3, str.c_str());
+		activeLog->setConsoleLines(ConsoleLine::createConsoleLines(getActiveLog()));
+		activeLog->display();
 
 		// blit the GUI console on the root console
 		TCODConsole::blit(con,0,0,engine.screenWidth,PANEL_HEIGHT,
 			TCODConsole::root,0,engine.screenHeight-PANEL_HEIGHT);
 
-		TCODConsole::root->print(1, engine.screenHeight-PANEL_HEIGHT+4, "weapon: fists",
+
+		TCODConsole::root->print(1, engine.screenHeight-PANEL_HEIGHT+4, "Go west",
 				engine.player->attacker->getWeapon().c_str());
 
+//		TCODConsole::root->setChar(2, engine.screenHeight-3, TileCharacters::LEFT_ARROW);
 	}
 	catch(...){
 		std::cerr << "An error occurred with Gui::render"  << std::endl;
@@ -93,6 +120,14 @@ void Gui::RenderBar(int x, int y, int width, const char *name,
 	const TCODColor &backColor) {
 
 	try{
+		std::string format = "%s : %g/%g";
+		if(name == "Level 1"){
+			format = "Level 1";
+
+		}
+		if(name == "Flashlight"){
+			format = "Flashlight";
+		}
 		// fill the background
 		con->setDefaultBackground(backColor);
 		con->rect(x,y,width,1,false,TCOD_BKGND_SET);
@@ -104,9 +139,17 @@ void Gui::RenderBar(int x, int y, int width, const char *name,
 			con->rect(x,y,barWidth,1,false,TCOD_BKGND_SET);
 		}
 		// print text on top of the bar
-		con->setDefaultForeground(TileColors::white);
+		if(format == "flashlight"){
+			con->setDefaultForeground(TileColors::grey);
+			con->printEx(x+width/2,y,TCOD_BKGND_NONE,TCOD_CENTER,
+				format.c_str(), name, value, maxValue);
+			con->setDefaultForeground(TileColors::white);
+		}
+		else{
+			con->setDefaultForeground(TileColors::white);
 		con->printEx(x+width/2,y,TCOD_BKGND_NONE,TCOD_CENTER,
-			"%s : %g/%g", name, value, maxValue);
+			format.c_str(), name, value, maxValue);
+		}
 	}
 	catch(...){
 		std::cerr << "An error occurred with Gui::renderBar"  << std::endl;

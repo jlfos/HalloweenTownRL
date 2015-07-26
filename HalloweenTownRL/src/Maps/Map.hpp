@@ -10,12 +10,13 @@ class MapGenerator;
 class Actor;
 
 struct Tile {
-    Tile() : explored(false), character(TileCharacters::Default::RAINBOW), lit(false) {}
+    Tile() : explored(false), character(TileCharacters::Default::RAINBOW), lit(false), visibility(0) {}
     TCODColor visibleColor;
     TCODColor fogColor;
     bool explored; // has the player already seen this tile ?
     int character; //character representing the tile
     bool lit; //is the tile currently lit?
+    float visibility;
 
 };
 
@@ -29,7 +30,7 @@ private:
     int width,height;
     MapGenerator* generator;
     Time* lastSeen;
-    Tile *tiles;
+
     long seed;
     TCODRandom *rng;
     TCODMap *map;
@@ -41,11 +42,11 @@ public :
     TCODList<Actor*> actors;
     enum class TileType {GROUND, WALL, LEFT_EDGE, RIGHT_EDGE, TOP_EDGE, BOTTOM_EDGE};
     TileType GetTileType(int x, int y) const;
-	bool IsInFov(int x, int y) const;
+	bool IsInFov(int x, int y);
     bool IsExplored(int x, int y) const;
     bool CanWalk(int x, int y) const;
     void ComputeFov();
-    void Render() const;
+    void Render();
     void Init();
     void Load(TCODZip &zip);
     void Save(TCODZip &zip);
@@ -58,8 +59,10 @@ public :
     bool TileHasBeenSet(int tileIndex);
     std::vector<Point> spawnLocations;
     ActorFactory::EnemyDifficulty GetDifficulty();
+    std::vector<Tile> tiles;
     void computeLight(Actor *owner, bool isVisible);
     void computeLight(Actor *owner, bool isVisible, int radius);
     void computeNonplayerLights();
+    float getTileVisibility(int x, int y);
 };
 #endif

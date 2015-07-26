@@ -329,13 +329,16 @@ void Engine::bossUpdate() {
 void Engine::Update() {
 	try {
 
-		if (gameStatus == STARTUP)
+		if (gameStatus == STARTUP){
+			currentMap->computeNonplayerLights();
 			currentMap->ComputeFov();
+
+		}
 		gameStatus = IDLE;
 		TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
 		player->Update();
 		if (gameStatus == NEW_TURN) {
-//			currentMap->computeNonplayerLights();
+			currentMap->computeNonplayerLights();
 			if(incrementTime)
 				currentTime.IncrementMinutes();
 			incrementTime = !incrementTime;
@@ -448,6 +451,7 @@ void Engine::SendToBack(Actor *actor) {
 
 void Engine::Render() {
 	try {
+//		TCODSystem::forceFullscreenResolution(800, 400);
 		TCODConsole::root->clear();
 		// draw the map
 
