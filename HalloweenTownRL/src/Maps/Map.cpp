@@ -424,6 +424,10 @@ void Map::computeNonplayerLights(){
 	}
 }
 
+void Map::SetTileProperties(Point point, TCODColor visible, TCODColor fog, int character) {
+	SetTileProperties((point.getX() + point.getY() * 80), visible, fog, character);
+}
+
 float Map::getTileVisibility(int x, int y){
 	try{
 		return tiles.at(x + y * width).visibility;

@@ -16,6 +16,13 @@
 #include "Tile/TileCharacters.hpp"
 #include "UI/VictoryScreen.hpp"
 
+	const int DEFAULT_MAP_HEIGHT = 43;
+	const int DEFAULT_MAP_WIDTH = 80;
+	const int DEFAULT_PLAYER_START_X = 10;
+	const int DEFAULT_PLAYER_START_Y = 10;
+	const int DEFAULT_MAP_X = 1;
+	const int DEFAULT_MAP_Y = 1;
+
 Engine::Engine(int screenWidth, int screenHeight) :
 		gameStatus(STARTUP), fovRadius(15), screenWidth(screenWidth), screenHeight(screenHeight),
 		currentTime(10, 00), incrementTime(false), bossMapX(0), bossMapY(0), playerMapX(0), playerMapY(0),

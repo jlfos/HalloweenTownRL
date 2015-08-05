@@ -4,6 +4,7 @@
 #include "../Tile/TileCharacters.hpp"
 #include "../Actor/ActorFactory.hpp"
 #include "../Persistent.hpp"
+#include "Point.hpp"
 
 class Time;
 class MapGenerator;
@@ -20,10 +21,6 @@ struct Tile {
 
 };
 
-struct Point {
-	int x;
-	int y;
-};
 class Map : public Persistent{
 private:
     bool NotOnMap(int x, int y) const;
@@ -56,6 +53,7 @@ public :
     int GetWidth();
     int GetHeight();
     void SetTileProperties(int tileIndex, TCODColor visible, TCODColor fog, int character);
+    void SetTileProperties(Point point, TCODColor visible, TCODColor fog, int character);
     bool TileHasBeenSet(int tileIndex);
     std::vector<Point> spawnLocations;
     ActorFactory::EnemyDifficulty GetDifficulty();

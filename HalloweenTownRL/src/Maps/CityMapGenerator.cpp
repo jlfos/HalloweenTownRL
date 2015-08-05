@@ -50,9 +50,7 @@ TCODMap* CityMapGenerator::Generate(Map* map, bool generateActors){
 					map->SetTileProperties(tileIndex, TileColors::lighterGrey, TileColors::grey, TileCharacters::Default::PERIOD);
 					if(tilesTillNextSpawn==0){
 						tilesTillNextSpawn =rng->getInt(5, 50);
-						Point spawn;
-						spawn.x = tilex;
-						spawn.y = tiley;
+						Point spawn(tilex, tiley);
 						map->spawnLocations.push_back(spawn);
 					}
 					tilesTillNextSpawn--;
@@ -80,11 +78,11 @@ void CityMapGenerator::PopulateActors(Map* map){
 					if(items>0 && nextItem <= 0){
 						nextItem = rng->getInt(0, 35);
 						items--;
-						temp = ActorFactory::CreateItem(spawn.x, spawn.y, difficulty);
+						temp = ActorFactory::CreateItem(spawn.getX(), spawn.getY(), difficulty);
 					}
 					else{
-						temp = ActorFactory::CreateMonster(spawn.x,
-								 spawn.y,
+						temp = ActorFactory::CreateMonster(spawn.getX(),
+								 spawn.getY(),
 								 difficulty,
 								 ActorFactory::MapType::CITY);
 					}
@@ -96,7 +94,7 @@ void CityMapGenerator::PopulateActors(Map* map){
 		}
 		else{
 			int bossSpawn = rng->getInt(0, map->spawnLocations.size()-1);
-			map->actors.push(ActorFactory::CreateGiantSpider(map->spawnLocations[bossSpawn].x, map->spawnLocations[bossSpawn].y));
+			map->actors.push(ActorFactory::CreateGiantSpider(map->spawnLocations[bossSpawn].getX(), map->spawnLocations[bossSpawn].getY()));
 		}
 	}
 	catch(...){

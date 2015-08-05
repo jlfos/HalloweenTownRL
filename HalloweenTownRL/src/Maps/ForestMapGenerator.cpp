@@ -53,9 +53,7 @@ TCODMap* ForestMapGenerator::Generate(Map* map, bool generateActors){
 					GenerateGrass(tilex, tiley, width, forestMap, map);
 					if(tilesTillNextSpawn==0){
 						tilesTillNextSpawn =rng->getInt(5, 50);
-						Point spawn;
-						spawn.x = tilex;
-						spawn.y = tiley;
+						Point spawn(tilex, tiley);
 						map->spawnLocations.push_back(spawn);
 					}
 					tilesTillNextSpawn--;
@@ -83,11 +81,11 @@ void ForestMapGenerator::PopulateActors(Map* map){
 			if(items>0 && nextItem <= 0){
 				nextItem = rng->getInt(0, 10);
 				items--;
-				temp = ActorFactory::CreateItem(spawn.x, spawn.y, difficulty);
+				temp = ActorFactory::CreateItem(spawn.getX(), spawn.getY(), difficulty);
 			}
 			else{
-				temp = ActorFactory::CreateMonster(spawn.x,
-					 spawn.y,
+				temp = ActorFactory::CreateMonster(spawn.getX(),
+					 spawn.getY(),
 					 difficulty,
 					 ActorFactory::MapType::WOODS);
 				}
