@@ -36,10 +36,10 @@ TCODMap* RoadMapGenerator::Generate(Map* map, bool generateActors){
 		GenerateFence(lotStart, lotEnd);
 		Point buildingStart(20, 20);
 		Point buildingEnd(buildingStart.getX() + sizeX, buildingStart.getY() + sizeY);
-		int side = rng->getInt(0, 3);
+		MapGenerator::Orientation side = (MapGenerator::Orientation)rng->getInt(0, 3);
 		int roomsLeft = 4;
-
-		GenerateRoom(buildingStart, buildingEnd, visible, (Orientation)side, Orientation::NONE, roomsLeft);
+		Room initialRoom(buildingStart, sizeX, sizeY, side);
+		GenerateRoom(initialRoom ,visible, Orientation::NONE, roomsLeft);
 		for (int tileX = 0; tileX < width; tileX++) {
 			for (int tileY = 0; tileY < height-1; tileY++) {
 				roadMap->setProperties(tileX, tileY, true, true);
@@ -98,33 +98,33 @@ void RoadMapGenerator::GenerateRoad(int x, int y, int width, TCODMap* roadMap){
 	map->SetTileProperties(tileIndex, visible, character);
 }
 
-void RoadMapGenerator::GenerateRoom(Point start, Point end, TCODColor color, Orientation orientation, Orientation previousOrientation, int roomsLeft) {
+void RoadMapGenerator::GenerateRoom(Room room, TCODColor color, Orientation previousOrientation, int roomsLeft) {
 	try{
 
 		/**TODO
 		 * You also might need to pass in the size of the room as a parameter.
 		 */
 		if(previousOrientation != MapGenerator::Orientation::SOUTH){
-			GenerateNorthWall(start, end, color);
+			GenerateNorthWall(room.getStart(), room.getEnd(), color);
 			if(previousOrientation == MapGenerator::Orientation::NONE)
-				GenerateSouthDoor(start, end, rng);
+				GenerateSouthDoor(room.getStart(), room.getEnd(), rng);
 		}
 		if(previousOrientation != MapGenerator::Orientation::NORTH){
-			GenerateSouthWall(start, end, color);
+			GenerateSouthWall(room.getStart(), room.getEnd(), color);
 			if(previousOrientation == MapGenerator::Orientation::NONE)
-				GenerateNorthDoor(start, end, rng);
+				GenerateNorthDoor(room.getStart(), room.getEnd(), rng);
 		}
 		if(previousOrientation != MapGenerator::Orientation::WEST){
-			GenerateEastWall(start, end, color);
+			GenerateEastWall(room.getStart(), room.getEnd(), color);
 			if(previousOrientation == MapGenerator::Orientation::NONE)
-				GenerateWestDoor(start, end);
+				GenerateWestDoor(room.getStart(), room.getEnd());
 		}
 		if(previousOrientation != MapGenerator::Orientation::EAST){
-			GenerateWestWall(start, end, color);
+			GenerateWestWall(room.getStart(), room.getEnd(), color);
 			if(previousOrientation == MapGenerator::Orientation::NONE)
-				GenerateEastDoor(start, end, rng);
+				GenerateEastDoor(room.getStart(), room.getEnd(), rng);
 		}
-		GenerateInterior(start, end, roomsLeft);
+		GenerateInterior(room.getStart(), room.getEnd(), roomsLeft);
 
 		roomsLeft--;
 
@@ -132,10 +132,12 @@ void RoadMapGenerator::GenerateRoom(Point start, Point end, TCODColor color, Ori
 			return;
 		else{ //TODO This should probably be moved into its own method
 
+			Point end = room.getEnd();
+			Point start = room.getStart();
 			//TODO the roadmap needs to be passed in again OR it needs to be something that is set via the map field. Look into the latter idea first.
-			Orientation newDoor = FindNextDoor(start, end);
+			Orientation newDoor = FindNextDoor(room.getStart(), room.getEnd());
 			if(previousOrientation == MapGenerator::Orientation::NONE){
-				orientation = newDoor;
+//				orientation = newDoor;
 			}
 			switch(newDoor){
 			case MapGenerator::Orientation::NORTH:
@@ -185,7 +187,8 @@ void RoadMapGenerator::GenerateRoom(Point start, Point end, TCODColor color, Ori
 
 void RoadMapGenerator::GenerateRoom(Point start, Point end, TCODColor color,
 		Orientation orientation, int roomsLeft) {
-	GenerateRoom(start, end, color, orientation, orientation, roomsLeft);
+	Room room(start, end, orientation);
+	GenerateRoom(room, color, orientation, roomsLeft);
 }
 
 void RoadMapGenerator::GenerateNorthWall(Point start, Point end, TCODColor color) {

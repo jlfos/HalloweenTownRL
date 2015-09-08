@@ -13,6 +13,7 @@
 #include "MapGenerator.hpp"
 #include "Point.hpp"
 #include "../RandomWrapper.hpp"
+#include "Room.hpp"
 class Map;
 class RandomWrapper;
 
@@ -32,7 +33,7 @@ class RoadMapGenerator : public MapGenerator{
 		TCODRandom* rng;
 		Map* map;
 		RandomWrapper randomWrap;
-		void GenerateRoom(Point start, Point end, TCODColor color, Orientation orientation, Orientation previousOrientation, int roomsLeft);
+		void GenerateRoom(Room room, TCODColor color, Orientation previousOrientation, int roomsLeft);
 		void GenerateRoom(Point start, Point end, TCODColor color, Orientation orientation, int roomsLeft);
 		void GenerateNorthWall(Point start, Point end, TCODColor color);
 		void GenerateSouthWall(Point start, Point end, TCODColor color);
