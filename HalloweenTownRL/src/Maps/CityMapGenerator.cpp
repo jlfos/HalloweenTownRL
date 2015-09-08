@@ -47,7 +47,7 @@ TCODMap* CityMapGenerator::Generate(Map* map, bool generateActors){
 			int tileIndex = tilex+tiley*width;
 			if(!map->TileHasBeenSet(tileIndex)){
 					cityMap->setProperties(tilex, tiley, true, true);
-					map->SetTileProperties(tileIndex, TileColors::lighterGrey, TileColors::grey, TileCharacters::Default::PERIOD);
+					map->SetTileProperties(tileIndex, TileColors::lighterGrey, TileCharacters::Default::PERIOD);
 					if(tilesTillNextSpawn==0){
 						tilesTillNextSpawn =rng->getInt(5, 50);
 						Point spawn(tilex, tiley);
@@ -107,11 +107,10 @@ void CityMapGenerator::PopulateActors(Map* map){
  */
 void CityMapGenerator::CreateBuilding(Map* map, TCODMap* cityMap, int startX, int startY){
 	TCODColor visible;
-	TCODColor fog;
 	int sizeX = rng->getInt(3, 8);
 	int sizeY = rng->getInt(3, 8);
 	int width = map->GetWidth();
-	GenerateBuildingColors(visible, fog);
+	GenerateBuildingColor(visible);
 	int height = map->GetHeight();
 	for(int tileX = startX; tileX < startX+sizeX && tileX < width-2; tileX++ ){
 		for(int tileY = startY; tileY < startY+sizeY && tileY < height-2; tileY++){
@@ -120,7 +119,7 @@ void CityMapGenerator::CreateBuilding(Map* map, TCODMap* cityMap, int startX, in
 			int character = GenerateBuildingCharacter(startX, startY, tileX, tileY, sizeX, sizeY);
 
 			cityMap->setProperties(tileX, tileY, false, false);
-			map->SetTileProperties(tileIndex, visible, fog, character);
+			map->SetTileProperties(tileIndex, visible, character);
 		}
 	}
 }
@@ -128,19 +127,16 @@ void CityMapGenerator::CreateBuilding(Map* map, TCODMap* cityMap, int startX, in
  * Generates building colors (visible and fog of war). Based off of rng.
  * Current choices are crimson, sepia and grey
  */
-void CityMapGenerator::GenerateBuildingColors(TCODColor& visible, TCODColor& fog){
+void CityMapGenerator::GenerateBuildingColor(TCODColor& visible){
 	int color = rng->getInt(1, 3);
 	if(color == 1){
 		visible = TileColors::darkerGrey;
-		fog = TileColors::darkestGrey;
 	}
 	else if(color == 2){
 		visible = TileColors::desaturatedCrimson;
-		fog = TileColors::darkestCrimson;
 	}
 	else{
 		visible = TileColors::darkerSepia;
-		fog = TileColors::darkestSepia;
 	}
 
 }

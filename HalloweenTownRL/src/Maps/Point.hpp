@@ -10,11 +10,14 @@
 class Point {
 public:
 	Point(int x, int y);
+	Point(const Point& p);
 	virtual ~Point();
 
 	int getX() const;
 
 	int getY() const;
+
+	int getTileIndex(int mapWidth) const;
 
 	bool operator==(const Point &rhs);
 	bool operator!=(const Point &rhs);

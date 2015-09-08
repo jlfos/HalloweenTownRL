@@ -11,8 +11,10 @@
 #include <memory>
 #include "libtcod.hpp"
 #include "MapGenerator.hpp"
-
+#include "Point.hpp"
+#include "../RandomWrapper.hpp"
 class Map;
+class RandomWrapper;
 
 class RoadMapGenerator : public MapGenerator{
 	public:
@@ -20,26 +22,36 @@ class RoadMapGenerator : public MapGenerator{
 		RoadMapGenerator(MapGenerator::Orientation orientation);
 		TCODMap* Generate(Map* map, bool generateActors);
 		void PopulateActors(Map* map);
+
 	private:
-		void GenerateTile(int x, int y, int width, int height, TCODMap* roadMap, Map* map);
-		void GenerateRoad(int x, int y, int width, TCODMap* roadMap, Map* map);
-		void GenerateGrass(int x, int y, int width, TCODMap* roadMap, Map* map);
+		void GenerateTile(int x, int y, int width, int height, TCODMap* roadMap);
+		void GenerateRoad(int x, int y, int width, TCODMap* roadMap);
+		void GenerateGrass(int x, int y, int width, TCODMap* roadMap);
 		void AddItem(Map* map, int x, int y);
-		MapGenerator::Orientation orientation;
+		MapGenerator::Orientation flagOri;
 		TCODRandom* rng;
-		enum Orientation {NORTH = 0, EAST, SOUTH, WEST};
-		void GenerateRoom(Map* map, TCODMap* cityMap, Point start, Point end, TCODColor color, Orientation side, int roomsLeft);
-		void GenerateNorthWall(Point start, Point end, TCODColor color, Map* map);
-		void GenerateSouthWall(Point start, Point end, TCODColor color, Map* map);
-		void GenerateEastWall(Point start, Point end, TCODColor color, Map* map);
-		void GenerateWestWall(Point start, Point end, TCODColor color, Map* map);
-		void GenerateInterior(Point start, Point end, Map* map);
-		void GenerateNECorner(Point point, Map* map, TCODColor color);
-		void GenerateSECorner(Point point, Map* map, TCODColor color);
-		void GenerateSWCorner(Point point, Map* map, TCODColor color);
-		void GenerateNWCorner(Point point, Map* map, TCODColor color);
-		void GenerateDoor(Point start, Point end, TCODRandom* rng, Map* map, Orientation side);
-		int FindNextDoor(Orientation currentDoor);
+		Map* map;
+		RandomWrapper randomWrap;
+		void GenerateRoom(Point start, Point end, TCODColor color, Orientation orientation, Orientation previousOrientation, int roomsLeft);
+		void GenerateRoom(Point start, Point end, TCODColor color, Orientation orientation, int roomsLeft);
+		void GenerateNorthWall(Point start, Point end, TCODColor color);
+		void GenerateSouthWall(Point start, Point end, TCODColor color);
+		void GenerateEastWall(Point start, Point end, TCODColor color);
+		void GenerateWestWall(Point start, Point end, TCODColor color);
+		void GenerateInterior(Point start, Point end, int character);
+		void GenerateNECorner(Point point, TCODColor color);
+		void GenerateSECorner(Point point, TCODColor color);
+		void GenerateSWCorner(Point point, TCODColor color);
+		void GenerateNWCorner(Point point, TCODColor color);
+		void GenerateDoor(const Point& door);
+		void GenerateFence(Point start, Point end);
+		void GenerateNorthDoor(Point start, Point end, TCODRandom* rng);
+		void GenerateEastDoor(Point start, Point end, TCODRandom* rng);
+		void GenerateSouthDoor(Point start, Point end, TCODRandom* rng);
+		void GenerateWestDoor(Point start, Point end);
+		Orientation FindNextDoor(Point start, Point end);
+		bool FindNextDoor(Point start, Point end, Orientation potential);
+
 };
 
 

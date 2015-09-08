@@ -238,11 +238,10 @@ int Map::GetHeight(){
 
 
 
-void Map::SetTileProperties(int tileIndex, TCODColor visible, TCODColor fog, int character){
+void Map::SetTileProperties(int tileIndex, TCODColor visible, int character){
 	try{
 
 		tiles.at(tileIndex).visibleColor = visible;
-		tiles.at(tileIndex).fogColor = fog;
 		tiles.at(tileIndex).character = character;
 	}
 	catch(...){
@@ -250,6 +249,16 @@ void Map::SetTileProperties(int tileIndex, TCODColor visible, TCODColor fog, int
 		throw 0;
 	}
 
+}
+
+void Map::SetTileProperties(Point point, TCODColor visible, int character) {
+	try{
+		SetTileProperties((point.getTileIndex(80)), visible, character);
+	}
+	catch(...){
+		std::cerr << "An error occurred in Map::SetTileProperties" << std::endl;
+		throw 0;
+	}
 }
 
 bool Map::TileHasBeenSet(int tileIndex){
@@ -264,6 +273,17 @@ bool Map::TileHasBeenSet(int tileIndex){
 		throw 0;
 	}
 
+}
+
+
+bool Map::TileHasBeenSet(Point point) {
+	try{
+		return TileHasBeenSet(point.getTileIndex(80));
+	}
+	catch(...){
+		std::cerr << "An error occurred in Map::TileHasBeenSet" << std::endl;
+		throw 0;
+	}
 }
 
 bool Map::CanWalk(int x, int y) const {
@@ -424,9 +444,7 @@ void Map::computeNonplayerLights(){
 	}
 }
 
-void Map::SetTileProperties(Point point, TCODColor visible, TCODColor fog, int character) {
-	SetTileProperties((point.getX() + point.getY() * 80), visible, fog, character);
-}
+
 
 float Map::getTileVisibility(int x, int y){
 	try{
@@ -437,3 +455,4 @@ float Map::getTileVisibility(int x, int y){
 		throw 0;
 	}
 }
+

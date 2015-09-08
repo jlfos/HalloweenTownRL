@@ -52,9 +52,10 @@ public :
     void TimeLastSeen(Time* time);
     int GetWidth();
     int GetHeight();
-    void SetTileProperties(int tileIndex, TCODColor visible, TCODColor fog, int character);
-    void SetTileProperties(Point point, TCODColor visible, TCODColor fog, int character);
+    void SetTileProperties(int tileIndex, TCODColor visible, int character);
+    void SetTileProperties(Point point, TCODColor visible, int character);
     bool TileHasBeenSet(int tileIndex);
+    bool TileHasBeenSet(Point point);
     std::vector<Point> spawnLocations;
     ActorFactory::EnemyDifficulty GetDifficulty();
     std::vector<Tile> tiles;

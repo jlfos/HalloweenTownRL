@@ -132,9 +132,8 @@ void ForestMapGenerator::GenerateTree(int x, int y, int width, TCODMap* forestMa
 	int tileIndex = x+y*width;
 	forestMap->setProperties(x, y, false, false);
 	TCODColor visible = TileColors::brown;
-	TCODColor fog = TileColors::darkBrown;
 	int character = TileCharacters::Default::YEN_SYMBOL;
-	map->SetTileProperties(tileIndex, visible, fog, character);
+	map->SetTileProperties(tileIndex, visible, character);
 }
 
 /**
@@ -144,8 +143,7 @@ void ForestMapGenerator::GenerateGrass(int x, int y, int width, TCODMap* forestM
 	int tileIndex = x+y*width;
 	forestMap->setProperties(x, y, true, true);
 	TCODColor visible = TileColors::green;
-	TCODColor fog = TileColors::darkerGreen;
 	int character = TileCharacters::Default::PERIOD;
-	map->SetTileProperties(tileIndex, visible, fog, character);
+	map->SetTileProperties(tileIndex, visible, character);
 }
 
