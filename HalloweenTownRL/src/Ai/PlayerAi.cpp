@@ -36,6 +36,7 @@ void PlayerAi::Update(Actor *owner){
 			case TCODK_LEFT : MoveLeft(owner); break;
 			case TCODK_RIGHT : MoveRight(owner); break;
 			case TCODK_ESCAPE :LoadMenu(); break;
+			case TCODK_SPACE : std::cout <<"X: " << owner->x <<" Y: " << owner->y<< std::endl; break;
 			case TCODK_CHAR : HandleActionKey(owner, engine.lastKey.c); break;
 				default:break;
 			}

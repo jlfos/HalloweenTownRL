@@ -25,12 +25,15 @@ class RoadMapGenerator : public MapGenerator{
 		void PopulateActors(Map* map);
 
 	private:
+		int minSizeX;
+		int minSizeY;
+		int maxSizeX;
+		int maxSizeY;
 		void GenerateTile(int x, int y, int width, int height, TCODMap* roadMap);
 		void GenerateRoad(int x, int y, int width, TCODMap* roadMap);
 		void GenerateGrass(int x, int y, int width, TCODMap* roadMap);
 		void AddItem(Map* map, int x, int y);
 		MapGenerator::Orientation flagOri;
-		TCODRandom* rng;
 		Map* map;
 		RandomWrapper randomWrap;
 		void GenerateRoom(Room room, TCODColor color, Orientation previousOrientation, int roomsLeft);
@@ -46,12 +49,12 @@ class RoadMapGenerator : public MapGenerator{
 		void GenerateNWCorner(Point point, TCODColor color);
 		void GenerateDoor(const Point& door);
 		void GenerateFence(Point start, Point end);
-		void GenerateNorthDoor(Point start, Point end, TCODRandom* rng);
-		void GenerateEastDoor(Point start, Point end, TCODRandom* rng);
-		void GenerateSouthDoor(Point start, Point end, TCODRandom* rng);
+		void GenerateNorthDoor(Point start, Point end);
+		void GenerateEastDoor(Point start, Point end);
+		void GenerateSouthDoor(Point start, Point end);
 		void GenerateWestDoor(Point start, Point end);
-		Orientation FindNextDoor(Point start, Point end);
-		bool FindNextDoor(Point start, Point end, Orientation potential);
+		Room* FindNextDoor(Point start, Point end);
+		Room* FindNextDoor(Point start, Point end, Orientation potential);
 
 };
 

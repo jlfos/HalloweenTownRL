@@ -16,7 +16,9 @@ class RandomWrapper {
 
 	public:
 		RandomWrapper();
+		~RandomWrapper();
 		MapGenerator::Orientation GetOrientation();
+		int getInt(int min, int max);
 	private:
 		TCODRandom* rng;
 		int index;

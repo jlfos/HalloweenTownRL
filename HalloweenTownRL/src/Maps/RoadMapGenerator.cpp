@@ -18,8 +18,11 @@ RoadMapGenerator::RoadMapGenerator():RoadMapGenerator(MapGenerator::Orientation:
 }
 RoadMapGenerator::RoadMapGenerator(MapGenerator::Orientation orientation){
 	this->flagOri = orientation;
-	rng = TCODRandom::getInstance();
 	map = nullptr;
+	minSizeX = 5;
+	minSizeY = 5;
+	maxSizeX = 9;
+	maxSizeY = 9;
 }
 
 TCODMap* RoadMapGenerator::Generate(Map* map, bool generateActors){
@@ -29,15 +32,14 @@ TCODMap* RoadMapGenerator::Generate(Map* map, bool generateActors){
 		TCODMap* roadMap = new TCODMap(width, height);
 		this->map = map;
 		TCODColor visible = TCODColor::grey;
-		int sizeX = rng->getInt(5, 9);
-		int sizeY = rng->getInt(5, 9);
+		int sizeX = randomWrap.getInt(minSizeX, maxSizeX);
+		int sizeY = randomWrap.getInt(minSizeY, maxSizeY);
 		Point lotStart(10, 10);
 		Point lotEnd(30, 30);
 		GenerateFence(lotStart, lotEnd);
 		Point buildingStart(20, 20);
-		Point buildingEnd(buildingStart.getX() + sizeX, buildingStart.getY() + sizeY);
-		MapGenerator::Orientation side = (MapGenerator::Orientation)rng->getInt(0, 3);
-		int roomsLeft = 4;
+		MapGenerator::Orientation side = (MapGenerator::Orientation)randomWrap.getInt(0, 3);
+		int roomsLeft = 2;
 		Room initialRoom(buildingStart, sizeX, sizeY, side);
 		GenerateRoom(initialRoom ,visible, Orientation::NONE, roomsLeft);
 		for (int tileX = 0; tileX < width; tileX++) {
@@ -107,12 +109,12 @@ void RoadMapGenerator::GenerateRoom(Room room, TCODColor color, Orientation prev
 		if(previousOrientation != MapGenerator::Orientation::SOUTH){
 			GenerateNorthWall(room.getStart(), room.getEnd(), color);
 			if(previousOrientation == MapGenerator::Orientation::NONE)
-				GenerateSouthDoor(room.getStart(), room.getEnd(), rng);
+				GenerateSouthDoor(room.getStart(), room.getEnd());
 		}
 		if(previousOrientation != MapGenerator::Orientation::NORTH){
 			GenerateSouthWall(room.getStart(), room.getEnd(), color);
 			if(previousOrientation == MapGenerator::Orientation::NONE)
-				GenerateNorthDoor(room.getStart(), room.getEnd(), rng);
+				GenerateNorthDoor(room.getStart(), room.getEnd());
 		}
 		if(previousOrientation != MapGenerator::Orientation::WEST){
 			GenerateEastWall(room.getStart(), room.getEnd(), color);
@@ -122,7 +124,7 @@ void RoadMapGenerator::GenerateRoom(Room room, TCODColor color, Orientation prev
 		if(previousOrientation != MapGenerator::Orientation::EAST){
 			GenerateWestWall(room.getStart(), room.getEnd(), color);
 			if(previousOrientation == MapGenerator::Orientation::NONE)
-				GenerateEastDoor(room.getStart(), room.getEnd(), rng);
+				GenerateEastDoor(room.getStart(), room.getEnd());
 		}
 		GenerateInterior(room.getStart(), room.getEnd(), roomsLeft);
 
@@ -135,17 +137,17 @@ void RoadMapGenerator::GenerateRoom(Room room, TCODColor color, Orientation prev
 			Point end = room.getEnd();
 			Point start = room.getStart();
 			//TODO the roadmap needs to be passed in again OR it needs to be something that is set via the map field. Look into the latter idea first.
-			Orientation newDoor = FindNextDoor(room.getStart(), room.getEnd());
+			Room* ra = FindNextDoor(room.getStart(), room.getEnd());
 			if(previousOrientation == MapGenerator::Orientation::NONE){
 //				orientation = newDoor;
 			}
-			switch(newDoor){
+			switch(ra->getOrientation()){
 			case MapGenerator::Orientation::NORTH:
 			{
-				Point nextEnd(end.getX() , start.getY());
-				Point nextStart(nextEnd.getX() - 5, nextEnd.getY() - 5);
-				GenerateSouthDoor(nextStart, nextEnd, rng);
-				GenerateRoom(nextStart, nextEnd, color, MapGenerator::Orientation::NORTH, roomsLeft);
+//				Point nextEnd(end.getX() , start.getY());
+//				Point nextStart(nextEnd.getX() - 5, nextEnd.getY() - 5);
+				GenerateSouthDoor(ra->getStart(), ra->getEnd());
+				GenerateRoom(ra->getStart(), ra->getEnd(), color, MapGenerator::Orientation::NORTH, roomsLeft);
 			}
 			break;
 			case MapGenerator::Orientation::EAST:
@@ -160,7 +162,7 @@ void RoadMapGenerator::GenerateRoom(Room room, TCODColor color, Orientation prev
 			{
 				Point nextStart(start.getX(), end.getY());
 				Point nextEnd(nextStart.getX() + 5, nextStart.getY() + 5);
-				GenerateNorthDoor(nextStart, nextEnd, rng);
+				GenerateNorthDoor(nextStart, nextEnd);
 				GenerateRoom(nextStart, nextEnd, color, MapGenerator::Orientation::SOUTH, roomsLeft);
 			}
 			break;
@@ -168,12 +170,12 @@ void RoadMapGenerator::GenerateRoom(Room room, TCODColor color, Orientation prev
 			{
 				Point nextEnd(start.getX(), end.getY());
 				Point nextStart(nextEnd.getX() - 5, nextEnd.getY() - 5);
-				GenerateEastDoor(nextStart, nextEnd, rng);
+				GenerateEastDoor(nextStart, nextEnd);
 				GenerateRoom(nextStart, nextEnd, color, MapGenerator::Orientation::WEST, roomsLeft);
 			}
 			break;
 			default:
-				std::cerr << "The value " << newDoor << " is not currently supported" << std::endl;
+				std::cerr << "The value " << ra->getOrientation() << " is not currently supported" << std::endl;
 				throw 0;
 				break;
 			}
@@ -263,24 +265,24 @@ void RoadMapGenerator::GenerateDoor(const Point& door) {
 	map->SetTileProperties(door, color, character);
 }
 
-void RoadMapGenerator::GenerateNorthDoor(Point start, Point end, TCODRandom* rng) {
-	Point door(rng->getInt(start.getX() + 1, end.getX() - 1 ), start.getY());
+void RoadMapGenerator::GenerateNorthDoor(Point start, Point end) {
+	Point door(randomWrap.getInt(start.getX() + 1, end.getX() - 1 ), start.getY());
 	GenerateDoor(door);
 
 }
 
-void RoadMapGenerator::GenerateEastDoor(Point start, Point end, TCODRandom* rng) {
-	Point door(end.getX(), rng->getInt(start.getY() + 1, end.getY() - 1));
+void RoadMapGenerator::GenerateEastDoor(Point start, Point end) {
+	Point door(end.getX(), randomWrap.getInt(start.getY() + 1, end.getY() - 1));
 	GenerateDoor(door);
 }
 
-void RoadMapGenerator::GenerateSouthDoor(Point start, Point end, TCODRandom* rng) {
-	Point door(rng->getInt(start.getX() + 1, end.getX() - 1), end.getY());
+void RoadMapGenerator::GenerateSouthDoor(Point start, Point end) {
+	Point door(randomWrap.getInt(start.getX() + 1, end.getX() - 1), end.getY());
 	GenerateDoor(door);
 }
 
 void RoadMapGenerator::GenerateWestDoor(Point start, Point end) {
-	Point door(start.getX(), rng->getInt(start.getY() + 1, end.getY() - 1));
+	Point door(start.getX(), randomWrap.getInt(start.getY() + 1, end.getY() - 1));
 	GenerateDoor(door);
 }
 
@@ -304,21 +306,22 @@ void RoadMapGenerator::GenerateNWCorner(Point point, TCODColor color) {
 	map->SetTileProperties(point, color, character);
 }
 
-MapGenerator::Orientation RoadMapGenerator::FindNextDoor(Point start, Point end) {
+Room* RoadMapGenerator::FindNextDoor(Point start, Point end) {
 	try{
 	bool notFound = true;
-	Orientation side =  (Orientation)rng->getInt(0, 3);//randomWrap.GetOrientation();
+	Orientation side;// =  (Orientation)randomWrap.getInt(0, 3);//randomWrap.GetOrientation();
 	std::set<MapGenerator::Orientation> orientationSet = {MapGenerator::Orientation::NORTH,
 														  MapGenerator::Orientation::EAST,
 														  MapGenerator::Orientation::WEST,
 														  MapGenerator::Orientation::SOUTH};
 	while(notFound){ //TODO this has the potential to go on forever, this bug needs to be solved now
-		side = (Orientation)rng->getInt(0, 3); //I like the idea of having a wrapper for rand calls, especially since I am having to cast all of them here anyways
+		side = (Orientation)0; //I like the idea of having a wrapper for rand calls, especially since I am having to cast all of them here anyways
 		auto search = orientationSet.find(side);
 		if(search != orientationSet.end()){
-			orientationSet.erase(search);
-			if(FindNextDoor(start, end, side)){
-					return side;
+//			orientationSet.erase(search);
+			Room* r = FindNextDoor(start, end, side);
+			if(r != nullptr){
+					return r;
 					break;
 				}
 		}
@@ -330,7 +333,7 @@ MapGenerator::Orientation RoadMapGenerator::FindNextDoor(Point start, Point end)
 
 	}
 
-	return side;
+	return nullptr;
 	}
 	catch(...){
 		std::cerr << "An error occurred in FindNextDoor" << std::endl;
@@ -345,17 +348,44 @@ void RoadMapGenerator::GenerateFence(Point start, Point end) {
 	GenerateWestWall(start, end, TCODColor::white);
 }
 
-bool RoadMapGenerator::FindNextDoor(Point start, Point end, Orientation potential) {
+Room* RoadMapGenerator::FindNextDoor(Point start, Point end, Orientation potential) {
 	bool sideFlag = true;
 	switch(potential){
 	case MapGenerator::Orientation::NORTH:{
-		for(int i = start.getX(); i <= end.getX(); i++){  //Check north
-			if(map->TileHasBeenSet(Point(i, start.getY() - 1)) || map->TileHasBeenSet(Point(i, start.getY() - 5)) ){
-				sideFlag = false;
+		int y = 1;
+		for(; y < maxSizeY; y++){  //Check north
+			if(map->TileHasBeenSet(Point(start.getX() , start.getY() - y))){
+
+				break;
+
+			}
+		}
+		y--;
+
+		if(y<minSizeY)
+			return nullptr;
+
+		int x = 1;
+		for(; x <= maxSizeX; x++){
+			if(map->TileHasBeenSet(Point(start.getX() + x, start.getY() - y))){
 				break;
 			}
 		}
-		return sideFlag;
+
+		x--;
+		if(x<minSizeX)
+			return nullptr;
+
+		std::cout << "Y " << y << std::endl;
+		std::cout << "X " << x << std::endl;
+		int offsetX = randomWrap.getInt(minSizeX, x);
+		int offsetY = randomWrap.getInt(minSizeY, y);
+		Point newEnd(end.getX(), start.getY());
+		Point newStart(newEnd.getX()-offsetX, newEnd.getY()-offsetY);
+		Room* r = new Room(newStart, newEnd, MapGenerator::Orientation::NORTH);
+		sideFlag = false;
+		return r;
+
 	}
 	break;
 	case MapGenerator::Orientation::SOUTH:{
@@ -367,7 +397,7 @@ bool RoadMapGenerator::FindNextDoor(Point start, Point end, Orientation potentia
 			}
 
 		}
-		return sideFlag;
+		return nullptr;
 	}
 	break;
 	case MapGenerator::Orientation::EAST:{
@@ -379,7 +409,7 @@ bool RoadMapGenerator::FindNextDoor(Point start, Point end, Orientation potentia
 			}
 
 		}
-		return sideFlag;
+		return nullptr;
 	}
 	break;
 	case MapGenerator::Orientation::WEST:{
@@ -391,7 +421,7 @@ bool RoadMapGenerator::FindNextDoor(Point start, Point end, Orientation potentia
 			}
 
 		}
-		return sideFlag;
+		return nullptr;
 
 	}
 	break;
