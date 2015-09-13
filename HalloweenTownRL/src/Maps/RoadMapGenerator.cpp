@@ -142,6 +142,10 @@ void RoadMapGenerator::GenerateRoom(Room room, TCODColor color, Orientation prev
 			case MapGenerator::Orientation::NORTH:
 			{
 				GenerateSouthDoor(ra->getStart(), ra->getEnd());
+				//TODO The orientation in this function could be the case key. Also the below signiute should probably take a Room as a parameter
+				//TODO The verbage should probably be changed to Draw____Door and DrawRoom. The Room is generated in memory in the find door function (verbage should also be changed)
+				//TODO This case statement can be slimmed down. The GenerateRoom call can be moved out. The GenerateDoor is the only thing that is case dependent at this point.
+				//TODO So now that switching directions works (test pending) we need to work on back up. If ra comes back as null then you need to back up to the previous level and try again.
 				GenerateRoom(ra->getStart(), ra->getEnd(), color, MapGenerator::Orientation::NORTH, roomsLeft);
 			}
 			break;
@@ -298,6 +302,7 @@ void RoadMapGenerator::GenerateNWCorner(Point point, TCODColor color) {
 Room* RoadMapGenerator::FindNextDoor(Point start, Point end) {
 	try{
 	bool notFound = true;
+	//TODO the switching of the directions needs to be tested
 	Orientation side;// =  (Orientation)randomWrap.getInt(0, 3);//randomWrap.GetOrientation();
 	std::set<MapGenerator::Orientation> orientationSet = {MapGenerator::Orientation::NORTH,
 														  MapGenerator::Orientation::EAST,
@@ -340,7 +345,9 @@ void RoadMapGenerator::GenerateFence(Point start, Point end) {
 Room* RoadMapGenerator::FindNextDoor(Point start, Point end, Orientation potential) {
 	switch(potential){
 	case MapGenerator::Orientation::NORTH:{
-		int y = 1;
+		int y = 1; //TODO Clean this function up. Its really ugly.
+//I think you could break each of these case statements out into their own methods. Those methods might be broken into generate offset
+// and generate points/room. Point generation is done a case by case basis so I don't think that is something that can be made generic.
 		for(; y < maxSizeY; y++){  //Check north
 			if(map->TileHasBeenSet(Point(start.getX() , start.getY() - y))){
 				break;
