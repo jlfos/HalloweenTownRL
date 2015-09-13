@@ -138,40 +138,29 @@ void RoadMapGenerator::GenerateRoom(Room room, TCODColor color, Orientation prev
 			Point start = room.getStart();
 			//TODO the roadmap needs to be passed in again OR it needs to be something that is set via the map field. Look into the latter idea first.
 			Room* ra = FindNextDoor(room.getStart(), room.getEnd());
-			if(previousOrientation == MapGenerator::Orientation::NONE){
-//				orientation = newDoor;
-			}
 			switch(ra->getOrientation()){
 			case MapGenerator::Orientation::NORTH:
 			{
-//				Point nextEnd(end.getX() , start.getY());
-//				Point nextStart(nextEnd.getX() - 5, nextEnd.getY() - 5);
 				GenerateSouthDoor(ra->getStart(), ra->getEnd());
 				GenerateRoom(ra->getStart(), ra->getEnd(), color, MapGenerator::Orientation::NORTH, roomsLeft);
 			}
 			break;
 			case MapGenerator::Orientation::EAST:
 			{
-				Point nextStart(end.getX(), start.getY());
-				Point nextEnd(nextStart.getX() + 5, nextStart.getY() + 5);
-				GenerateWestDoor(nextStart, nextEnd);
-				GenerateRoom(nextStart, nextEnd, color, MapGenerator::Orientation::EAST, roomsLeft);
+				GenerateWestDoor(ra->getStart(), ra->getEnd());
+				GenerateRoom(ra->getStart(), ra->getEnd(), color, MapGenerator::Orientation::EAST, roomsLeft);
 			}
 			break;
 			case MapGenerator::Orientation::SOUTH:
 			{
-				Point nextStart(start.getX(), end.getY());
-				Point nextEnd(nextStart.getX() + 5, nextStart.getY() + 5);
-				GenerateNorthDoor(nextStart, nextEnd);
-				GenerateRoom(nextStart, nextEnd, color, MapGenerator::Orientation::SOUTH, roomsLeft);
+				GenerateNorthDoor(ra->getStart(), ra->getEnd());
+				GenerateRoom(ra->getStart(), ra->getEnd(), color, MapGenerator::Orientation::SOUTH, roomsLeft);
 			}
 			break;
 			case MapGenerator::Orientation::WEST:
 			{
-				Point nextEnd(start.getX(), end.getY());
-				Point nextStart(nextEnd.getX() - 5, nextEnd.getY() - 5);
-				GenerateEastDoor(nextStart, nextEnd);
-				GenerateRoom(nextStart, nextEnd, color, MapGenerator::Orientation::WEST, roomsLeft);
+				GenerateEastDoor(ra->getStart(), ra->getEnd());
+				GenerateRoom(ra->getStart(), ra->getEnd(), color, MapGenerator::Orientation::WEST, roomsLeft);
 			}
 			break;
 			default:
@@ -315,7 +304,7 @@ Room* RoadMapGenerator::FindNextDoor(Point start, Point end) {
 														  MapGenerator::Orientation::WEST,
 														  MapGenerator::Orientation::SOUTH};
 	while(notFound){ //TODO this has the potential to go on forever, this bug needs to be solved now
-		side = (Orientation)0; //I like the idea of having a wrapper for rand calls, especially since I am having to cast all of them here anyways
+		side = MapGenerator::Orientation::WEST; //I like the idea of having a wrapper for rand calls, especially since I am having to cast all of them here anyways
 		auto search = orientationSet.find(side);
 		if(search != orientationSet.end()){
 //			orientationSet.erase(search);
@@ -349,15 +338,12 @@ void RoadMapGenerator::GenerateFence(Point start, Point end) {
 }
 
 Room* RoadMapGenerator::FindNextDoor(Point start, Point end, Orientation potential) {
-	bool sideFlag = true;
 	switch(potential){
 	case MapGenerator::Orientation::NORTH:{
 		int y = 1;
 		for(; y < maxSizeY; y++){  //Check north
 			if(map->TileHasBeenSet(Point(start.getX() , start.getY() - y))){
-
 				break;
-
 			}
 		}
 		y--;
@@ -376,59 +362,122 @@ Room* RoadMapGenerator::FindNextDoor(Point start, Point end, Orientation potenti
 		if(x<minSizeX)
 			return nullptr;
 
-		std::cout << "Y " << y << std::endl;
-		std::cout << "X " << x << std::endl;
 		int offsetX = randomWrap.getInt(minSizeX, x);
 		int offsetY = randomWrap.getInt(minSizeY, y);
 		Point newEnd(end.getX(), start.getY());
 		Point newStart(newEnd.getX()-offsetX, newEnd.getY()-offsetY);
 		Room* r = new Room(newStart, newEnd, MapGenerator::Orientation::NORTH);
-		sideFlag = false;
 		return r;
 
 	}
 	break;
 	case MapGenerator::Orientation::SOUTH:{
-		sideFlag = true;
-		for(int i = start.getX(); i <= end.getX(); i++){  //Check south
-			if(map->TileHasBeenSet(Point(i, end.getY() + 1)) || map->TileHasBeenSet(Point(i, end.getY() + 5)) ){
-				sideFlag = false;
+		int y = 1;
+		for(; y < maxSizeY; y++){  //Check north
+			if(map->TileHasBeenSet(Point(start.getX() , end.getY() + y))){
+
+				break;
+
+			}
+		}
+		y--;
+
+		if(y<minSizeY)
+			return nullptr;
+
+		int x = 1;
+		for(; x <= maxSizeX; x++){
+			if(map->TileHasBeenSet(Point(start.getX() + x, end.getY() + y))){
 				break;
 			}
-
 		}
-		return nullptr;
+
+		x--;
+		if(x<minSizeX)
+			return nullptr;
+
+		int offsetX = randomWrap.getInt(minSizeX, x);
+		int offsetY = randomWrap.getInt(minSizeY, y);
+
+		Point newStart(start.getX(), end.getY());
+		Point newEnd(newStart.getX() + offsetX, newStart.getY() + offsetY);
+		Room* r = new Room(newStart, newEnd, MapGenerator::Orientation::SOUTH);
+		return r;
+
 	}
 	break;
 	case MapGenerator::Orientation::EAST:{
-		sideFlag = true;
-		for(int i = start.getY(); i <= end.getY(); i++){  //Check east
-			if(map->TileHasBeenSet(Point(end.getX() + 1, i )) || map->TileHasBeenSet(Point(end.getX() + 5, i )) ){
-				sideFlag = false;
+
+
+		int x = 1;
+		for(; x <= maxSizeX; x++){
+			if(map->TileHasBeenSet(Point(end.getX() + x, start.getY()))){
 				break;
 			}
-
 		}
-		return nullptr;
+
+		x--;
+		if(x<minSizeX)
+			return nullptr;
+
+		int y = 1;
+		for(; y < maxSizeY; y++){  //Check north
+			if(map->TileHasBeenSet(Point(end.getX() + x , start.getY() + y))){
+
+				break;
+
+			}
+		}
+		y--;
+
+		if(y<minSizeY)
+			return nullptr;
+
+		int offsetX = randomWrap.getInt(minSizeX, x);
+		int offsetY = randomWrap.getInt(minSizeY, y);
+
+		Point newStart(end.getX(), start.getY());
+		Point newEnd(newStart.getX() + offsetX, newStart.getY() + offsetY);
+		Room* r = new Room(newStart, newEnd, MapGenerator::Orientation::EAST);
+		return r;
+
 	}
 	break;
 	case MapGenerator::Orientation::WEST:{
-		sideFlag = true;
-		for(int i = start.getY(); i <= end.getY(); i++){  //Check west
-			if(map->TileHasBeenSet(Point(start.getX() - 1, i)) || map->TileHasBeenSet(Point(start.getX() - 5, i)) ){
-				sideFlag = false;
+		int x = 1;
+		for(; x <= maxSizeX; x++){
+			if(map->TileHasBeenSet(Point(start.getX() - x, start.getY()))){
 				break;
 			}
-
 		}
-		return nullptr;
+
+		x--;
+		if(x<minSizeX)
+			return nullptr;
+
+		int y = 1;
+		for(; y < maxSizeY; y++){  //Check north
+			if(map->TileHasBeenSet(Point(start.getX() - x, start.getY() - y))){
+				break;
+			}
+		}
+		y--;
+
+		if(y<minSizeY)
+			return nullptr;
+
+		int offsetX = randomWrap.getInt(minSizeX, x);
+		int offsetY = randomWrap.getInt(minSizeY, y);
+		Point newEnd(start.getX(), end.getY());
+		Point newStart(newEnd.getX() - offsetX, newEnd.getY() - offsetY);
+		Room* r = new Room(newStart, newEnd, MapGenerator::Orientation::WEST);
+		return r;
 
 	}
 	break;
 
 	default:
 		std::cerr << "It broke" << std::endl;
-		return false;
 	}
 
 }
