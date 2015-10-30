@@ -24,12 +24,16 @@ RandomWrapper::RandomWrapper() {
 
 MapGenerator::Orientation RandomWrapper::GetOrientation() {
 	if(index > data.size()){
+
 		MapGenerator::Orientation  orientation = data.at(index);
+		std::cout << "not rand" << orientation << std::endl;
+
 		index++;
 		return orientation;
 	}
 	else{
 		MapGenerator::Orientation  orientation = (MapGenerator::Orientation)rng->getInt(0,3);
+		std::cout << "rand " << orientation << std::endl;
 		return orientation;
 	}
 }
