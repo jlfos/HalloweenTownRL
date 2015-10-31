@@ -8,6 +8,8 @@
 #define RANDOMWRAPPER_HPP
 #include <vector>
 #include "libtcod.hpp"
+#include <memory>
+
 #include "Maps/MapGenerator.hpp"
 
 class RoadMapGenerator;
@@ -20,7 +22,7 @@ class RandomWrapper {
 		MapGenerator::Orientation GetOrientation();
 		int getInt(int min, int max);
 	private:
-		TCODRandom* rng;
+		std::unique_ptr<TCODRandom> rng;
 		int index;
 		std::vector<MapGenerator::Orientation> data;
 

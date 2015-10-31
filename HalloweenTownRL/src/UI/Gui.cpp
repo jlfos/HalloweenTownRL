@@ -80,7 +80,7 @@ void Gui::Render() {
 		con->print(startStats + 8, 2, str.c_str());
 		str = "INT: " + std::to_string(1);
 		con->print(startStats + 8, 3, str.c_str());
-		PlayerAi *playerAi = (PlayerAi*)engine.player->ai;
+//		std::shared_ptr<PlayerAi> playerAi = (std::shared_ptr<PlayerAi>)engine.player->ai;
 
 //		std::string levelText = "Level: ";
 //		levelText += std::to_string(playerAi->GetLevel());

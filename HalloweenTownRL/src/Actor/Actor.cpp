@@ -17,12 +17,7 @@ Actor::Actor(int x, int y, int ch, std::string name, const TCODColor &col) :
  
 Actor::~Actor(){
 	try{
-		if(attacker) delete attacker;
-		if(destructible) delete destructible;
-		if(ai) delete ai;
-		if(item) delete item;
-		if(container) delete container;
-		if(lightsource) delete lightsource;
+
 	}
 	catch(...){
 		std::cerr << "An error occurred with Actor::~Actor"  << std::endl;
@@ -92,20 +87,20 @@ void Actor::Load(TCODZip &zip){
 		bool hasPickable = zip.getInt();
 		bool hasContainer = zip.getInt();
 		if(hasAttacker){
-			attacker = new Attacker(0.0f);
+			attacker = std::shared_ptr<Attacker>(new Attacker(0.0f));
 			attacker->Load(zip);
 		}
 		if(hasDestructible){
-			destructible = Destructible::Create(zip);
+			destructible = std::shared_ptr<Destructible>(Destructible::Create(zip));
 		}
 		if(hasAi){
-			ai = Ai::Create(zip);
+			ai = std::shared_ptr<Ai>(Ai::Create(zip));
 		}
 		if(hasPickable){
-			item = Item::Create(zip);
+			item = std::shared_ptr<Item>(Item::Create(zip));
 		}
 		if(hasContainer){
-			container = new Container(0);
+			container = std::shared_ptr<Container>(new Container(0));
 			container->Load(zip);
 		}
 	}

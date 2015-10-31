@@ -12,7 +12,7 @@
 
 RandomWrapper::RandomWrapper() {
 
-	rng = TCODRandom::getInstance();
+	rng = std::unique_ptr<TCODRandom>(TCODRandom::getInstance());
 	data = {MapGenerator::Orientation::NORTH,
 			MapGenerator::Orientation::SOUTH,
 			MapGenerator::Orientation::SOUTH,
@@ -39,10 +39,7 @@ MapGenerator::Orientation RandomWrapper::GetOrientation() {
 }
 
 RandomWrapper::~RandomWrapper() {
-	if(rng!=nullptr){
-		delete rng;
-	}
-	rng = nullptr;
+
 }
 
 int RandomWrapper::getInt(int min, int max) {
