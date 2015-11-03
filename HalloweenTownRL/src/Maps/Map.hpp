@@ -51,6 +51,7 @@ public :
     Time* TimeLastSeen();
     void TimeLastSeen(Time* time);
     int GetWidth();
+    bool TileSetOnStraightLine(const Point start, const Point end);
     int GetHeight();
     void SetTileProperties(int tileIndex, TCODColor visible, int character);
     void SetTileProperties(Point point, TCODColor visible, int character);

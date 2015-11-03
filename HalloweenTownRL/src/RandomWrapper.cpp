@@ -19,21 +19,25 @@ RandomWrapper::RandomWrapper() {
 			MapGenerator::Orientation::EAST,
 			MapGenerator::Orientation::WEST };
 
-	index = 0;//data.size();
+	indexO = 0;//data.size();
+	indexI = 0;
+	dataO = {2, 2, 0, 2, 2, 3, 1, 0, 0, 0, 2, 0, 2, 2, 3, 0, 3, 0, 1};
+	dataI = {6, 6, 8, 5, 8, 5, 5, 6, 5, 5, 6 ,5};
+
 }
 
 MapGenerator::Orientation RandomWrapper::GetOrientation() {
-	if(index > data.size()){
+	if(indexO < data.size()){
 
-		MapGenerator::Orientation  orientation = data.at(index);
-		std::cout << "not rand" << orientation << std::endl;
+		MapGenerator::Orientation  orientation = data.at(indexO);
+		std::cout << "not rand ori " << orientation << std::endl;
 
-		index++;
+		indexO++;
 		return orientation;
 	}
 	else{
 		MapGenerator::Orientation  orientation = (MapGenerator::Orientation)rng->getInt(0,3);
-		std::cout << "rand " << orientation << std::endl;
+		std::cout << "ori rand " << orientation << std::endl;
 		return orientation;
 	}
 }
@@ -45,12 +49,41 @@ RandomWrapper::~RandomWrapper() {
 int RandomWrapper::getInt(int min, int max) {
 	try{
 		if(min>max){
-			std::cerr << "Min cannot be large then max" << std::endl;
+			std::cerr << "Min cannot be larger then max" << std::endl;
 			throw 0;
 		}
-		else
-			return rng->getInt(min, max);
+		else{
+			int temp = rng->getInt(min, max);
+//			std::cout << "int rand " << temp << std::endl;
+			return temp;
+		}
+	}
+	catch(...){
+		std::cerr << "An error occurred in RandomWrapper::getInt" << std::endl;
+		throw 0;
+	}
+}
 
+
+int RandomWrapper::getInt(int min, int max, bool test) {
+	try{
+		if(min>max){
+			std::cerr << "Min cannot be larger then max" << std::endl;
+			throw 0;
+		}
+		else{
+			int temp;
+			if(indexI < dataI.size()){
+				temp = dataI.at(indexI);
+				indexI++;
+			}
+			else{
+				temp = rng->getInt(min, max);
+			}
+			std::cout << "int rand " << temp << std::endl;
+			return temp;
+
+		}
 	}
 	catch(...){
 		std::cerr << "An error occurred in RandomWrapper::getInt" << std::endl;

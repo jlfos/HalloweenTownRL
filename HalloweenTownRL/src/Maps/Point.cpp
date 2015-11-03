@@ -4,14 +4,31 @@
  *  Created on: Jul 26, 2015
  */
 
+#include <iostream>
 #include "Point.hpp"
 
-Point::Point(int x, int y) : x(x), y(y) {
+Point::Point(int x, int y){
 
+	if(x < 0 && y < 0){
+		std::cerr << "X and Y are both negative. Negative values are not legal for the Point constructor." << std::endl;
+		throw 0;
+	}
+	else if(x < 0){
+		std::cerr << "X is negative. Negative values are not legal for the Point constructor." << std::endl;
+		throw 0;
+	}
+	else if(y < 0){
+		std::cerr << "Y is negative. Negative values are not legal for the Point constructor." << std::endl;
+		throw 0;
+	}
+	else{
+		this->x = x;
+		this->y = y;
+	}
 
 }
 
-Point::Point(const Point &p) :x(p.x), y(p.y) {
+Point::Point(const Point &p) : Point(p.x, p.y) {
 }
 
 Point::~Point() {

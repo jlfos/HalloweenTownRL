@@ -5,6 +5,7 @@
 #include "../Actor/Actor.hpp"
 #include "../Engine.hpp"
 #include "../UI/Gui.hpp"
+#include "../LoggerWrapper.hpp"
 #include "Map.hpp"
 #include "MapGenerator.hpp"
 #include "../Tile/TileColors.hpp"
@@ -263,6 +264,7 @@ void Map::SetTileProperties(Point point, TCODColor visible, int character) {
 
 bool Map::TileHasBeenSet(int tileIndex){
 	try{
+		int charcTemp = tiles.at(tileIndex).character;
 		if(tiles.at(tileIndex).character == TileCharacters::Default::RAINBOW)
 			return false;
 		else
@@ -456,3 +458,33 @@ float Map::getTileVisibility(int x, int y){
 	}
 }
 
+bool Map::TileSetOnStraightLine(const Point start, const Point end) {
+	try{
+		int deltaX = end.getX() - start.getX();
+		int deltaY = end.getY() - start.getY();
+		if(deltaX != 0 && deltaY != 0){ // not a straight line
+			LoggerWrapper::Error("Points passed into TileSetOnStraightLine did not form a straight line");
+			throw 0;
+		}
+		else if(deltaX != 0 ){ //horizontal line
+			if(deltaX > 0){ //right oriented
+
+			}
+			else{ //left oriented
+
+			}
+		}
+		else if (deltaY != 0){ //vertical line
+			if(deltaY > 0){ //down oriented
+
+			}
+			else{ //up oriented
+
+			}
+		}
+	}
+	catch(...){
+		LoggerWrapper::Error("An error occurred in Map::getTileVisibility");
+		throw 0;
+	}
+}

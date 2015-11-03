@@ -87,20 +87,20 @@ void Actor::Load(TCODZip &zip){
 		bool hasPickable = zip.getInt();
 		bool hasContainer = zip.getInt();
 		if(hasAttacker){
-			attacker = std::shared_ptr<Attacker>(new Attacker(0.0f));
+			attacker =  new Attacker(0.0f);
 			attacker->Load(zip);
 		}
 		if(hasDestructible){
-			destructible = std::shared_ptr<Destructible>(Destructible::Create(zip));
+			destructible =  Destructible::Create(zip);
 		}
 		if(hasAi){
-			ai = std::shared_ptr<Ai>(Ai::Create(zip));
+			ai =  Ai::Create(zip);
 		}
 		if(hasPickable){
-			item = std::shared_ptr<Item>(Item::Create(zip));
+			item =  Item::Create(zip);
 		}
 		if(hasContainer){
-			container = std::shared_ptr<Container>(new Container(0));
+			container =  new Container(0);
 			container->Load(zip);
 		}
 	}

@@ -21,12 +21,12 @@ public:
 	TCODColor col; // color
 	std::string name; // the actor's name
 	bool blocks; // can we walk on this actor?
-	std::shared_ptr<Attacker> attacker; // something that deals damages
-	std::shared_ptr<Destructible> destructible; // something that can be damaged
-	std::shared_ptr<Ai> ai; // something self-updating
-	std::shared_ptr<Item> item; //something that can be picked up
-	std::shared_ptr<Container> container; //something that contains
-	std::shared_ptr<Lightsource>  lightsource;//something that emits light
+	Attacker* attacker; // something that deals damages
+	Destructible* destructible; // something that can be damaged
+	Ai* ai; // something self-updating
+	Item* item; //something that can be picked up
+	Container* container; //something that contains
+	Lightsource*  lightsource;//something that emits light
 	Actor(int x, int y, int ch, std::string name, const TCODColor &col);
 	~Actor();
 	void Update();

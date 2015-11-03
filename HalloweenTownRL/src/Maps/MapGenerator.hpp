@@ -6,7 +6,7 @@
 
 #ifndef HALLOWEENTOWN_MAPGENERATOR_HPP
 #define HALLOWEENTOWN_MAPGENERATOR_HPP
-#include "libtcod.hpp";
+#include "libtcod.hpp"
 
 class Map;
 
