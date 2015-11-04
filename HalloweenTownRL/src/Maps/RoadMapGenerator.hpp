@@ -56,9 +56,9 @@ class RoadMapGenerator : public MapGenerator{
 		void DrawWestDoor(Point start, Point end);
 		Room* FindNextDoor(Point start, Point end);
 		Room* FindNextDoor(Point start, Point end, Orientation potential);
-	void GenerateRoom(const Room& room, TCODColor color, int roomsLeft);
-	void DrawNextDoor(Room* ra);
-	void DrawWalls(Orientation previousOrientation, const Room& room, TCODColor color);
+		void GenerateRoom(const Room& room, TCODColor color, int roomsLeft);
+		void DrawNextDoor(Room* ra);
+		void DrawWalls(Orientation previousOrientation, const Room& room, TCODColor color);
 };
 
 

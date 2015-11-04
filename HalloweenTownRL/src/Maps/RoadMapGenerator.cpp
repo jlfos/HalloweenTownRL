@@ -274,6 +274,7 @@ void RoadMapGenerator::DrawNorthDoor(Point start, Point end) {
 
 void RoadMapGenerator::DrawEastDoor(Point start, Point end) {
 	Point door(end.getX(), randomWrap.getInt(start.getY() + 1, end.getY() - 1));
+	std::cout << "East Door X: " << door.getX() << "Y: "  << door.getY() << std::endl;
 	DrawDoor(door);
 }
 
@@ -284,6 +285,7 @@ void RoadMapGenerator::DrawSouthDoor(Point start, Point end) {
 
 void RoadMapGenerator::DrawWestDoor(Point start, Point end) {
 	Point door(start.getX(), randomWrap.getInt(start.getY() + 1, end.getY() - 1));
+	std::cout << "West Door X: " << door.getX() << "Y: "  << door.getY() << std::endl;
 	DrawDoor(door);
 }
 
@@ -375,6 +377,13 @@ Room* RoadMapGenerator::FindNextDoor(Point start, Point end, Orientation potenti
 		if(x < minSizeX)
 			return nullptr;
 
+		int temp = y;
+		for(; temp > 1; temp--){
+			if(map->TileHasBeenSet(Point(end.getX() - x, start.getY() - temp))){
+				return nullptr;
+			}
+		}
+
 		int offsetX = randomWrap.getInt(minSizeX, x, true);
 		int offsetY = randomWrap.getInt(minSizeY, y, true);
 
@@ -408,12 +417,22 @@ Room* RoadMapGenerator::FindNextDoor(Point start, Point end, Orientation potenti
 		if(x < minSizeX)
 			return nullptr;
 
+		int temp = y;
+		for(; temp > 1; temp--){
+			if(map->TileHasBeenSet(Point(start.getX() + x, end.getY() + temp))){
+				return nullptr;
+			}
+		}
+
 		int offsetX = randomWrap.getInt(minSizeX, x, true);
 		int offsetY = randomWrap.getInt(minSizeY, y, true);
 
 		Point newStart(start.getX(), end.getY());
 		Point newEnd(newStart.getX() + offsetX, newStart.getY() + offsetY);
+
+
 		Room* r = new Room(newStart, newEnd, MapGenerator::Orientation::SOUTH);
+
 		return r;
 
 	}
@@ -432,9 +451,7 @@ Room* RoadMapGenerator::FindNextDoor(Point start, Point end, Orientation potenti
 		int y = 1;
 		for(; y < maxSizeY; y++){  //Check southeast
 			if(map->TileHasBeenSet(Point(end.getX() + x , start.getY() + y))){
-
 				break;
-
 			}
 		}
 		y--;
@@ -442,12 +459,21 @@ Room* RoadMapGenerator::FindNextDoor(Point start, Point end, Orientation potenti
 		if(y < minSizeY)
 			return nullptr;
 
+		int temp = x;
+		for(; temp > 1; temp--){  //Check southeast
+			if(map->TileHasBeenSet(Point(end.getX() + temp , start.getY() + y))){
+				return nullptr;
+			}
+		}
+
 		int offsetX = randomWrap.getInt(minSizeX, x, true);
 		int offsetY = randomWrap.getInt(minSizeY, y, true);
 
 		Point newStart(end.getX(), start.getY());
 		Point newEnd(newStart.getX() + offsetX, newStart.getY() + offsetY);
+
 		Room* r = new Room(newStart, newEnd, MapGenerator::Orientation::EAST);
+
 		return r;
 
 	}
@@ -475,11 +501,24 @@ Room* RoadMapGenerator::FindNextDoor(Point start, Point end, Orientation potenti
 		if(y < minSizeY)
 			return nullptr;
 
+
+		int temp = x;
+		for(; temp > 1; temp--){  //Check west
+			if(map->TileHasBeenSet(Point(start.getX() - temp, end.getY() - y))){
+				return nullptr;
+			}
+		}
+
+
+
+
 		int offsetX = randomWrap.getInt(minSizeX, x, true);
 		int offsetY = randomWrap.getInt(minSizeY, y, true);
 		Point newEnd(start.getX(), end.getY());
 		Point newStart(newEnd.getX() - offsetX, newEnd.getY() - offsetY);
+
 		Room* r = new Room(newStart, newEnd, MapGenerator::Orientation::WEST);
+
 		return r;
 	}
 	break;

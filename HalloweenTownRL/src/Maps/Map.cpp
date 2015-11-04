@@ -458,29 +458,31 @@ float Map::getTileVisibility(int x, int y){
 	}
 }
 
-bool Map::TileSetOnStraightLine(const Point start, const Point end) {
+bool Map::TileSetOnLineXAxis(const Point start, const Point end) {
 	try{
 		int deltaX = end.getX() - start.getX();
-		int deltaY = end.getY() - start.getY();
-		if(deltaX != 0 && deltaY != 0){ // not a straight line
-			LoggerWrapper::Error("Points passed into TileSetOnStraightLine did not form a straight line");
-			throw 0;
-		}
-		else if(deltaX != 0 ){ //horizontal line
+		if(deltaX != 0 ){ //horizontal line
 			if(deltaX > 0){ //right oriented
-
+				while(deltaX > 0){
+					if(TileHasBeenSet(Point(start.getX() + deltaX, start.getY()))){
+						return false;
+					}
+					deltaX--;
+				}
+				return true;
 			}
 			else{ //left oriented
-
+				while(deltaX < 0){
+					if(TileHasBeenSet(Point(start.getX() + deltaX, start.getY()))){
+						return false;
+					}
+					deltaX++;
+				}
+				return true;
 			}
 		}
-		else if (deltaY != 0){ //vertical line
-			if(deltaY > 0){ //down oriented
-
-			}
-			else{ //up oriented
-
-			}
+		else{
+			return true;
 		}
 	}
 	catch(...){

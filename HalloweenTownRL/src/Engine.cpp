@@ -15,6 +15,7 @@
 #include "Tile/TileColors.hpp"
 #include "Tile/TileCharacters.hpp"
 #include "UI/VictoryScreen.hpp"
+#include "UI/BorderScreen.hpp"
 
 	const int DEFAULT_MAP_HEIGHT = 43;
 	const int DEFAULT_MAP_WIDTH = 80;
@@ -377,8 +378,10 @@ void Engine::NextLevel(Map::TileType type) {
 			if (playerMapY > 0) {
 				playerMapY--;
 			} else {
-				gui->PushMessage(TileColors::red,
-						"An invisible force keeps you from moving forward");
+				BorderScreen border;
+				border.Show();
+//				gui->PushMessage(TileColors::red,
+//						"An invisible force keeps you from moving forward");
 				gameStatus = IDLE;
 				return;
 			}
@@ -389,8 +392,10 @@ void Engine::NextLevel(Map::TileType type) {
 			if (playerMapX < WORLD_SIZE_LONGITUDE - 1) {
 				playerMapX++;
 			} else {
-				gui->PushMessage(TileColors::red,
-						"An invisible force keeps you from moving forward");
+				BorderScreen border;
+				border.Show();
+//				gui->PushMessage(TileColors::red,
+//						"An invisible force keeps you from moving forward");
 				gameStatus = IDLE;
 				return;
 			}

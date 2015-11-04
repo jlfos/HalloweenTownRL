@@ -22,6 +22,7 @@ public:
 	bool operator==(const Point &rhs);
 	bool operator!=(const Point &rhs);
 
+
 private:
 	int x;
 	int y;
