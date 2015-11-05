@@ -13,15 +13,17 @@
 
 class Room {
 public:
-	Room(Point start, Point end, MapGenerator::Orientation orientation);
-	Room(Point start, int offsetX, int offsetY, MapGenerator::Orientation orientation);
-	const Point& getEnd() const;
+	Room(Point nwCorner, Point seCorner, MapGenerator::Orientation orientation);
+	Room(Point nwCorner, int offsetX, int offsetY, MapGenerator::Orientation orientation);
 	MapGenerator::Orientation getOrientation() const;
-	const Point& getStart() const;
+	const Point& getNWCorner() const;
+	const Point& getNECorner() const;
+	const Point& getSECorner() const;
+	const Point& getSWCorner() const;
 
 private:
-	Point start;
-	Point end;
+	Point nwCorner;
+	Point seCorner;
 	MapGenerator::Orientation orientation;
 
 

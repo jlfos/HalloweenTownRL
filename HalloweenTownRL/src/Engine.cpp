@@ -16,6 +16,7 @@
 #include "Tile/TileCharacters.hpp"
 #include "UI/VictoryScreen.hpp"
 #include "UI/BorderScreen.hpp"
+#include "UI/Console/ConsoleFrame.hpp"
 
 	const int DEFAULT_MAP_HEIGHT = 43;
 	const int DEFAULT_MAP_WIDTH = 80;
@@ -52,9 +53,9 @@ void Engine::Init() {
 		player = ActorFactory::CreateHero(DEFAULT_PLAYER_START_X,
 				DEFAULT_PLAYER_START_Y);
 		std::vector<std::vector<Engine::MapType>> mapTypes{
-				{Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH },
-				{Engine::MapType::CITY_BOSS , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::FOREST_NORTH },
-				{Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::FOREST_NORTH },
+//				{Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH },
+//				{Engine::MapType::CITY_BOSS , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::FOREST_NORTH },
+//				{Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::FOREST_NORTH },
 				{Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::ROAD_EW },
 				{Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::FOREST_SOUTH },
 				{Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::FOREST_SOUTH },
@@ -378,8 +379,28 @@ void Engine::NextLevel(Map::TileType type) {
 			if (playerMapY > 0) {
 				playerMapY--;
 			} else {
-				BorderScreen border;
-				border.Show();
+				unsigned int descriptionWidth = 45;
+				std::string tooMuchGravity = "You've been walking for what seems like hours. Your shoulders stoop, your arms hang heavy, and you can barely seem to pick up your legs. Every step seems to add another ten-pound weight to your back. Finally you fall to your knees, but you won't stop there. You crawl on, but soon your arms give out. You belly-crawl a few yards more, but then the gravity is so intense you can't lift your chest to breathe. You must turn back.";
+				ConsoleUI description(tooMuchGravity, descriptionWidth, engine.screenWidth/5, engine.screenHeight/5 );
+				description.frame = new ConsoleFrame("Attempt to leave", TileColors::white);
+				description.display();
+				description.flush();
+				bool descriptionMode = true;
+				while(descriptionMode){
+					TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
+					switch(lastKey.vk){
+					case TCODK_ESCAPE:{
+						descriptionMode = false;
+						break;
+					}
+					default:
+						break;
+					}
+
+				}
+				description.clear();
+				description.display();
+				description.flush();
 //				gui->PushMessage(TileColors::red,
 //						"An invisible force keeps you from moving forward");
 				gameStatus = IDLE;

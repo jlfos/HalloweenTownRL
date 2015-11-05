@@ -8,19 +8,17 @@
 #include "ScreenUI.hpp"
 
 ScreenUI::ScreenUI() {
-	log = nullptr;
 }
 
 ScreenUI::~ScreenUI(){
-	if(log)
-		delete log;
+
 }
 
 void ScreenUI::Show() {
 	int y=1;
 		TCODConsole::root->clear();
 		float colorCoef=0.4f;
-		for(Message message : (*log)) {
+		for(Message message : (log)) {
 				TCODConsole::root->setDefaultForeground(message.getBackgroundColor() * colorCoef);
 				TCODConsole::root->print(1, y, message.getText().c_str(), message.getBackgroundColor());
 				y++;

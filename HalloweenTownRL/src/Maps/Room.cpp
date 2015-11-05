@@ -5,22 +5,33 @@
  */
 #include "Room.hpp"
 
-Room::Room(Point start, Point end, MapGenerator::Orientation orientation):start(start), end(end), orientation(orientation) {
+Room::Room(Point nwCorner, Point seCorner, MapGenerator::Orientation orientation):nwCorner(nwCorner), seCorner(seCorner), orientation(orientation) {
 
 }
 
-Room::Room(Point start, int offsetX, int offsetY, MapGenerator::Orientation orientation): start(start), end(start.getX() + offsetX, start.getY() + offsetY), orientation(orientation) {
+Room::Room(Point nwCorner, int offsetX, int offsetY, MapGenerator::Orientation orientation): nwCorner(nwCorner), seCorner(nwCorner.getX() + offsetX, nwCorner.getY() + offsetY), orientation(orientation) {
 
 }
 
-const Point& Room::getEnd() const {
-	return end;
-}
 
 MapGenerator::Orientation Room::getOrientation() const {
 	return orientation;
 }
 
-const Point& Room::getStart() const {
-	return start;
+
+
+const Point& Room::getNECorner() const {
+	return Point(seCorner.getX(), nwCorner.getY());
+}
+
+const Point& Room::getNWCorner() const {
+	return nwCorner;
+}
+
+const Point& Room::getSECorner() const {
+	return seCorner;
+}
+
+const Point& Room::getSWCorner() const {
+	return Point(nwCorner.getX(), seCorner.getY());
 }

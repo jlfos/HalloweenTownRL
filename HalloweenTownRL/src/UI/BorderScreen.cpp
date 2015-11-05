@@ -15,14 +15,11 @@ BorderScreen::BorderScreen() : ScreenUI(){
 //		+	"You can see the outline of fingers pressing into your skin. You struggle, but the grip only tightens."
 //				 + " Something grabs your shoulder and then your leg. They pull you back toward town.";
 
+	std::string tooMuchGravity = "You've been walking for what seems like hours. Your shoulders stoop, your arms hang heavy, and you can barely seem to pick up your legs. Every step seems to add another ten-pound weight to your back. Finally you fall to your knees, but you won't stop there. You crawl on, but soon your arms give out. You belly-crawl a few yards more, but then the gravity is so intense you can't lift your chest to breathe. You must turn back.";
 
-	log = new std::vector<Message>();
-	log->push_back(Message("You've been walking for what seems like hours. Your shoulders stoop, your arms"));
-	log->push_back(Message("hang heavy, and you can barely seem to pick up your legs. Every step seems to"));
-	log->push_back(Message("add another ten-pound weight to your back. Finally you fall to your knees, but"));
-	log->push_back(Message("you won't stop there. You crawl on, but soon your arms give out. You belly-"));
-	log->push_back(Message("crawl a few yards more, but then the gravity is so intense you can't lift your"));
-	log->push_back(Message("chest to breathe. You must turn back."));
+	log = Message::wordWrapText(tooMuchGravity, 77);
+
+
 }
 
 BorderScreen::~BorderScreen() {

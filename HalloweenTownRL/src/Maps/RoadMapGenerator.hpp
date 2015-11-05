@@ -44,12 +44,15 @@ class RoadMapGenerator : public MapGenerator{
 		void DrawEastWall(Point start, Point end, TCODColor color);
 		void DrawWestWall(Point start, Point end, TCODColor color);
 		void DrawInterior(Point start, Point end, int character);
+		void DrawHorizontalLine(Point start, Point end, int character, TCODColor color);
+		void DrawVerticalLine(Point start, Point end, int character, TCODColor color);
 		void DrawNECorner(Point point, TCODColor color);
 		void DrawSECorner(Point point, TCODColor color);
 		void DrawSWCorner(Point point, TCODColor color);
 		void DrawNWCorner(Point point, TCODColor color);
 		void DrawDoor(const Point& door);
 		void DrawFence(Point start, Point end);
+		void EraseFence(Point start, Point end);
 		void DrawNorthDoor(Point start, Point end);
 		void DrawEastDoor(Point start, Point end);
 		void DrawSouthDoor(Point start, Point end);
@@ -59,6 +62,7 @@ class RoadMapGenerator : public MapGenerator{
 		void GenerateRoom(const Room& room, TCODColor color, int roomsLeft);
 		void DrawNextDoor(Room* ra);
 		void DrawWalls(Orientation previousOrientation, const Room& room, TCODColor color);
+	void createHouse(int lotX, int lotY, TCODColor visible);
 };
 
 

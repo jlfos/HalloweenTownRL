@@ -14,7 +14,7 @@ public:
 	~ScreenUI();
 	void Show();
 protected:
-	std::vector<Message>* log;
+	std::vector<Message> log;
 };
 
 
