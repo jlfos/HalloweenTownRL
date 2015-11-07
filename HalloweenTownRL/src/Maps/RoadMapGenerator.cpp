@@ -38,6 +38,7 @@ void RoadMapGenerator::createHouse(int lotX, int lotY, TCODColor visible) {
 	int sizeY = randomWrap.getInt(minSizeY, maxSizeY);
 	Room initialRoom(buildingStart, sizeX, sizeY, side);
 	GenerateRoom(initialRoom, visible, Orientation::NONE, roomsLeft);
+	EraseFence(lotStart, lotEnd);
 }
 
 TCODMap* RoadMapGenerator::Generate(Map* map, bool generateActors){
@@ -57,34 +58,45 @@ TCODMap* RoadMapGenerator::Generate(Map* map, bool generateActors){
 
 		for (int tileX = 0; tileX < width; tileX++) {
 			for (int tileY = 0; tileY < height-1; tileY++) {
-				roadMap->setProperties(tileX, tileY, true, true);
-				if(map->TileHasBeenSet(tileX + tileY * 80))
-					continue;
 
-				bool roadFlag = false;
-				switch(flagOri){
-					case MapGenerator::Orientation::NORTH:
-					case MapGenerator::Orientation::SOUTH:
-						roadFlag = tileX <= (width/2)+3  &&  tileX >= (width/2)-3;
-						break;
-					case MapGenerator::Orientation::EAST:
-					case MapGenerator::Orientation::WEST:
-						roadFlag = tileY <= (height/2)+3  &&  tileY >= (height/2)-3;
-						break;
-					default:
-						std::cerr << "Case " << flagOri << " is not currently supported" << std::endl;
-						break;
+				//TODO this needs to be set properly for the demo and lightsource needs to be fixed
+
+				if(map->TileHasBeenSet(tileX + tileY * 80)){
+					if(map->GetCharacter(tileX, tileY) != TileCharacters::PERIOD){
+						roadMap->setProperties(tileX, tileY, false, false);
+						continue;
+					}
+					else{
+						roadMap->setProperties(tileX, tileY, true, true);
+					}
 				}
+				else{
+					roadMap->setProperties(tileX, tileY, true, true);
 
-				if(roadFlag)
-					DrawRoad(tileX, tileY, width, roadMap);
-				else
+					bool roadFlag = false;
+					switch(flagOri){
+						case MapGenerator::Orientation::NORTH:
+						case MapGenerator::Orientation::SOUTH:
+							roadFlag = tileX <= (width/2)+3  &&  tileX >= (width/2)-3;
+							break;
+						case MapGenerator::Orientation::EAST:
+						case MapGenerator::Orientation::WEST:
+							roadFlag = tileY <= (height/2)+3  &&  tileY >= (height/2)-3;
+							break;
+						default:
+							std::cerr << "Case " << flagOri << " is not currently supported" << std::endl;
+							break;
+					}
+
+					if(roadFlag)
+						DrawRoad(tileX, tileY, width, roadMap);
+					else
 					DrawGrass(tileX, tileY, width, roadMap);
-
+				}
 
 			}
 		}
-		map->actors.push(ActorFactory::CreateLampPost(19, 19));
+		map->actors.push(ActorFactory::CreateLampPost(65, 7));
 
 		return roadMap;
 	}
@@ -255,7 +267,7 @@ void RoadMapGenerator::DrawInterior(Point start, Point end, int character) { //T
 		TCODColor visible = TCODColor::grey;
 		for(int i = start.getX() + 1 ; i < end.getX(); i++){
 			for(int j = start.getY() + 1 ; j < end.getY(); j++){
-//				int character = TileCharacters::Default::PERIOD;
+				int character = TileCharacters::Default::PERIOD;
 				map->SetTileProperties(Point(i, j), visible, character);
 			}
 		}
@@ -356,13 +368,18 @@ void RoadMapGenerator::DrawFence(Point start, Point end) {
 	DrawWestWall(start, Point(start.getX(), end.getY()), TCODColor::white);
 }
 
-
+//TODO Finish erase fence
 void RoadMapGenerator::EraseFence(Point start, Point end) {
 	Room ra(start, end, MapGenerator::Orientation::NORTH);
-//	DrawVerticalLine()
+	DrawHorizontalLine(ra.getNWCorner(), ra.getNECorner(), TileCharacters::RAINBOW, TCODColor::white);
+	DrawVerticalLine(ra.getNECorner(), ra.getSECorner(), TileCharacters::RAINBOW, TCODColor::white);
+	DrawHorizontalLine(ra.getSWCorner(), ra.getSECorner(), TileCharacters::RAINBOW, TCODColor::white);
+	DrawVerticalLine(ra.getNWCorner(), ra.getSWCorner(), TileCharacters::RAINBOW, TCODColor::white);
+	map->SetTileProperties(ra.getSECorner(), TCODColor::white, TileCharacters::RAINBOW);
 
 }
 
+//TODO There are still cases where a room will overwrite another room.
 Room* RoadMapGenerator::FindNextDoor(Point start, Point end, Orientation potential) {
 	switch(potential){
 	case MapGenerator::Orientation::NORTH:{

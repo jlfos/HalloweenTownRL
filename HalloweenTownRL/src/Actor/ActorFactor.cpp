@@ -25,7 +25,7 @@ Actor *ActorFactory::CreateHero(int x, int y){
 		player->attacker=new Attacker(3, "fists");
 		player->ai = new PlayerAi();
 		player->container= new Container(26);
-		player->lightsource = new Lightsource(30);
+		player->lightsource = new Lightsource(10);
 		return player;
 	}
 	catch(...){
@@ -36,7 +36,7 @@ Actor *ActorFactory::CreateHero(int x, int y){
 
 Actor *ActorFactory::CreateLampPost(int x, int y){
 	try{
-		Actor* lampPost = new Actor(x, y, TileCharacters::Default::H_LOWERCASE, "lamp post", TileColors::brown);
+		Actor* lampPost = new Actor(x, y, TileCharacters::Default::T_UPPERCASE, "lamp post", TileColors::grey);
 		lampPost->blocks = true;
 		lampPost->lightsource = new Lightsource(15);
 		return lampPost;

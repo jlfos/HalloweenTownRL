@@ -262,6 +262,12 @@ void Map::SetTileProperties(Point point, TCODColor visible, int character) {
 	}
 }
 
+
+int Map::GetCharacter(int x, int y){
+	return tiles.at(x + y * 80).character;
+}
+
+
 bool Map::TileHasBeenSet(int tileIndex){
 	try{
 		int charcTemp = tiles.at(tileIndex).character;
@@ -319,11 +325,9 @@ bool Map::IsExplored(int x, int y) const {
 
 bool Map::IsInFov(int x, int y) {
 	try{
-
 		if (x < 0 || x >= width || y < 0 || y >= height) { //position is off of the map
 			return false;
 		}
-
 		if (map->isInFov(x, y) && tiles.at(x + y * width).lit && tiles.at(x + y * width).visibility > edgeOfVision) { //position is in fov, currently lit & has a visibility of 20%
 			tiles.at(x + y * width).explored = true;
 			return true;
@@ -351,8 +355,6 @@ void Map::Render() {
 	try{
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-
-
 				 if (IsInFov(x, y)) {
 					engine.gui->setCharAdjusted(x, y, tiles.at(x + y * width).character);
 					engine.gui->setForegroundAdjusted(x, y, tiles.at(x + y * width).visibleColor * tiles.at(x + y * width).visibility);

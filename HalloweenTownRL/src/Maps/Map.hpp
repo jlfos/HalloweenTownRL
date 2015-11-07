@@ -65,5 +65,7 @@ public :
     void computeLight(Actor *owner, bool isVisible, int radius);
     void computeNonplayerLights();
     float getTileVisibility(int x, int y);
+    int GetCharacter(int x, int y);
+
 };
 #endif
