@@ -57,7 +57,7 @@ RandomWrapper::~RandomWrapper() {
 int RandomWrapper::getInt(int min, int max) {
 	try{
 		if(min>max){
-			LoggerWrapper::Error("Min cannot be larger then max");
+			LoggerWrapper::Error("Min " + std::to_string(min) + " cannot be larger then max " + std::to_string(max));
 			throw 0;
 		}
 		else{

@@ -1,6 +1,8 @@
 #ifndef HALLOWEENTOWN_MAP_HPP
 #define HALLOWEENTOWN_MAP_HPP
 #include <vector>
+#include "libtcod.hpp"
+
 #include "../Tile/TileCharacters.hpp"
 #include "../Actor/ActorFactory.hpp"
 #include "../Persistent.hpp"

@@ -11,6 +11,7 @@
 #include "Maps/CityMapGenerator.hpp"
 #include "Maps/ForestMapGenerator.hpp"
 #include "Maps/MapGenerator.hpp"
+#include "Maps/NeighborhoodMapGenerator.hpp"
 #include "MonsterEntry.hpp"
 #include "Maps/RoadMapGenerator.hpp"
 #include "Tile/TileColors.hpp"
@@ -110,7 +111,7 @@ std::vector<std::vector<Map*>> *Engine::CreateMaps(std::vector<std::vector<Engin
 					firstMapFlag = true;
 					playerMapX = j;
 					playerMapY = i;
-					generator = new RoadMapGenerator(MapGenerator::Orientation::EAST);
+					generator = new NeighborhoodMapGenerator(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, MapGenerator::Orientation::EAST);
 					break;
 				case Engine::MapType::CITY:
 					generator = new CityMapGenerator(false);
