@@ -8,6 +8,7 @@
 #include "../Engine.hpp"
 #include "../UI/Gui.hpp"
 #include "../Item/Item.hpp"
+#include "../LoggerWrapper.hpp"
 
 Actor::Actor(int x, int y, int ch, std::string name, const TCODColor &col) :
     x(x),y(y),ch(ch),col(col), name(name),
@@ -20,7 +21,7 @@ Actor::~Actor(){
 
 	}
 	catch(...){
-		std::cerr << "An error occurred with Actor::~Actor"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Actor::~Actor");
 		throw 0;
 	}
 }
@@ -31,7 +32,7 @@ void Actor::Render() const {
 		engine.gui->setForegroundAdjusted(x, y, col * visibility);
 	}
 	catch(...){
-		std::cerr << "An error occurred with Actor::Render"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Actor::Render");
 		throw 0;
 	}
 }
@@ -41,7 +42,7 @@ void Actor::Update(){
 		if( ai ) ai->Update(this);
 	}
 	catch(...){
-		std::cerr << "An error occurred with Actor::Update"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Actor::Update");
 		throw 0;
 	}
 }
@@ -67,7 +68,7 @@ void Actor::Save(TCODZip &zip){
 		if(lightsource) lightsource->Save(zip);
 	}
 	catch(...){
-		std::cerr << "An error occurred with Actor::Save"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Actor::Save");
 		throw 0;
 	}
 }
@@ -105,7 +106,7 @@ void Actor::Load(TCODZip &zip){
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred with Actor::Load"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Actor::Load");
 		throw 0;
 	}
 }

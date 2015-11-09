@@ -13,7 +13,9 @@ class LoggerWrapper {
 public:
 	static void Info(std::string text);
 	static void Warn(std::string text);
+	static void Debug(std::string text);
 	static void Error(std::string text);
+
 };
 
 

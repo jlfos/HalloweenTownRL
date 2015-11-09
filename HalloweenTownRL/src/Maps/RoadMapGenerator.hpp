@@ -62,7 +62,7 @@ class RoadMapGenerator : public MapGenerator{
 		void GenerateRoom(const Room& room, TCODColor color, int roomsLeft);
 		void DrawNextDoor(Room* ra);
 		void DrawWalls(Orientation previousOrientation, const Room& room, TCODColor color);
-	void createHouse(int lotX, int lotY, TCODColor visible);
+	void CreateHouse(int lotX, int lotY, TCODColor visible);
 };
 
 

@@ -12,6 +12,7 @@
 #include "../Destructible/PlayerDestructible.hpp"
 #include "../Destructible/MonsterDestructible.hpp"
 #include "../Lightsource.hpp"
+#include "../LoggerWrapper.hpp"
 #include "../Item/Item.hpp"
 #include "../Item/Healer.hpp"
 #include "../Item/MeleeWeapon.hpp"
@@ -29,7 +30,7 @@ Actor *ActorFactory::CreateHero(int x, int y){
 		return player;
 	}
 	catch(...){
-		std::cerr << "An error occurred in ActorFactory::CreateHero" << std::endl;
+		LoggerWrapper::Error("An error occurred in ActorFactory::CreateHero");
 		throw 0;
 	}
 }
@@ -42,7 +43,7 @@ Actor *ActorFactory::CreateLampPost(int x, int y){
 		return lampPost;
 	}
 	catch(...){
-		std::cerr << "An error occurred in ActorFactory::CreateLampPost" << std::endl;
+		LoggerWrapper::Error("An error occurred in ActorFactory::CreateLampPost");
 		throw 0;
 	}
 }
@@ -57,7 +58,7 @@ Actor *ActorFactory::CreateGiantSpider(int x, int y){
 		return giantSpider;
 	}
 	catch(...){
-		std::cerr << "An error occurred in ActorFactory::CreateGiantSpider" << std::endl;
+		LoggerWrapper::Error("An error occurred in ActorFactory::CreateGiantSpider");
 		throw 0;
 	}
 }
@@ -101,7 +102,7 @@ Actor *ActorFactory::CreateVampire(int x, int y, EnemyDifficulty difficulty){
 		return vampire;
 	}
 	catch(...){
-		std::cerr << "An error occurred in ActorFactory::CreateVampire" << std::endl;
+		LoggerWrapper::Error("An error occurred in ActorFactory::CreateVampire");
 		throw 0;
 	}
 
@@ -118,7 +119,7 @@ Actor *ActorFactory::CreateGremlin(int x, int y){
 		return gremlin;
 	}
 	catch(...){
-		std::cerr << "An error occurred in ActorFactory::CreateOrc" << std::endl;
+		LoggerWrapper::Error("An error occurred in ActorFactory::CreateOrc");
 		throw 0;
 	}
 }
@@ -133,7 +134,7 @@ Actor *ActorFactory::CreateZombie(int x, int y){
 		return zombie;
 	}
 	catch(...){
-		std::cerr << "An error occurred in ActorFactory::CreateZombie" << std::endl;
+		LoggerWrapper::Error("An error occurred in ActorFactory::CreateZombie");
 		throw 0;
 	}
 
@@ -148,7 +149,7 @@ Actor *ActorFactory::CreateMedkit(int x, int y){
 		return healthPotion;
 	}
 	catch(...){
-		std::cerr << "An error occurred in ActorFactory::CreateMedkit" << std::endl;
+		LoggerWrapper::Error("An error occurred in ActorFactory::CreateMedkit");
 		throw 0;
 	}
 }
@@ -171,7 +172,7 @@ Actor *ActorFactory::CreateMonster(int x, int y, EnemyDifficulty difficulty, Map
 		return monster;
 	}
 	catch(...){
-		std::cerr << "An error occurred in ActorFactory::CreateMonster" << std::endl;
+		LoggerWrapper::Error("An error occurred in ActorFactory::CreateMonster");
 		throw 0;
 	}
 }
@@ -185,7 +186,7 @@ Actor *ActorFactory::CreateSewerMutant(int x, int y){
 		return mutant;
 	}
 	catch(...){
-		std::cerr << "An error occurred in CreateSewerMutant" << std::endl;
+		LoggerWrapper::Error("An error occurred in CreateSewerMutant");
 		throw 0;
 	}
 }
@@ -201,7 +202,7 @@ Actor *ActorFactory::CreateGoblin(int x, int y){
 		return goblin;
 	}
 	catch(...){
-		std::cerr << "An error occurred in CreateGoblin" << std::endl;
+		LoggerWrapper::Error("An error occurred in CreateGoblin");
 		throw 0;
 	}
 }
@@ -215,7 +216,7 @@ Actor *ActorFactory::CreateDirewolf(int x, int y){
 		return direWolf;
 	}
 	catch(...){
-		std::cerr << "An error occurred in CreateDirewolf" << std::endl;
+		LoggerWrapper::Error("An error occurred in CreateDirewolf");
 		throw 0;
 	}
 }
@@ -230,7 +231,7 @@ Actor *ActorFactory::CreateDirebear(int x, int y){
 		return direBear;
 	}
 	catch(...){
-		std::cerr << "An error occurred in CreateDirebear" << std::endl;
+		LoggerWrapper::Error("An error occurred in CreateDirebear");
 		throw 0;
 	}
 }
@@ -244,7 +245,7 @@ Actor *ActorFactory::CreateGiantInsect(int x, int y){
 		return giantInsect;
 	}
 	catch(...){
-		std::cerr << "An error occurred in CreateGiantInsect" << std::endl;
+		LoggerWrapper::Error("An error occurred in CreateGiantInsect");
 		throw 0;
 	}
 }
@@ -291,7 +292,7 @@ Actor *ActorFactory::CreateMonsterForCity(int x, int y, EnemyDifficulty difficul
 		return monster;
 	}
 	catch(...){
-		std::cerr << "An error occurred in CreateMonsterForCity" << std::endl;
+		LoggerWrapper::Error("An error occurred in CreateMonsterForCity");
 		throw 0;
 	}
 }
@@ -334,7 +335,7 @@ Actor *ActorFactory::CreateMonsterForWoods(int x, int y, EnemyDifficulty difficu
 		return monster;
 	}
 	catch(...){
-		std::cerr << "An error occured in CreateMonsterForWoods" << std::endl;
+		LoggerWrapper::Error("An error occured in CreateMonsterForWoods");
 		throw 0;
 	}
 }
@@ -387,7 +388,7 @@ Actor *ActorFactory::CreateItem(int x, int y, EnemyDifficulty difficulty){
 		return item;
 	}
 	catch(...){
-		std::cerr << "An error occurred in ActorFactory::CreateItem" << std::endl;
+		LoggerWrapper::Error("An error occurred in ActorFactory::CreateItem");
 		throw 0;
 	}
 }
@@ -401,7 +402,7 @@ Actor *ActorFactory::CreateNightstick(int x, int y){
 		return nightstick;
 	}
 	catch(...){
-		std::cerr << "An error occurred in ActorFactory::CreateNightstick" << std::endl;
+		LoggerWrapper::Error("An error occurred in ActorFactory::CreateNightstick");
 		throw 0;
 	}
 }
@@ -415,7 +416,7 @@ Actor *ActorFactory::CreateTireIron(int x, int y){
 		return tireIron;
 	}
 	catch(...){
-		std::cerr << "An error occurred in ActorFactory::CreateTireIron" << std::endl;
+		LoggerWrapper::Error("An error occurred in ActorFactory::CreateTireIron");
 		throw 0;
 	}
 }
@@ -429,7 +430,7 @@ Actor *ActorFactory::CreateKnife(int x, int y){
 		return knife;
 	}
 	catch(...){
-		std::cerr << "An error occurred in ActorFactory::CreateKnife" << std::endl;
+		LoggerWrapper::Error("An error occurred in ActorFactory::CreateKnife");
 		throw 0;
 	}
 }
@@ -444,7 +445,7 @@ Actor *ActorFactory::CreateKris(int x, int y){
 		return kris;
 	}
 	catch(...){
-		std::cerr << "An error occurred in ActorFactory::CreateNightStick" << std::endl;
+		LoggerWrapper::Error("An error occurred in ActorFactory::CreateNightStick");
 		throw 0;
 	}
 }
@@ -458,7 +459,7 @@ Actor *ActorFactory::CreateBaseballBat(int x, int y){
 		return baseballBat;
 	}
 	catch(...){
-		std::cerr << "An error occurred in ActorFactory::CreateBaseballBat" << std::endl;
+		LoggerWrapper::Error("An error occurred in ActorFactory::CreateBaseballBat");
 		throw 0;
 	}
 }
@@ -472,7 +473,7 @@ Actor *ActorFactory::CreateMachete(int x, int y){
 		return machete;
 	}
 	catch(...){
-		std::cerr << "An error occurred in ActorFactory::CreateMachete" << std::endl;
+		LoggerWrapper::Error("An error occurred in ActorFactory::CreateMachete");
 		throw 0;
 	}
 }
@@ -546,7 +547,7 @@ std::map<ActorFactory::EnemyDifficulty, int>  ActorFactory::GenerateSpawnChances
 	}
 
 	catch(...){
-		std::cerr << "An error occurred in GenerateChances" << std::endl;
+		LoggerWrapper::Error("An error occurred in GenerateChances");
 		throw 0;
 	}
 }
