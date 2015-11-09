@@ -129,8 +129,6 @@ std::vector<std::vector<Map*>> *Engine::CreateMaps(std::vector<std::vector<Engin
 		LoggerWrapper::Debug("Constructing Map " + std::to_string(i) + " " + std::to_string(j));
 #endif
 				Map* temp = new Map(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, generator);
-				temp->Init();
-
 				if(firstMapFlag)
 					currentMap = temp;
 				(*maps).back().push_back(temp);
@@ -278,7 +276,7 @@ void Engine::ContinueGame() {
 			maps = new std::vector<std::vector<Map*>>(WORLD_SIZE_LATITUDE);
 			for (int i = 0; i < tempLatitudeSize; i++) {
 				for (int j = 0; j < tempLongitudeSize; j++) {
-					(*maps)[i].push_back(new Map(width, height));
+//					(*maps)[i].push_back(new Map(width, height));
 					(*maps)[i][j]->Load(zip);
 					if (playerMapX == i && playerMapY == j) {
 						currentMap = (*maps)[i][j];

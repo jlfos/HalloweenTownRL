@@ -18,28 +18,19 @@ const float edgeOfVision = 0.2;
 #endif
 
 
-Map::Map(int width, int height) :
-		width(width), height(height), tiles(width * height, Tile()) {
-	try{
-		map = nullptr;
-		rng = nullptr;
-		lastSeen = nullptr;
-		generator = nullptr;
-		seed = TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);
-		actors = new TCODList<Actor>();
-	}
-	catch(...){
-		LoggerWrapper::Error("An error occurred with Map::Map(int, int)");
-		throw 0;
-	}
-}
-
 Map::Map(int width, int height, MapGenerator* generator):
 		width(width), height(height), generator(generator), tiles(width * height, Tile())
 		{
 	try{
-		map = nullptr;
-		rng = nullptr;
+		map = generator->Generate(this, true);
+		generator->PopulateActors(this);
+
+		for(Actor *actor : actors){
+			if(actor->lightsource!=nullptr){
+				computeLight(actor, true);
+			}
+		}
+		rng = new TCODRandom(seed, TCOD_RNG_MT);
 		lastSeen = nullptr;
 		seed = TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);
 		actors = new TCODList<Actor>();
@@ -51,33 +42,6 @@ Map::Map(int width, int height, MapGenerator* generator):
 
 }
 
-void Map::Init() {
-	try{
-#ifdef M_LOG
-		LoggerWrapper::Debug("Initializing Map");
-#endif
-		if(rng== nullptr)
-			rng = new TCODRandom(seed, TCOD_RNG_MT);
-
-		if(generator == nullptr){
-			throw 0;
-		}
-		else if(map == nullptr){
-			map = generator->Generate(this, true);
-			generator->PopulateActors(this);
-
-			for(Actor *actor : actors){
-				if(actor->lightsource!=nullptr){
-					computeLight(actor, true);
-				}
-			}
-		}
-	}
-	catch(...){
-		LoggerWrapper::Error("An error occurred with Map::Init");
-		throw 0;
-	}
-}
 
 ActorFactory::EnemyDifficulty Map::GetDifficulty(){
 	try{
@@ -251,9 +215,9 @@ int Map::GetHeight(){
 
 
 
-void Map::SetTileProperties(int tileIndex, TCODColor visible, int character){
+void Map::SetTileProperties(int x, int y, TCODColor visible, int character){
 	try{
-
+		int tileIndex = x + y * width;
 		tiles.at(tileIndex).visibleColor = visible;
 		tiles.at(tileIndex).character = character;
 	}
@@ -266,7 +230,7 @@ void Map::SetTileProperties(int tileIndex, TCODColor visible, int character){
 
 void Map::SetTileProperties(Point point, TCODColor visible, int character) {
 	try{
-		SetTileProperties((point.getTileIndex(80)), visible, character);
+		SetTileProperties(point.getX(), point.getY(), visible, character);
 	}
 	catch(...){
 		LoggerWrapper::Error("An error occurred in Map::SetTileProperties");
@@ -276,12 +240,26 @@ void Map::SetTileProperties(Point point, TCODColor visible, int character) {
 
 
 
-bool Map::TileHasBeenSet(int tileIndex){
+bool Map::TileHasBeenSet(int x, int y){
 	try{
-		if(tiles.at(tileIndex).character == TileCharacters::Default::RAINBOW)
-			return false;
-		else
-			return true;
+		if(x < 0 && y < 0){
+			LoggerWrapper::Error("X and Y are both negative. Negative values are not legal for Tile coordinates.");
+			throw 0;
+		}
+		else if(x < 0){
+			LoggerWrapper::Error("X is negative. Negative values are not legal for Tile coordinates.");
+			throw 0;
+		}
+		else if(y < 0){
+			LoggerWrapper::Error("Y is negative. Negative values are not legal for Tile coordinates.");
+			throw 0;
+		}
+		else{
+			if(tiles.at(x + y * width).character == TileCharacters::Default::RAINBOW)
+				return false;
+			else
+				return true;
+		}
 	}
 	catch(...){
 		LoggerWrapper::Error("An error occurred in Map::TileHasBeenSet");
@@ -293,7 +271,7 @@ bool Map::TileHasBeenSet(int tileIndex){
 
 bool Map::TileHasBeenSet(Point point) {
 	try{
-		return TileHasBeenSet(point.getTileIndex(80));
+		return TileHasBeenSet(point.getX(), point.getY());
 	}
 	catch(...){
 		LoggerWrapper::Error("An error occurred in Map::TileHasBeenSet");

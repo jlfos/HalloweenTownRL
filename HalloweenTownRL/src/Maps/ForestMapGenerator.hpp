@@ -23,8 +23,8 @@ class ForestMapGenerator : public MapGenerator{
 	private:
 		TCODRandom* rng;
 		void GenerateTile(int x, int y, int width, int height, TCODMap* forestMap, Map* map);
-		void GenerateTree(int x, int y, int width, TCODMap* forestMap, Map* map);
-		void GenerateGrass(int x, int y, int width, TCODMap* forestMap, Map* map);
+		void GenerateTree(int x, int y, TCODMap* forestMap, Map* map);
+		void GenerateGrass(int x, int y, TCODMap* forestMap, Map* map);
 		MapGenerator::Orientation orientation;
 };
 

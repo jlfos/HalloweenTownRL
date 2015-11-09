@@ -33,7 +33,6 @@ private:
     TCODMap *map;
     int a = 0;
 public :
-    Map(int width, int height);
     Map(int width, int height, MapGenerator* generator);
     ~Map();
     TCODList<Actor*> actors;
@@ -44,7 +43,6 @@ public :
     bool CanWalk(int x, int y) const;
     void ComputeFov();
     void Render();
-    void Init();
     void Load(TCODZip &zip);
     void Save(TCODZip &zip);
     void PopulateActors();
@@ -54,9 +52,9 @@ public :
     bool TileSetOnLineXAxis(const Point start, const Point end);
     bool TileSetOnLineYAxis(const Point start, const Point end);
     int GetHeight();
-    void SetTileProperties(int tileIndex, TCODColor visible, int character);
+    void SetTileProperties(int x, int y, TCODColor visible, int character);
     void SetTileProperties(Point point, TCODColor visible, int character);
-    bool TileHasBeenSet(int tileIndex);
+    bool TileHasBeenSet(int x, int y);
     bool TileHasBeenSet(Point point);
     std::vector<Point> spawnLocations;
     ActorFactory::EnemyDifficulty GetDifficulty();

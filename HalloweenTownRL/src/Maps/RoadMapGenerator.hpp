@@ -30,8 +30,8 @@ class RoadMapGenerator : public MapGenerator{
 		int maxSizeX;
 		int maxSizeY;
 		void GenerateTile(int x, int y, int width, int height, TCODMap* roadMap);
-		void DrawRoad(int x, int y, int width, TCODMap* roadMap);
-		void DrawGrass(int x, int y, int width, TCODMap* roadMap);
+		void DrawRoad(int x, int y, TCODMap* roadMap);
+		void DrawGrass(int x, int y, TCODMap* roadMap);
 		void AddItem(Map* map, int x, int y);
 		MapGenerator::Orientation flagOri;
 		Map* map;

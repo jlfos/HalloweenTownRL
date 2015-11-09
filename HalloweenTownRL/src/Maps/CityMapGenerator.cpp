@@ -44,15 +44,14 @@ TCODMap* CityMapGenerator::Generate(Map* map, bool generateActors){
 			}
 		}
 
-		for (int tilex = 0; tilex < width-1; tilex++) {
-			for (int tiley = 0; tiley < height-1; tiley++) {
-				int tileIndex = tilex+tiley*width;
-				if(!map->TileHasBeenSet(tileIndex)){
-						cityMap->setProperties(tilex, tiley, true, true);
-						map->SetTileProperties(tileIndex, TileColors::lighterGrey, TileCharacters::Default::PERIOD);
+		for (int x = 0; x < width-1; x++) {
+			for (int y = 0; y < height-1; y++) {
+				if(!map->TileHasBeenSet(x, y)){
+						cityMap->setProperties(x, y, true, true);
+						map->SetTileProperties(x, y, TileColors::lighterGrey, TileCharacters::Default::PERIOD);
 						if(tilesTillNextSpawn==0){
 							tilesTillNextSpawn =rng->getInt(5, 50);
-							Point spawn(tilex, tiley);
+							Point spawn(x, y);
 							map->spawnLocations.push_back(spawn);
 						}
 						tilesTillNextSpawn--;
@@ -123,12 +122,10 @@ void CityMapGenerator::CreateBuilding(Map* map, TCODMap* cityMap, int startX, in
 		int height = map->GetHeight();
 		for(int tileX = startX; tileX < startX+sizeX && tileX < width-2; tileX++ ){
 			for(int tileY = startY; tileY < startY+sizeY && tileY < height-2; tileY++){
-
-				int tileIndex =  tileX + tileY* width;
 				int character = GenerateBuildingCharacter(startX, startY, tileX, tileY, sizeX, sizeY);
 
 				cityMap->setProperties(tileX, tileY, false, false);
-				map->SetTileProperties(tileIndex, visible, character);
+				map->SetTileProperties(tileX, tileY, visible, character);
 			}
 		}
 	}

@@ -69,31 +69,31 @@ TCODMap* RoadMapGenerator::Generate(Map* map, bool generateActors){
 		CreateHouse(lotX + 20, lotY, visible);
 		CreateHouse(lotX + 40, lotY, visible);
 
-		for (int tileX = 0; tileX < width; tileX++) {
-			for (int tileY = 0; tileY < height-1; tileY++) {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height-1; y++) {
 				//TODO this needs to be set properly for the demo and lightsource needs to be fixed
 
-				if(map->TileHasBeenSet(tileX + tileY * 80)){
-					if(map->GetCharacter(tileX, tileY) != TileCharacters::PERIOD){
-						roadMap->setProperties(tileX, tileY, false, false);
+				if(map->TileHasBeenSet(x, y)){
+					if(map->GetCharacter(x, y) != TileCharacters::PERIOD){
+						roadMap->setProperties(x, y, false, false);
 						continue;
 					}
 					else{
-						roadMap->setProperties(tileX, tileY, true, true);
+						roadMap->setProperties(x, y, true, true);
 					}
 				}
 				else{
-					roadMap->setProperties(tileX, tileY, true, true);
+					roadMap->setProperties(x, y, true, true);
 
 					bool roadFlag = false;
 					switch(flagOri){
 						case MapGenerator::Orientation::NORTH:
 						case MapGenerator::Orientation::SOUTH:
-							roadFlag = tileX <= (width/2)+3  &&  tileX >= (width/2)-3;
+							roadFlag = x <= (width/2)+3  &&  x >= (width/2)-3;
 							break;
 						case MapGenerator::Orientation::EAST:
 						case MapGenerator::Orientation::WEST:
-							roadFlag = tileY <= (height/2)+3  &&  tileY >= (height/2)-3;
+							roadFlag = y <= (height/2)+3  &&  y >= (height/2)-3;
 							break;
 						default:
 							LoggerWrapper::Error("Case " + std::to_string(flagOri) + " is not currently supported");
@@ -101,9 +101,9 @@ TCODMap* RoadMapGenerator::Generate(Map* map, bool generateActors){
 					}
 
 					if(roadFlag)
-						DrawRoad(tileX, tileY, width, roadMap);
+						DrawRoad(x, y, roadMap);
 					else
-					DrawGrass(tileX, tileY, width, roadMap);
+					DrawGrass(x, y, roadMap);
 				}
 
 			}
@@ -123,13 +123,12 @@ void RoadMapGenerator::PopulateActors(Map* map){
 
 }
 
-void RoadMapGenerator::DrawGrass(int x, int y, int width, TCODMap* roadMap){
+void RoadMapGenerator::DrawGrass(int x, int y, TCODMap* roadMap){
 	try {
-		int tileIndex = x+y*width;
 		roadMap->setProperties(x, y, true, true);
 		TCODColor visible = TileColors::green;
 		int character = TileCharacters::Default::PERIOD;
-		map->SetTileProperties(tileIndex, visible, character);
+		map->SetTileProperties(x, y, visible, character);
 	}
 	catch (...) {
 		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawGrass");
@@ -138,13 +137,12 @@ void RoadMapGenerator::DrawGrass(int x, int y, int width, TCODMap* roadMap){
 }
 
 
-void RoadMapGenerator::DrawRoad(int x, int y, int width, TCODMap* roadMap){
+void RoadMapGenerator::DrawRoad(int x, int y, TCODMap* roadMap){
 	try {
-		int tileIndex = x+y*width;
 		roadMap->setProperties(x, y, true, true);
 		TCODColor visible = TileColors::lightGrey;
 		int character = TileCharacters::Default::PERIOD;
-		map->SetTileProperties(tileIndex, visible, character);
+		map->SetTileProperties(x, y, visible, character);
 	}
 	catch (...) {
 		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawRoad");

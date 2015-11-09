@@ -46,15 +46,14 @@ TCODMap* ForestMapGenerator::Generate(Map* map, bool generateActors){
 		}
 
 		//TODO Make the generation of spawn locations more generic
-		for (int tilex = 0; tilex < width-1; tilex++) {
-			for (int tiley = 0; tiley < height-1; tiley++) {
-				int tileIndex = tilex+tiley*width;
-				if(!map->TileHasBeenSet(tileIndex)){
-						forestMap->setProperties(tilex, tiley, true, true);
-						GenerateGrass(tilex, tiley, width, forestMap, map);
+		for (int x = 0; x < width-1; x++) {
+			for (int y = 0; y < height-1; y++) {
+				if(!map->TileHasBeenSet(x, y)){
+						forestMap->setProperties(x, y, true, true);
+						GenerateGrass(x, y, forestMap, map);
 						if(tilesTillNextSpawn==0){
 							tilesTillNextSpawn =rng->getInt(5, 50);
-							Point spawn(tilex, tiley);
+							Point spawn(x, y);
 							map->spawnLocations.push_back(spawn);
 						}
 						tilesTillNextSpawn--;
@@ -132,7 +131,7 @@ void ForestMapGenerator::GenerateTile(int x, int y, int width, int height, TCODM
 		else
 			rand = rng->getInt(90, 100);
 		if(rand%100==0 && x!=0 && y!=0 && x!=width-1 && y!=height-1)
-			GenerateTree(x, y, width, forestMap, map);
+			GenerateTree(x, y, forestMap, map);
 	}
 	catch (...) {
 		LoggerWrapper::Error("An error occurred in ForestMapGenerator::GenerateTile");
@@ -144,13 +143,12 @@ void ForestMapGenerator::GenerateTile(int x, int y, int width, int height, TCODM
 /**
  * Generates Tree tile
  */
-void ForestMapGenerator::GenerateTree(int x, int y, int width, TCODMap* forestMap, Map* map){
+void ForestMapGenerator::GenerateTree(int x, int y, TCODMap* forestMap, Map* map){
 	try {
-		int tileIndex = x+y*width;
 		forestMap->setProperties(x, y, false, false);
 		TCODColor visible = TileColors::brown;
 		int character = TileCharacters::Default::YEN_SYMBOL;
-		map->SetTileProperties(tileIndex, visible, character);
+		map->SetTileProperties(x, y, visible, character);
 	}
 	catch (...) {
 		LoggerWrapper::Error("An error occurred in ForestMapGenerator::GenerateTree");
@@ -161,13 +159,12 @@ void ForestMapGenerator::GenerateTree(int x, int y, int width, TCODMap* forestMa
 /**
  *  Generates Grass tile
  */
-void ForestMapGenerator::GenerateGrass(int x, int y, int width, TCODMap* forestMap, Map* map){
+void ForestMapGenerator::GenerateGrass(int x, int y, TCODMap* forestMap, Map* map){
 	try {
-		int tileIndex = x+y*width;
 		forestMap->setProperties(x, y, true, true);
 		TCODColor visible = TileColors::green;
 		int character = TileCharacters::Default::PERIOD;
-		map->SetTileProperties(tileIndex, visible, character);
+		map->SetTileProperties(x, y, visible, character);
 	}
 	catch (...) {
 		LoggerWrapper::Error("An error occurred in ForestMapGenerator::GenerateGrass");
