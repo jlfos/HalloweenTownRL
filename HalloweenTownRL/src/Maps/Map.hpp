@@ -22,48 +22,53 @@ struct Tile {
 };
 
 class Map : public Persistent{
-private:
-    bool NotOnMap(int x, int y) const;
-    int width,height;
-    MapGenerator* generator;
-    Time* lastSeen;
+public:
+    std::vector<Tile> tiles;
+	TCODList<Actor*> actors;
+    std::vector<Point> spawnLocations;
 
-    long seed;
+private:
+    u_int width,height;
+    Time* lastSeen;
+    MapGenerator* generator;
+
     TCODRandom *rng;
     TCODMap *map;
-    int a = 0;
+    long seed;
+
 public :
     Map(int width, int height, MapGenerator* generator);
     ~Map();
-    TCODList<Actor*> actors;
+
     enum class TileType {GROUND, WALL, LEFT_EDGE, RIGHT_EDGE, TOP_EDGE, BOTTOM_EDGE};
     TileType GetTileType(int x, int y) const;
 	bool IsInFov(int x, int y);
-    bool IsExplored(int x, int y) const;
+
     bool CanWalk(int x, int y) const;
     void ComputeFov();
     void Render();
+    void PopulateActors();
     void Load(TCODZip &zip);
     void Save(TCODZip &zip);
-    void PopulateActors();
+
     Time* TimeLastSeen();
     void TimeLastSeen(Time* time);
-    int GetWidth();
+    int GetWidth() const;
     bool TileSetOnLineXAxis(const Point start, const Point end);
     bool TileSetOnLineYAxis(const Point start, const Point end);
-    int GetHeight();
+    int GetHeight() const;
     void SetTileProperties(int x, int y, TCODColor visible, int character);
     void SetTileProperties(Point point, TCODColor visible, int character);
-    bool TileHasBeenSet(int x, int y);
-    bool TileHasBeenSet(Point point);
-    std::vector<Point> spawnLocations;
-    ActorFactory::EnemyDifficulty GetDifficulty();
-    std::vector<Tile> tiles;
-    void computeLight(Actor *owner, bool isVisible);
-    void computeLight(Actor *owner, bool isVisible, int radius);
-    void computeNonplayerLights();
-    float getTileVisibility(int x, int y);
-    int GetCharacter(int x, int y);
+    bool TileHasBeenSet(int x, int y) const;
+    bool TileHasBeenSet(Point point) const;
 
+    ActorFactory::EnemyDifficulty GetDifficulty();
+    void ComputeLight(Actor *owner, bool isVisible);
+    void ComputeAllLights();
+    float GetTileVisibility(int x, int y);
+    int GetCharacter(int x, int y);
+private:
+    bool IsExplored(int x, int y) const;
+    bool ValidPoint(u_int x, u_int y) const;
 };
 #endif

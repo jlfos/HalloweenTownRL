@@ -22,18 +22,13 @@ Map::Map(int width, int height, MapGenerator* generator):
 		width(width), height(height), generator(generator), tiles(width * height, Tile())
 		{
 	try{
+		actors = new TCODList<Actor>();
 		map = generator->Generate(this, true);
-		generator->PopulateActors(this);
 
-		for(Actor *actor : actors){
-			if(actor->lightsource!=nullptr){
-				computeLight(actor, true);
-			}
-		}
 		rng = new TCODRandom(seed, TCOD_RNG_MT);
 		lastSeen = nullptr;
 		seed = TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);
-		actors = new TCODList<Actor>();
+
 	}
 	catch(...){
 		LoggerWrapper::Error("An error occurred with Map::Map(int, int, MapGenerator)");
@@ -101,7 +96,7 @@ void Map::PopulateActors(){
 void Map::Save(TCODZip &zip) {
 	try{
 		zip.putInt(seed);
-		for (int i = 0; i < width * height; i++) {
+		for (u_int i = 0; i < width * height; i++) {
 			zip.putInt(tiles.at(i).explored);
 		}
 		int size = actors.size();
@@ -130,7 +125,7 @@ void Map::Load(TCODZip &zip) {
 		seed = zip.getInt();
 		rng = new TCODRandom(seed, TCOD_RNG_MT);
 		map = generator->Generate(this, false);
-		for (int i = 0; i < width * height; i++) {
+		for (u_int i = 0; i < width * height; i++) {
 			tiles.at(i).explored = zip.getInt();
 		}
 		int nbActors = zip.getInt();
@@ -193,7 +188,7 @@ Map::TileType Map::GetTileType(int x, int y) const {
 	}
 }
 
-int Map::GetWidth(){
+int Map::GetWidth() const{
 	try{
 		return width;
 	}
@@ -203,7 +198,7 @@ int Map::GetWidth(){
 	}
 }
 
-int Map::GetHeight(){
+int Map::GetHeight() const{
 	try{
 		return height;
 	}
@@ -217,9 +212,15 @@ int Map::GetHeight(){
 
 void Map::SetTileProperties(int x, int y, TCODColor visible, int character){
 	try{
-		int tileIndex = x + y * width;
-		tiles.at(tileIndex).visibleColor = visible;
-		tiles.at(tileIndex).character = character;
+		if(ValidPoint(x, y)){
+			int tileIndex = x + y * width;
+			tiles.at(tileIndex).visibleColor = visible;
+			tiles.at(tileIndex).character = character;
+		}
+		else{
+			LoggerWrapper::Error("Invalid point " + Point(x, y).ToString());
+			throw 0;
+		}
 	}
 	catch(...){
 		LoggerWrapper::Error("An error occurred in Map::SetTileProperties");
@@ -240,18 +241,10 @@ void Map::SetTileProperties(Point point, TCODColor visible, int character) {
 
 
 
-bool Map::TileHasBeenSet(int x, int y){
+bool Map::TileHasBeenSet(int x, int y) const{
 	try{
-		if(x < 0 && y < 0){
-			LoggerWrapper::Error("X and Y are both negative. Negative values are not legal for Tile coordinates.");
-			throw 0;
-		}
-		else if(x < 0){
-			LoggerWrapper::Error("X is negative. Negative values are not legal for Tile coordinates.");
-			throw 0;
-		}
-		else if(y < 0){
-			LoggerWrapper::Error("Y is negative. Negative values are not legal for Tile coordinates.");
+		if(!ValidPoint(x, y)){
+			LoggerWrapper::Error("Invalid point " + Point(x, y).ToString());
 			throw 0;
 		}
 		else{
@@ -269,7 +262,7 @@ bool Map::TileHasBeenSet(int x, int y){
 }
 
 
-bool Map::TileHasBeenSet(Point point) {
+bool Map::TileHasBeenSet(Point point) const{
 	try{
 		return TileHasBeenSet(point.getX(), point.getY());
 	}
@@ -300,7 +293,13 @@ bool Map::CanWalk(int x, int y) const {
 
 bool Map::IsExplored(int x, int y) const {
 	try{
-		return tiles.at(x + y * width).explored;
+		if(ValidPoint(x, y)){
+			return tiles.at(x + y * width).explored;
+		}
+		else{
+			LoggerWrapper::Error("Invalid Point: " + Point(x, y).ToString());
+			throw 0;
+		}
 	}
 	catch(...){
 		LoggerWrapper::Error("An error occurred with Map::IsExplored");
@@ -310,7 +309,7 @@ bool Map::IsExplored(int x, int y) const {
 
 bool Map::IsInFov(int x, int y) {
 	try{
-		if (x < 0 || x >= width || y < 0 || y >= height) { //position is off of the map
+		if (!ValidPoint(x, y)) { //position is off of the map
 			return false;
 		}
 		if (map->isInFov(x, y) && tiles.at(x + y * width).lit && tiles.at(x + y * width).visibility > edgeOfVision) { //position is in fov, currently lit & has a visibility of 20%
@@ -338,8 +337,8 @@ void Map::ComputeFov()  {
 
 void Map::Render() {
 	try{
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
+		for (u_int x = 0; x < width; x++) {
+			for (u_int y = 0; y < height; y++) {
 				 if (IsInFov(x, y)) {
 					engine.gui->SetCharAdjusted(x, y, tiles.at(x + y * width).character);
 					engine.gui->SetForegroundAdjusted(x, y, tiles.at(x + y * width).visibleColor * tiles.at(x + y * width).visibility);
@@ -358,17 +357,21 @@ void Map::Render() {
 
 }
 
-void Map::computeLight(Actor* owner, bool isVisible, int radius){
+void Map::ComputeLight(Actor* owner, bool isVisible){
 	try{
 		if(owner){ //checks to see if owner is null
 			if(owner->lightsource){ // checks to see if lightsource is null
+				int radius = owner->lightsource->GetRadius();
 				int centerX = owner->x;
 				int centerY = owner->y;
-				int startX = std::max(centerX - radius,0);
-				int startY = std::max(centerY - radius,0);
-				int diameter = radius * 2;
-					for(int y=0, pointY = startY; y < diameter && y < height ; y++, pointY++){
-						for(int x = 0, pointX = startX; x < diameter && x < width ;x++, pointX++ ){
+				u_int startX = std::max(centerX - radius,0);
+				u_int startY = std::max(centerY - radius,0);
+				u_int diameter = radius * 2;
+#ifdef M_LOG
+				LoggerWrapper::Debug("Lightsource at " + Point(centerX, centerY).ToString());
+#endif
+					for(u_int y = 0, pointY = startY; y < diameter && y < height ; y++, pointY++){
+						for(u_int x = 0, pointX = startX; x < diameter && x < width ;x++, pointX++ ){
 							float distance = sqrt((centerX-pointX)*(centerX-pointX) + (centerY-pointY)*(centerY-pointY)) ;
 							unsigned int tileIndex = pointX + pointY* width;
 							if(distance < radius &&  tileIndex < tiles.size() ){ //checks to see if current tile distance is within the radius
@@ -402,29 +405,17 @@ void Map::computeLight(Actor* owner, bool isVisible, int radius){
 }
 
 
-void Map::computeLight(Actor* owner, bool isVisible){
-	try{
-		if(owner->lightsource)
-			computeLight(owner, isVisible, owner->lightsource->GetRadius());
-		else{
-			LoggerWrapper::Error("You cannot computeLight on an actor that is not a lightsource");
-			throw 0;
-		}
-	}
-	catch(...){
-		LoggerWrapper::Error("An error occurred in Map::computeLight");
-		throw 0;
-	}
-}
 
-void Map::computeNonplayerLights(){
+void Map::ComputeAllLights(){
 	try{
-
+#ifdef M_LOG
+		LoggerWrapper::Debug("Size of actors in ComputeAllLights: " + std::to_string(actors.size()));
+#endif
 		for(Actor* actor : actors){
 			if(actor!=engine.player && actor->lightsource)
-				computeLight(actor, true);
+				ComputeLight(actor, true);
 		}
-		computeLight(engine.player, true);
+		ComputeLight(engine.player, true);
 
 	}
 	catch(...){
@@ -435,12 +426,18 @@ void Map::computeNonplayerLights(){
 
 
 
-float Map::getTileVisibility(int x, int y){
+float Map::GetTileVisibility(int x, int y){
 	try{
-		return tiles.at(x + y * width).visibility;
+		if(ValidPoint(x, y)){
+			return tiles.at(x + y * width).visibility;
+		}
+		else{
+			LoggerWrapper::Error("Invalid Point: " + Point(x, y).ToString());
+			throw 0;
+		}
 	}
 	catch(...){
-		LoggerWrapper::Error("An error occurred in Map::getTileVisibility");
+		LoggerWrapper::Error("An error occurred in Map::GetTileVisibility");
 		throw 0;
 	}
 }
@@ -473,7 +470,14 @@ bool Map::TileSetOnLineXAxis(const Point start, const Point end) {
 		}
 	}
 	catch(...){
-		LoggerWrapper::Error("An error occurred in Map::getTileVisibility");
+		LoggerWrapper::Error("An error occurred in Map::GetTileVisibility");
 		throw 0;
 	}
+}
+
+bool Map::ValidPoint(u_int x, u_int y) const{
+	if(x >= width || y >= height)
+		return false;
+	else
+		return true;
 }

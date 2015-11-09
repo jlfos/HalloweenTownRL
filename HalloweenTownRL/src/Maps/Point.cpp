@@ -7,7 +7,7 @@
 #include "../LoggerWrapper.hpp"
 #include "Point.hpp"
 
-Point::Point(int x, int y){
+Point::Point(uint x, uint y){
 
 	if(x < 0 && y < 0){
 		LoggerWrapper::Error("X and Y are both negative. Negative values are not legal for the Point constructor.");
@@ -35,11 +35,11 @@ Point::~Point() {
 
 }
 
-int Point::getX() const {
+uint Point::getX() const {
 	return x;
 }
 
-int Point::getY() const {
+uint Point::getY() const {
 	return y;
 }
 
@@ -60,4 +60,11 @@ bool Point::operator !=(const Point& rhs) {
 	else
 		return false;
 
+}
+
+std::string Point::ToString() const {
+	std::string ret = "X: " + std::to_string(x);
+	ret += " Y: ";
+	ret += std::to_string(y);
+	return ret;
 }

@@ -50,6 +50,9 @@ Item *Item::Create(TCODZip &zip){
 		Item *Item=nullptr;
 		switch(type){
 			case ItemType::HEALER: Item = new Healer(0); break;
+			default:
+				LoggerWrapper::Error("Incorrect item type for Create");
+				throw 0;
 		}
 		Item->Load(zip);
 		return Item;

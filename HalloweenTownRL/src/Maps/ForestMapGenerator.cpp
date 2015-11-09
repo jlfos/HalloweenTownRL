@@ -123,6 +123,10 @@ void ForestMapGenerator::GenerateTile(int x, int y, int width, int height, TCODM
 			case MapGenerator::Orientation::SOUTH:
 				lowTreeChance = y<=height/2;
 				break;
+			default:
+				LoggerWrapper::Error("Incorrect orientation of GenerateTile");
+				throw 0;
+				break;
 		}
 
 		int rand = 0;

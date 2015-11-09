@@ -153,7 +153,7 @@ bool PlayerAi::MoveOrAttack(Actor *owner, int targetX, int targetY){
 				engine.gui->PushMessage(TileColors::lightGrey,"There's a %s here", (actor->name).c_str() );
 			}
 		}
-		engine.currentMap->computeLight(owner, false, engine.fovRadius);
+		engine.currentMap->ComputeLight(owner, false);
 		owner->x=targetX;
 		owner->y=targetY;
 		return true;

@@ -28,7 +28,7 @@ Actor::~Actor(){
 void Actor::Render() const {
 	try{
 		engine.gui->SetCharAdjusted(x, y, ch);
-		float visibility = engine.currentMap->getTileVisibility(x, y);
+		float visibility = engine.currentMap->GetTileVisibility(x, y);
 		engine.gui->SetForegroundAdjusted(x, y, col * visibility);
 	}
 	catch(...){

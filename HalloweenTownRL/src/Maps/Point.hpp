@@ -6,26 +6,30 @@
 
 #ifndef POINT_HPP
 #define POINT_HPP
+#include <string>
+
 
 class Point {
 public:
-	Point(int x, int y);
+	Point(uint x, uint y);
 	Point(const Point& p);
 	virtual ~Point();
 
-	int getX() const;
+	uint getX() const;
 
-	int getY() const;
+	uint getY() const;
 
 	int getTileIndex(int mapWidth) const;
 
 	bool operator==(const Point &rhs);
 	bool operator!=(const Point &rhs);
 
+	std::string ToString() const;
+
 
 private:
-	int x;
-	int y;
+	uint x;
+	uint y;
 };
 
 #endif /* POINT_HPP */

@@ -14,7 +14,7 @@
 #include "../LoggerWrapper.hpp"
 
 #ifndef RMG_LOGGER
-#define RMG_LOGGER
+//#define RMG_LOGGER
 #endif
 
 RoadMapGenerator::RoadMapGenerator():RoadMapGenerator(MapGenerator::Orientation::NORTH) {
@@ -306,7 +306,7 @@ void RoadMapGenerator::DrawWestWall(Point start, Point end, TCODColor color) {
 
 void RoadMapGenerator::DrawHorizontalLine(Point start, Point end, int character, TCODColor color) {
 	try {
-		for(int i = start.getX(); i < end.getX(); i++){
+		for(u_int i = start.getX(); i <= end.getX(); i++){
 			map->SetTileProperties(Point(i, end.getY()), color, character);
 		}
 	}
@@ -319,7 +319,7 @@ void RoadMapGenerator::DrawHorizontalLine(Point start, Point end, int character,
 
 void RoadMapGenerator::DrawVerticalLine(Point start, Point end, int character, TCODColor color) {
 	try {
-		for(int i = start.getY(); i < end.getY(); i++){
+		for(u_int i = start.getY(); i <= end.getY(); i++){
 			map->SetTileProperties(Point(start.getX(), i), color, character);
 		}
 	}
@@ -343,8 +343,8 @@ void RoadMapGenerator::DrawInterior(Point start, Point end, int character) { //T
 		LoggerWrapper::Debug("Interior is " +  std::to_string(character) );
 #endif
 		TCODColor visible = TCODColor::grey;
-		for(int i = start.getX() + 1 ; i < end.getX(); i++){
-			for(int j = start.getY() + 1 ; j < end.getY(); j++){
+		for(uint i = start.getX() + 1 ; i < end.getX(); i++){
+			for(uint j = start.getY() + 1 ; j < end.getY(); j++){
 				int character = TileCharacters::Default::PERIOD;
 				map->SetTileProperties(Point(i, j), visible, character);
 			}

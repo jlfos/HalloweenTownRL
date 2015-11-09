@@ -258,8 +258,6 @@ void Engine::ContinueGame() {
 			TCODZip zip;
 			zip.loadFromFile("game.sav");
 
-			int width = zip.getInt();
-			int height = zip.getInt();
 			playerMapX = zip.getInt();
 			playerMapY = zip.getInt();
 			int tempLatitudeSize = zip.getInt();
@@ -364,7 +362,7 @@ void Engine::Update() {
 	try {
 
 		if (gameStatus == STARTUP){
-			currentMap->computeNonplayerLights();
+			currentMap->ComputeAllLights();
 			currentMap->ComputeFov();
 
 		}
@@ -372,7 +370,7 @@ void Engine::Update() {
 		TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
 		player->Update();
 		if (gameStatus == NEW_TURN) {
-			currentMap->computeNonplayerLights();
+			currentMap->ComputeAllLights();
 			if(incrementTime)
 				currentTime.IncrementMinutes();
 			incrementTime = !incrementTime;

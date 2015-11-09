@@ -12,7 +12,7 @@
 #include "LoggerWrapper.hpp"
 
 #ifndef RW_LOGGER
-#define RW_LOGGER
+//#define RW_LOGGER
 #endif
 
 RandomWrapper::RandomWrapper() {
