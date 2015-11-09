@@ -370,8 +370,8 @@ void Map::ComputeLight(Actor* owner, bool isVisible){
 #ifdef M_LOG
 				LoggerWrapper::Debug("Lightsource at " + Point(centerX, centerY).ToString());
 #endif
-					for(u_int y = 0, pointY = startY; y < diameter && y < height ; y++, pointY++){
-						for(u_int x = 0, pointX = startX; x < diameter && x < width ;x++, pointX++ ){
+					for(u_int y = 0, pointY = startY; y < diameter && pointY < height ; y++, pointY++){
+						for(u_int x = 0, pointX = startX; x < diameter && pointX < width ;x++, pointX++ ){
 							float distance = sqrt((centerX-pointX)*(centerX-pointX) + (centerY-pointY)*(centerY-pointY)) ;
 							unsigned int tileIndex = pointX + pointY* width;
 							if(distance < radius &&  tileIndex < tiles.size() ){ //checks to see if current tile distance is within the radius
@@ -442,38 +442,6 @@ float Map::GetTileVisibility(int x, int y){
 	}
 }
 
-bool Map::TileSetOnLineXAxis(const Point start, const Point end) {
-	try{
-		int deltaX = end.getX() - start.getX();
-		if(deltaX != 0 ){ //horizontal line
-			if(deltaX > 0){ //right oriented
-				while(deltaX > 0){
-					if(TileHasBeenSet(Point(start.getX() + deltaX, start.getY()))){
-						return false;
-					}
-					deltaX--;
-				}
-				return true;
-			}
-			else{ //left oriented
-				while(deltaX < 0){
-					if(TileHasBeenSet(Point(start.getX() + deltaX, start.getY()))){
-						return false;
-					}
-					deltaX++;
-				}
-				return true;
-			}
-		}
-		else{
-			return true;
-		}
-	}
-	catch(...){
-		LoggerWrapper::Error("An error occurred in Map::GetTileVisibility");
-		throw 0;
-	}
-}
 
 bool Map::ValidPoint(u_int x, u_int y) const{
 	if(x >= width || y >= height)

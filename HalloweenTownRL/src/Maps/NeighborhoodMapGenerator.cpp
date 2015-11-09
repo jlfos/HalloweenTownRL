@@ -17,8 +17,8 @@
 
 NeighborhoodMapGenerator::NeighborhoodMapGenerator(int width, int height,
 		MapGenerator::Orientation orientation): mapWidth(width), mapHeight(height), flagOri(orientation) {
-	minRoomSizeX = 5;
-	minRoomSizeY = 5;
+	minRoomSizeX = 4;
+	minRoomSizeY = 4;
 	maxRoomSizeX = 9;
 	maxRoomSizeY = 9;
 
@@ -37,8 +37,8 @@ TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 		TCODColor visible = TCODColor::grey;
 
 		//TODO This is as close to 0,0 as I can go. I get exceptions otherwise. I need to look into this
-		int lotX = 10;
-		int lotY = 10;
+		int lotX = 0;
+		int lotY = 0;
 		CreateHouse(lotX, lotY, visible);
 		CreateHouse(lotX + 20, lotY, visible);
 		CreateHouse(lotX + 40, lotY, visible);
@@ -49,7 +49,7 @@ TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 
 				if(map->TileHasBeenSet(x, y)){
 					if(map->GetCharacter(x, y) != TileCharacters::PERIOD){
-						neighborhoodMap->setProperties(x, y, false, false);
+						neighborhoodMap->setProperties(x, y, true, true);
 						continue;
 					}
 					else{
@@ -82,7 +82,7 @@ TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 
 			}
 		}
-		map->actors.push(ActorFactory::CreateLampPost(65, 7));
+		map->actors.push(ActorFactory::CreateLampPost(75, 7));
 
 		return neighborhoodMap;
 	}
@@ -144,7 +144,7 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Point start, Point end, Orientation
 			int y = 1; //TODO Clean this function up. Its really ugly.
 		//I think you could break each of these case statements out into their own methods. Those methods might be broken into generate offset
 		// and generate points/room. Point generation is done a case by case basis so I don't think that is something that can be made generic.
-			for(; y < maxRoomSizeY && y < start.getY(); y++){  //Check north
+			for(; y <= maxRoomSizeY && y < start.getY(); y++){  //Check north
 				if(map->TileHasBeenSet(Point(end.getX() , start.getY() - y))){
 					break;
 				}
@@ -168,9 +168,16 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Point start, Point end, Orientation
 			int temp = y;
 			for(; temp > 1; temp--){
 				if(map->TileHasBeenSet(Point(end.getX() - x, start.getY() - temp))){
+#ifdef NMG_LOGGER
+					LoggerWrapper::Debug("Northern Drawback failed " + Point(end.getX() - x, start.getY() - temp).ToString());
+#endif
 					return nullptr;
 				}
 			}
+
+//			y -= temp;
+//			if(y < minRoomSizeY)
+//				return nullptr;
 
 			int offsetX = randomWrap.getInt(minRoomSizeX, x);
 			int offsetY = randomWrap.getInt(minRoomSizeY, y);
@@ -184,7 +191,7 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Point start, Point end, Orientation
 		break;
 		case MapGenerator::Orientation::SOUTH:{
 			int y = 1;
-			for(; y < maxRoomSizeY; y++){  //Check south
+			for(; y <= maxRoomSizeY; y++){  //Check south
 				if(map->TileHasBeenSet(Point(start.getX() , end.getY() + y))){
 					break;
 				}
@@ -208,6 +215,9 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Point start, Point end, Orientation
 			int temp = y;
 			for(; temp > 1; temp--){
 				if(map->TileHasBeenSet(Point(start.getX() + x, end.getY() + temp))){
+#ifdef NMG_LOGGER
+					LoggerWrapper::Debug("Southern Drawback failed " + Point(end.getX() - x, start.getY() - temp).ToString());
+#endif
 					return nullptr;
 				}
 			}
@@ -237,7 +247,7 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Point start, Point end, Orientation
 				return nullptr;
 
 			int y = 1;
-			for(; y < maxRoomSizeY; y++){  //Check southeast
+			for(; y <= maxRoomSizeY; y++){  //Check southeast
 				if(map->TileHasBeenSet(Point(end.getX() + x , start.getY() + y))){
 					break;
 				}
@@ -248,8 +258,11 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Point start, Point end, Orientation
 				return nullptr;
 
 			int temp = x;
-			for(; temp > 1; temp--){  //Check southeast
+			for(; temp > 1; temp--){  //Check east
 				if(map->TileHasBeenSet(Point(end.getX() + temp , start.getY() + y))){
+#ifdef NMG_LOGGER
+					LoggerWrapper::Debug("Eastern Drawback failed " + Point(end.getX() - x, start.getY() - temp).ToString());
+#endif
 					return nullptr;
 				}
 			}
@@ -279,7 +292,7 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Point start, Point end, Orientation
 				return nullptr;
 
 			int y = 1;
-			for(; y < maxRoomSizeY && y < start.getY(); y++){  //Check west
+			for(; y <= maxRoomSizeY && y < start.getY(); y++){  //Check west
 				if(map->TileHasBeenSet(Point(start.getX() - x, end.getY() - y))){
 					break;
 				}
@@ -293,6 +306,9 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Point start, Point end, Orientation
 			int temp = x;
 			for(; temp > 1; temp--){  //Check west
 				if(map->TileHasBeenSet(Point(start.getX() - temp, end.getY() - y))){
+#ifdef NMG_LOGGER
+					LoggerWrapper::Debug("Western Drawback failed " + Point(end.getX() - x, start.getY() - temp).ToString());
+#endif
 					return nullptr;
 				}
 			}
@@ -665,7 +681,7 @@ void NeighborhoodMapGenerator::CreateHouse(int lotX, int lotY, TCODColor visible
 		int sizeY = randomWrap.getInt(minRoomSizeY, maxRoomSizeY);
 		Room initialRoom(buildingStart, sizeX, sizeY, side);
 		GenerateRoom(initialRoom, visible, Orientation::NONE, roomsLeft);
-		EraseFence(lotStart, lotEnd);
+//		EraseFence(lotStart, lotEnd);
 	}
 	catch (...) {
 		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::CreateHouse");

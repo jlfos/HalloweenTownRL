@@ -26,7 +26,7 @@ Actor *ActorFactory::CreateHero(int x, int y){
 		player->attacker=new Attacker(3, "fists");
 		player->ai = new PlayerAi();
 		player->container= new Container(26);
-		player->lightsource = new Lightsource(10);
+		player->lightsource = new Lightsource(30);
 		return player;
 	}
 	catch(...){

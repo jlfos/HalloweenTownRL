@@ -56,8 +56,6 @@ public :
     Time* TimeLastSeen();
     void TimeLastSeen(Time* time);
     int GetWidth() const;
-    bool TileSetOnLineXAxis(const Point start, const Point end);
-    bool TileSetOnLineYAxis(const Point start, const Point end);
     int GetHeight() const;
     void SetTileProperties(int x, int y, TCODColor visible, int character);
     void SetTileProperties(Point point, TCODColor visible, int character);

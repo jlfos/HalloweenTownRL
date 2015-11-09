@@ -52,7 +52,7 @@ TCODMap* RoadMapGenerator::Generate(Map* map, bool generateActors){
 
 				if(map->TileHasBeenSet(x, y)){
 					if(map->GetCharacter(x, y) != TileCharacters::PERIOD){
-						roadMap->setProperties(x, y, false, false);
+						roadMap->setProperties(x, y, true, true);
 						continue;
 					}
 					else{

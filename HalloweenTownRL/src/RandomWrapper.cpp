@@ -12,7 +12,7 @@
 #include "LoggerWrapper.hpp"
 
 #ifndef RW_LOGGER
-//#define RW_LOGGER
+#define RW_LOGGER
 #endif
 
 RandomWrapper::RandomWrapper() {
@@ -32,7 +32,7 @@ RandomWrapper::RandomWrapper() {
 }
 
 MapGenerator::Orientation RandomWrapper::GetOrientation() {
-	if(indexO < data.size()){
+	if(indexO > data.size()){
 
 		MapGenerator::Orientation  orientation = data.at(indexO);
 #ifdef RW_LOGGER
@@ -56,12 +56,15 @@ RandomWrapper::~RandomWrapper() {
 
 int RandomWrapper::getInt(int min, int max) {
 	try{
-		if(min>max){
+		if(min > max){
 			LoggerWrapper::Error("Min " + std::to_string(min) + " cannot be larger then max " + std::to_string(max));
 			throw 0;
 		}
 		else{
 			int temp = rng->getInt(min, max);
+#ifdef RW_LOGGER
+			LoggerWrapper::Debug("int rand " + std::to_string(temp));
+#endif
 			return temp;
 		}
 	}
