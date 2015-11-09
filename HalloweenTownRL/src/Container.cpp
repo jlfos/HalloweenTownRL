@@ -2,6 +2,7 @@
 #include "libtcod.hpp"
 #include "Actor/Actor.hpp"
 #include "Container.hpp"
+#include "LoggerWrapper.hpp"
 #include "Tile/TileColors.hpp"
 
 Container::Container(int size): size(size), inventory(0){
@@ -9,7 +10,7 @@ Container::Container(int size): size(size), inventory(0){
 
 	}
 	catch(...){
-		std::cerr << "An error occurred with Container::Container"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Container::Container");
 		throw 0;
 	}
 }
@@ -19,7 +20,7 @@ Container::~Container(){
 		inventory.clearAndDelete();
 	}
 	catch(...){
-		std::cerr << "An error occurred with Container::~Container"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Container::~Container");
 		throw 0;
 	}
 }
@@ -33,7 +34,7 @@ bool Container::Add(Actor *actor){
 		return true;
 	}
 	catch(...){
-		std::cerr << "An error occurred with Container::Add"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Container::Add");
 		throw 0;
 	}
 }
@@ -43,7 +44,7 @@ void Container::Remove(Actor *actor){
 	inventory.remove(actor);
 	}
 	catch(...){
-		std::cerr << "An error occurred with Container::Remove" << std::endl;
+		LoggerWrapper::Error("An error occurred with Container::Remove");
 		throw 0;
 	}
 }
@@ -60,7 +61,7 @@ void Container::Load(TCODZip &zip){
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred with Container::Load"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Container::Load");
 		throw 0;
 	}
 }
@@ -75,7 +76,7 @@ void Container::Save(TCODZip &zip){
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred with Container::Save"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Container::Save");
 		throw 0;
 	}
 }

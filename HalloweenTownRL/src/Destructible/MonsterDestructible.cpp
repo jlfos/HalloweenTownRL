@@ -5,6 +5,7 @@
 #include "Destructible.hpp"
 #include "../Engine.hpp"
 #include "../UI/Gui.hpp"
+#include "../LoggerWrapper.hpp"
 #include "MonsterDestructible.hpp"
 #include "../Tile/TileColors.hpp"
 
@@ -32,7 +33,7 @@ void MonsterDestructible::Load(TCODZip &zip){
 		Destructible::Load(zip);
 	}
 	catch(...){
-		std::cerr << "An error occurred in MonsterDestructible::Load";
+		LoggerWrapper::Error("An error occurred in MonsterDestructible::Load");
 		throw 0;
 	}
 }
@@ -43,7 +44,7 @@ void MonsterDestructible::Die(Actor *owner){
 		Destructible::Die(owner);
 	}
 	catch(...){
-		std::cerr << "An error occurred in MonsterDestructible::Die" << std::endl;
+		LoggerWrapper::Error("An error occurred in MonsterDestructible::Die");
 		throw 0;
 	}
 }
@@ -54,7 +55,7 @@ void MonsterDestructible::Save(TCODZip &zip){
 		Destructible::Save(zip);
 	}
 	catch(...){
-		std::cerr << "An error occurred in MonsterDestructible::Save" << std::endl;
+		LoggerWrapper::Error("An error occurred in MonsterDestructible::Save");
 		throw 0;
 	}
 }

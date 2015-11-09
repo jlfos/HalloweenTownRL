@@ -18,6 +18,7 @@
 #include "../Gui.hpp"
 #include "InventoryConsole.hpp"
 #include "../../Item/Item.hpp"
+#include "../../LoggerWrapper.hpp"
 #include "Message.hpp"
 #include "../../Tile/TileColors.hpp"
 
@@ -46,19 +47,20 @@ InventoryConsole::InventoryConsole():
 			charIndex++;
 		}
 		selection = new ConsoleSelection(cl.size(), TileColors::blue);
-		populateKeyMapping();
-		setConsoleLines(cl);
-		display();
-		flush();
-		userInput();
+		PopulateKeyMapping();
+		SetConsoleLines(cl);
+		Display();
+		Flush();
+		UserInput();
 	}
 	catch(...){
-		std::cerr << "An error occurred in InventoryConsole::InventoryConsole()"  << std::endl;
+		LoggerWrapper::Error("An error occurred in InventoryConsole::InventoryConsole()");
+		throw 0;
 	}
 }
 
 
-void InventoryConsole::userInput(){
+void InventoryConsole::UserInput(){
 	try{
 	bool inventoryMode = true;
 	TCOD_key_t lastKey;
@@ -68,23 +70,23 @@ void InventoryConsole::userInput(){
 			case TCODK_UP:
 				if(selection){
 					if(selection->decrementSelection()){
-						display();
-						flush();
+						Display();
+						Flush();
 					}
 				}
 				break;
 			case TCODK_DOWN:
 				if(selection){
 					if(selection->incrementSelection()){
-						display();
-						flush();
+						Display();
+						Flush();
 					}
 				}
 				break;
 			case TCODK_ENTER:
 			{
 				if(selection){
-					useItem(getItem(selection->getSelection()-1));
+					UseItem(GetItem(selection->getSelection()-1));
 					inventoryMode = false;
 				}
 
@@ -98,7 +100,7 @@ void InventoryConsole::userInput(){
 
 				if(mapping < player->container->inventory.size()){
 					inventoryMode = false;
-					useItem(getItem(mapping));
+					UseItem(GetItem(mapping));
 				}
 
 			}
@@ -107,17 +109,17 @@ void InventoryConsole::userInput(){
 			case TCODK_SPACE: {
 
 				if(selection){
-					Actor* item = getItem(selection->getSelection()-1);
+					Actor* item = GetItem(selection->getSelection()-1);
 
 					if(item!= nullptr){
 						std::string itemName = item->name;
 						unsigned int descriptionWidth = 30;
-						std::string m = engine.getItemDescription(itemName);
+						std::string m = engine.GetItemDescription(itemName);
 						//TODO remove this hard coded '5'. Try to get the size of the map portion of the screen OR subtract the size of the player UI console from the startY value
 						ConsoleUI description(m, descriptionWidth, engine.screenWidth/2, engine.screenHeight/2 - 5);
 						description.frame = new ConsoleFrame(item->name, TileColors::white);
-						description.display();
-						description.flush();
+						description.Display();
+						description.Flush();
 						bool descriptionMode = true;
 						while(descriptionMode){
 							TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
@@ -131,9 +133,9 @@ void InventoryConsole::userInput(){
 							}
 
 						}
-						description.clear();
-						display();
-						flush();
+						description.Clear();
+						Display();
+						Flush();
 					}
 				}
 			}
@@ -145,41 +147,51 @@ void InventoryConsole::userInput(){
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred in InventoryConsole::userInput()" << std::endl;
+		LoggerWrapper::Error("An error occurred in InventoryConsole::UserInput()");
 		throw 0;
 	}
 }
 
-Actor* InventoryConsole::getItem(int itemIndex){
+Actor* InventoryConsole::GetItem(int itemIndex){
 	try{
 		if(itemIndex>=player->container->inventory.size()){
-//			std::cerr << "The item index " +std::to_string(itemIndex) + " is out of bounds" << std::endl;
 			return nullptr;
 		}
 		Actor* selectedItem = player->container->inventory.get(itemIndex);
 		if(selectedItem==nullptr){
-			std::cerr << "Selected item was null" << std::endl;
+			LoggerWrapper::Error("Selected item was null");
 			throw 0;
 		}
 		return selectedItem;
 	}
 	catch(...){
-		std::cerr << "An error occurred in InventoryConsole::getItem" << std::endl;
+		LoggerWrapper::Error("An error occurred in InventoryConsole::GetItem");
 		throw 0;
 	}
 }
 
-void InventoryConsole::useItem(Actor* item){
+void InventoryConsole::UseItem(Actor* item){
+	try {
 		if(item != nullptr){
 			item->item->Use(item, player);
 			engine.gameStatus=Engine::NEW_TURN;
 		}
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in InventoryConsole::UseItem");
+		throw 0;
+	}
 }
 
-void InventoryConsole::populateKeyMapping(){
-	char key = 'a';
-	for(int i = 0; i < player->container->size; i++, key++){
-		keyMapping[key] = i;
+void InventoryConsole::PopulateKeyMapping(){
+	try {
+		char key = 'a';
+		for(int i = 0; i < player->container->size; i++, key++){
+			keyMapping[key] = i;
+		}
 	}
-
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in InventoryConsole::PopulateKeyMapping");
+		throw 0;
+	}
 }

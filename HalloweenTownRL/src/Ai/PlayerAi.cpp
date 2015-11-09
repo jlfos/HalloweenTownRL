@@ -9,6 +9,7 @@
 #include "../Engine.hpp"
 #include "../UI/HelpScreen.hpp"
 #include "../UI/LevelUpMenu.hpp"
+#include "../LoggerWrapper.hpp"
 #include "../UI/MonsterLogMenu.hpp"
 #include "../Item/Item.hpp"
 #include "../Tile/TileColors.hpp"
@@ -51,7 +52,7 @@ void PlayerAi::Update(Actor *owner){
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred in PlayerAi::Update" << std::endl;
+		LoggerWrapper::Error("An error occurred in PlayerAi::Update");
 		throw 0;
 	}
 
@@ -66,7 +67,7 @@ void PlayerAi::MoveLeft(Actor *owner){
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred in PlayerAi::MoveLeft" << std::endl;
+		LoggerWrapper::Error("An error occurred in PlayerAi::MoveLeft");
 		throw 0;
 	}
 }
@@ -79,7 +80,7 @@ void PlayerAi::MoveDown(Actor *owner){
 		}
     }
     catch(...){
-		std::cerr << "An error occurred in PlayerAi::MoveDown" << std::endl;
+    	LoggerWrapper::Error("An error occurred in PlayerAi::MoveDown");
 		throw 0;
     }
 }
@@ -93,7 +94,7 @@ void PlayerAi::MoveRight(Actor *owner){
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred in PlayerAi::MoveRight" << std::endl;
+		LoggerWrapper::Error("An error occurred in PlayerAi::MoveRight");
 		throw 0;
 	}
 }
@@ -106,7 +107,7 @@ void PlayerAi::MoveUp(Actor *owner){
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred in PlayerAi::MoveUp" << std::endl;
+		LoggerWrapper::Error("An error occurred in PlayerAi::MoveUp");
 		throw 0;
 	}
 }
@@ -117,7 +118,7 @@ void PlayerAi::LoadMenu(){
 		engine.Load();
 	}
 	catch(...){
-		std::cerr << "An error occurred in PlayerAi::LoadMenu" << std::endl;
+		LoggerWrapper::Error("An error occurred in PlayerAi::LoadMenu");
 		throw 0;
 	}
 }
@@ -158,7 +159,7 @@ bool PlayerAi::MoveOrAttack(Actor *owner, int targetX, int targetY){
 		return true;
 	}
 	catch(...){
-		std::cerr << "An error occurred in PlayerAi::MoveOrAttack" << std::endl;
+		LoggerWrapper::Error("An error occurred in PlayerAi::MoveOrAttack");
 		throw 0;
 	}
 }
@@ -184,7 +185,8 @@ void PlayerAi::LevelUpPlayer(Actor* player){
 			player->destructible->IncreaseTotalHealth(10);
 	}
 	catch(...){
-		std::cerr << "An error occured in PlayerAi::LevelUpPlayer" << std::endl;
+		LoggerWrapper::Error("An error occured in PlayerAi::LevelUpPlayer");
+		throw 0;
 	}
 
 }
@@ -194,9 +196,15 @@ bool PlayerAi::LevelUpOccurred(){
 }
 
 
-void PlayerAi::showHelp() {
-	HelpScreen help;
-	help.Show();
+void PlayerAi::ShowHelp() {
+	try {
+		HelpScreen help;
+		help.Show();
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in ShowHelp");
+		throw 0;
+	}
 }
 
 void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
@@ -249,7 +257,7 @@ void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 			break;
 			case '?' : //view help screen
 			{
-				showHelp();
+				ShowHelp();
 			}
 			break;
 			case 'm' :
@@ -263,7 +271,7 @@ void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred in PlayerAi::handleActionKey" << std::endl;
+		LoggerWrapper::Error("An error occurred in PlayerAi::handleActionKey");
 		throw 0;
 	}
 }
@@ -319,7 +327,8 @@ void PlayerAi::PlayerLook(Actor* player){
 		}
 	}
 	catch(...){
-		std::cerr << "An error occured in PlayerAi::PlayerLook" << std::endl;
+		LoggerWrapper::Error("An error occured in PlayerAi::PlayerLook");
+		throw 0;
 	}
 }
 
@@ -338,7 +347,7 @@ void PlayerAi::viewLog(){
 			}
 	}
 	catch(...){
-		std::cerr << "An error occurred in PlayerAi::viewLog" << std::endl;
+		LoggerWrapper::Error("An error occurred in PlayerAi::viewLog");
 		throw 0;
 	}
 }
@@ -347,7 +356,7 @@ void PlayerAi::Load(TCODZip &zip){
 	try{
 	}
 	catch(...){
-		std::cerr << "An error occurred in PlayerAi::load" << std::endl;
+		LoggerWrapper::Error("An error occurred in PlayerAi::load");
 		throw 0;
 	}
 }
@@ -357,7 +366,7 @@ void PlayerAi::Save(TCODZip &zip){
 		zip.putInt(PLAYER);
 	}
 	catch(...){
-		std::cerr << "An error occurred in PlayerAi::save" << std::endl;
+		LoggerWrapper::Error("An error occurred in PlayerAi::save");
 		throw 0;
 	}
 }

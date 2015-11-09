@@ -4,6 +4,7 @@
  *  Created on: Jun 30, 2015
  */
 #include <iostream>
+#include "../LoggerWrapper.hpp"
 #include "MonsterLogMenu.hpp"
 MonsterLogMenu::MonsterLogMenu(){
 
@@ -20,7 +21,7 @@ void MonsterLogMenu::PopulateMenu(bool hardMode){
 		AddItem("?????");
 	}
 	catch(...){
-		std::cerr << "An error occurred in MonsterLogMenu::populateMenu" << std::endl;
+		LoggerWrapper::Error("An error occurred in MonsterLogMenu::PopulateMenu");
 	}
 }
 

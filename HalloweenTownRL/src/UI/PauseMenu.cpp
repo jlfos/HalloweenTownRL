@@ -5,6 +5,7 @@
  *      Author: josh
  */
 #include <iostream>
+#include "../LoggerWrapper.hpp"
 #include "MenuUI.hpp"
 #include "PauseMenu.hpp"
 
@@ -26,7 +27,7 @@ void PauseMenu::PopulateMenu(bool saveGameExists){
 
 		}
 		catch(...){
-			std::cerr << "An error occurred with PauseMenu::PopulateMenu"  << std::endl;
+			LoggerWrapper::Error("An error occurred with PauseMenu::PopulateMenu");
 			throw 0;
 		}
 }

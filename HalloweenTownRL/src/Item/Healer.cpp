@@ -4,6 +4,8 @@
 #include "../Actor/Actor.hpp"
 #include "../Destructible/Destructible.hpp"
 #include "Item.hpp"
+#include "../LoggerWrapper.hpp"
+
 Healer::Healer(float amount) : Item(ItemType::HEALER), amount(amount){
 }
 
@@ -22,7 +24,7 @@ bool Healer::Use(Actor *owner, Actor *wearer){
 		return false;
 	}
 	catch(...){
-		std::cerr << "An error occurred with Healer::Use" ;
+		LoggerWrapper::Error("An error occurred with Healer::Use");
 		throw 0;
 	}
 }
@@ -32,7 +34,7 @@ void Healer::Load(TCODZip &zip){
 		amount=zip.getFloat();
 	}
 	catch(...){
-		std::cerr << "An error occurred with Healer::Load"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Healer::Load");
 		throw 0;
 	}
 }
@@ -43,7 +45,7 @@ void Healer::Save(TCODZip &zip){
 		zip.putFloat(amount);
 	}
 	catch(...){
-		std::cerr << "An error occurred with Healer::Save"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Healer::Save");
 		throw 0;
 	}
 }

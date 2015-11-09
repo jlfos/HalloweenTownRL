@@ -1,12 +1,14 @@
 #include <iostream>
+#include "../LoggerWrapper.hpp"
 #include "MenuUI.hpp"
 #include "../Tile/TileColors.hpp"
 
 MenuUI::MenuUI() {
 	try {
 
-	} catch (...) {
-		std::cerr << "An error occurred with Menu::Menu" << std::endl;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred with Menu::Menu");
 		throw 0;
 	}
 }
@@ -14,8 +16,9 @@ MenuUI::MenuUI() {
 MenuUI::~MenuUI() {
 	try {
 		Clear();
-	} catch (...) {
-		std::cerr << "An error occurred with Menu::~Menu" << std::endl;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred with Menu::~Menu");
 		throw 0;
 	}
 }
@@ -23,8 +26,9 @@ MenuUI::~MenuUI() {
 void MenuUI::Clear() {
 	try {
 		items.clear();
-	} catch (...) {
-		std::cerr << "An error occurred with Menu::clear" << std::endl;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred with Menu::Clear");
 		throw 0;
 	}
 }
@@ -32,8 +36,9 @@ void MenuUI::Clear() {
 void MenuUI::AddItem(std::string item) {
 	try {
 		items.push(item);
-	} catch (...) {
-		std::cerr << "An error occurred with Menu::addItem" << std::endl;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred with Menu::addItem");
 		throw 0;
 	}
 }
@@ -88,8 +93,9 @@ std::string MenuUI::Pick() {
 			}
 		}
 		return "NONE";
-	} catch (...) {
-		std::cerr << "An error occurred with Menu::pick" << std::endl;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred with Menu::pick");
 		throw 0;
 	}
 }

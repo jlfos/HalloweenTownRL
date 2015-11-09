@@ -1,4 +1,5 @@
 #include <iostream>
+#include "LoggerWrapper.hpp"
 #include "Time.hpp"
 
 
@@ -13,13 +14,12 @@ Time::Time(int hour, int minutes){
 		this->minutes = minutes;
 	}
 	catch(...){
-		std::cerr << "An error occurred in Time::Time()" << std::endl;
+		LoggerWrapper::Error("An error occurred in Time::Time()");
 	}
 }
 
 int Time::ElapsedMinutes(Time previousTime){
 	try{
-
 		int tempCurrentHour = hour;
 		int tempPreviousHour = previousTime.GetHour();
 
@@ -31,7 +31,7 @@ int Time::ElapsedMinutes(Time previousTime){
 			tempPreviousHour += 12;
 
 		if(tempPreviousHour>tempCurrentHour){
-			std::cerr << "A previous time cannot be later then a current time" << std::endl;
+			LoggerWrapper::Error("A previous time cannot be later then a current time");
 			throw 0;
 		}
 
@@ -40,17 +40,16 @@ int Time::ElapsedMinutes(Time previousTime){
 		return elapsedTime;
 	}
 	catch(...){
-		std::cerr << "An error occurred in Time::elapsedMinutes()" << std::endl;
+		LoggerWrapper::Error("An error occurred in Time::elapsedMinutes()");
 		throw 0;
 	}
 }
 int Time::GetHour(){
 	try{
 		return hour;
-
 	}
 	catch(...){
-		std::cerr << "An error occurred in Time::getHour()" << std::endl;
+		LoggerWrapper::Error("An error occurred in Time::getHour()");
 		throw 0;
 	}
 }
@@ -59,7 +58,7 @@ int Time::GetMinutes(){
 		return minutes;
 	}
 	catch(...){
-		std::cerr << "An error occurred in Time::getMinutes()" << std::endl;
+		LoggerWrapper::Error("An error occurred in Time::getMinutes()");
 		throw 0;
 	}
 }
@@ -84,7 +83,7 @@ void Time::IncrementMinutes(){
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred in Time::incrementMinutes()" << std::endl;
+		LoggerWrapper::Error("An error occurred in Time::incrementMinutes()");
 		throw 0;
 	}
 }
@@ -104,7 +103,7 @@ const char* Time::c_str(){
 		return total.c_str();
 	}
 	catch(...){
-		std::cerr << "An error occurred in Time::c_str()" << std::endl;
+		LoggerWrapper::Error("An error occurred in Time::c_str()");
 		throw 0;
 	}
 }
@@ -122,7 +121,7 @@ std::string Time::ConvertMinutes(){
 		return result;
 	}
 	catch(...){
-		std::cerr << "An error occurred in Time::convertMinutes" << std::endl;
+		LoggerWrapper::Error("An error occurred in Time::convertMinutes");
 		throw 0;
 	}
 }

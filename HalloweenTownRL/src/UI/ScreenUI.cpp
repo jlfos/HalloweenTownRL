@@ -5,6 +5,7 @@
  *  Created on: Jul 18, 2015
  */
 #include "libtcod.hpp"
+#include "../LoggerWrapper.hpp"
 #include "ScreenUI.hpp"
 
 ScreenUI::ScreenUI() {
@@ -15,7 +16,8 @@ ScreenUI::~ScreenUI(){
 }
 
 void ScreenUI::Show() {
-	int y=1;
+	try {
+		int y=1;
 		TCODConsole::root->clear();
 		float colorCoef=0.4f;
 		for(Message message : (log)) {
@@ -32,15 +34,15 @@ void ScreenUI::Show() {
 			switch (lastKey.vk) {
 			case TCODK_ESCAPE:
 				screeMode = false;
-//				engine.Load();
+		//				engine.Load();
 				break;
 			default:
 				break;
 			}
 		}
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in ScreenUI::Show");
+		throw 0;
+	}
 }
-
-
-
-
-

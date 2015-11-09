@@ -7,6 +7,7 @@
 #include "Destructible/Destructible.hpp"
 #include "Engine.hpp"
 #include "UI/Gui.hpp"
+#include "LoggerWrapper.hpp"
 #include "Maps/CityMapGenerator.hpp"
 #include "Maps/ForestMapGenerator.hpp"
 #include "Maps/MapGenerator.hpp"
@@ -25,6 +26,10 @@
 	const int DEFAULT_MAP_X = 1;
 	const int DEFAULT_MAP_Y = 1;
 
+#ifndef E_LOG
+//#define E_LOG
+#endif
+
 Engine::Engine(int screenWidth, int screenHeight) :
 		gameStatus(STARTUP), fovRadius(15), screenWidth(screenWidth), screenHeight(screenHeight),
 		currentTime(10, 00), incrementTime(false), bossMapX(0), bossMapY(0), playerMapX(0), playerMapY(0),
@@ -41,21 +46,24 @@ Engine::Engine(int screenWidth, int screenHeight) :
 
 
 
-	} catch (...) {
-		std::cerr << "An error occurred with Engine::Engine" << std::endl;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred with Engine::Engine");
 		throw 0;
 	}
 }
 
 void Engine::Init() {
 	try {
-
+#ifdef E_LOG
+		LoggerWrapper::Debug("Initializing Engine");
+#endif
 		player = ActorFactory::CreateHero(DEFAULT_PLAYER_START_X,
 				DEFAULT_PLAYER_START_Y);
 		std::vector<std::vector<Engine::MapType>> mapTypes{
-//				{Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH },
-//				{Engine::MapType::CITY_BOSS , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::FOREST_NORTH },
-//				{Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::FOREST_NORTH },
+				{Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH },
+				{Engine::MapType::CITY_BOSS , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::FOREST_NORTH },
+				{Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::FOREST_NORTH },
 				{Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::ROAD_EW },
 				{Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::FOREST_SOUTH },
 				{Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::CITY , Engine::MapType::FOREST_SOUTH },
@@ -69,14 +77,18 @@ void Engine::Init() {
 		gui->PushMessage(TileColors::red,
 				"Welcome stranger!\nPrepare to perish in the horrors of Halloween Town.");
 		gameStatus = STARTUP;
-	} catch (...) {
-		std::cerr << "An error occurred with Engine::Init" << std::endl;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred with Engine::Init");
 		throw 0;
 	}
 }
 
 std::vector<std::vector<Map*>> *Engine::CreateMaps(std::vector<std::vector<Engine::MapType>> mapTypes) {
 	try {
+#ifdef E_LOG
+		LoggerWrapper::Debug("Creating Maps");
+#endif
 		std::vector<std::vector<Map*>> *maps = new std::vector<std::vector<Map*>>();
 		for(unsigned int i = 0; i<mapTypes.size(); i++)
 		{
@@ -113,9 +125,12 @@ std::vector<std::vector<Map*>> *Engine::CreateMaps(std::vector<std::vector<Engin
 					break;
 				}
 
-
+#ifdef E_LOG
+		LoggerWrapper::Debug("Constructing Map " + std::to_string(i) + " " + std::to_string(j));
+#endif
 				Map* temp = new Map(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, generator);
 				temp->Init();
+
 				if(firstMapFlag)
 					currentMap = temp;
 				(*maps).back().push_back(temp);
@@ -123,16 +138,15 @@ std::vector<std::vector<Map*>> *Engine::CreateMaps(std::vector<std::vector<Engin
 		}
 
 		return maps;
-	} catch (...) {
-		std::cerr << "An error occurred in Engine::CreateMaps" << std::endl;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in Engine::CreateMaps");
 		throw 0;
 	}
 }
 
 void Engine::Term() {
-
 	try {
-
 		//actors.clearAndDelete();
 		if (maps != nullptr) {
 			for (int i = 0; i < WORLD_SIZE_LATITUDE; i++) {
@@ -147,8 +161,9 @@ void Engine::Term() {
 		gui->Clear();
 		Time temp(6, 00);
 		currentTime = temp;
-	} catch (...) {
-		std::cerr << "An error occurred with Engine::Term" << std::endl;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred with Engine::Term");
 		throw 0;
 	}
 }
@@ -179,8 +194,9 @@ void Engine::Save() {
 			gui->Save(zip);
 			zip.saveToFile("game.sav");
 		}
-	} catch (...) {
-		std::cerr << "An error occurred with Engine::Save" << std::endl;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred with Engine::Save");
 		throw 0;
 	}
 }
@@ -206,8 +222,9 @@ void Engine::Load() {
 		else if (menuItem == "Continue") {
 			ContinueGame();
 		}
-	} catch (...) {
-		std::cerr << "An error occurred with Engine::load" << std::endl;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred with Engine::load");
 		throw 0;
 	}
 }
@@ -217,8 +234,9 @@ void Engine::ExitGame() {
 		Save();
 		exit(0);
 
-	} catch (...) {
-		std::cerr << "An error occurred with Engine::exitGame" << std::endl;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred with Engine::exitGame");
 		throw 0;
 	}
 }
@@ -227,8 +245,9 @@ void Engine::NewGame() {
 	try {
 		Term();
 		Init();
-	} catch (...) {
-		std::cerr << "An error occurred with Engine::newGame" << std::endl;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred with Engine::newGame");
 		throw 0;
 	}
 }
@@ -249,7 +268,7 @@ void Engine::ContinueGame() {
 			int tempLongitudeSize = zip.getInt();
 			if (tempLatitudeSize != WORLD_SIZE_LATITUDE
 					|| tempLongitudeSize != WORLD_SIZE_LONGITUDE) {
-				std::cerr << "An error occurred with loading the save file." << std::endl;
+				LoggerWrapper::Error("An error occurred with loading the save file.");
 				return;
 			}
 
@@ -278,8 +297,9 @@ void Engine::ContinueGame() {
 			engine.gui->PauseMenuClear();
 
 		}
-	} catch (...) {
-		std::cerr << "An error occurred with Engine::ContinueGame" << std::endl;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred with Engine::ContinueGame");
 		throw 0;
 	}
 }
@@ -305,33 +325,40 @@ Engine::~Engine() {
 			maps = nullptr;
 		}
 
-	} catch (...) {
-		std::cerr << "An error occurred with Engine::~Engine" << std::endl;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred with Engine::~Engine");
 		throw 0;
 	}
 }
 
-void Engine::bossUpdate() {
-	int xDiffAbs = abs(playerMapX - bossMapX);
-	int yDiffAbs = abs(playerMapY - bossMapY);
-	if(xDiffAbs == 0 && yDiffAbs == 0)
-		return;
-	if (xDiffAbs >= yDiffAbs) {
-		if (bossMapX < playerMapX) {
-			engine.gui->PushMessage(TileColors::lightGrey,
-					"Fate pulls you to the East");
+void Engine::BossUpdate() {
+	try {
+		int xDiffAbs = abs(playerMapX - bossMapX);
+		int yDiffAbs = abs(playerMapY - bossMapY);
+		if(xDiffAbs == 0 && yDiffAbs == 0)
+			return;
+		if (xDiffAbs >= yDiffAbs) {
+			if (bossMapX < playerMapX) {
+				engine.gui->PushMessage(TileColors::lightGrey,
+						"Fate pulls you to the East");
+			} else {
+				engine.gui->PushMessage(TileColors::lightGrey,
+						"Fate pulls you to the West");
+			}
 		} else {
-			engine.gui->PushMessage(TileColors::lightGrey,
-					"Fate pulls you to the West");
+			if (bossMapY < playerMapY) {
+				engine.gui->PushMessage(TileColors::lightGrey,
+						"Fate pulls you to the North");
+			} else {
+				engine.gui->PushMessage(TileColors::lightGrey,
+						"Fate pulls you to the South");
+			}
 		}
-	} else {
-		if (bossMapY < playerMapY) {
-			engine.gui->PushMessage(TileColors::lightGrey,
-					"Fate pulls you to the North");
-		} else {
-			engine.gui->PushMessage(TileColors::lightGrey,
-					"Fate pulls you to the South");
-		}
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in Engine::BossUpdate");
+		throw 0;
 	}
 }
 
@@ -361,8 +388,9 @@ void Engine::Update() {
 			VictoryScreen screen;
 			screen.Show();
 		}
-	} catch (...) {
-		std::cerr << "An error occurred with Engine::Update" << std::endl;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred with Engine::Update");
 		throw 0;
 	}
 }
@@ -383,8 +411,8 @@ void Engine::NextLevel(Map::TileType type) {
 				std::string tooMuchGravity = "You've been walking for what seems like hours. Your shoulders stoop, your arms hang heavy, and you can barely seem to pick up your legs. Every step seems to add another ten-pound weight to your back. Finally you fall to your knees, but you won't stop there. You crawl on, but soon your arms give out. You belly-crawl a few yards more, but then the gravity is so intense you can't lift your chest to breathe. You must turn back.";
 				ConsoleUI description(tooMuchGravity, descriptionWidth, engine.screenWidth/5, engine.screenHeight/5 );
 				description.frame = new ConsoleFrame("Attempt to leave", TileColors::white);
-				description.display();
-				description.flush();
+				description.Display();
+				description.Flush();
 				bool descriptionMode = true;
 				while(descriptionMode){
 					TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
@@ -398,9 +426,9 @@ void Engine::NextLevel(Map::TileType type) {
 					}
 
 				}
-				description.clear();
-				description.display();
-				description.flush();
+				description.Clear();
+				description.Display();
+				description.Flush();
 //				gui->PushMessage(TileColors::red,
 //						"An invisible force keeps you from moving forward");
 				gameStatus = IDLE;
@@ -457,7 +485,7 @@ void Engine::NextLevel(Map::TileType type) {
 			populateFlag = true;
 		}
 
-		bossUpdate();
+		BossUpdate();
 		if(populateFlag)
 			currentMap->PopulateActors();
 		actors = currentMap->actors;
@@ -466,8 +494,9 @@ void Engine::NextLevel(Map::TileType type) {
 		actors.push(player);
 		gameStatus = STARTUP;
 		Update();
-	} catch (...) {
-		std::cerr << "An error occurred with Engine::nextLevel" << std::endl;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred with Engine::nextLevel");
 		throw 0;
 	}
 }
@@ -476,8 +505,9 @@ void Engine::SendToBack(Actor *actor) {
 	try {
 		actors.remove(actor);
 		actors.insertBefore(actor, 0);
-	} catch (...) {
-		std::cerr << "An error occurred with Engine::sendToBack" << std::endl;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred with Engine::sendToBack");
 		throw 0;
 	}
 }
@@ -487,8 +517,6 @@ void Engine::Render() {
 //		TCODSystem::forceFullscreenResolution(800, 400);
 		TCODConsole::root->clear();
 		// draw the map
-
-
 		gui->Render();
 		currentMap->Render();
 		// draw the actors
@@ -503,22 +531,26 @@ void Engine::Render() {
 
 	}
 	catch (...) {
-		std::cerr << "An error occurred with Engine::Render" << std::endl;
+		LoggerWrapper::Error("An error occurred with Engine::Render");
 		throw 0;
 	}
 }
 
-std::string Engine::getItemDescription(std::string name){
-	std::map<std::string, std::string> itemDescriptions;
-	itemDescriptions["knife"] = "A blade and a handle to hold it, what more could you need?";
-	itemDescriptions["nightstick"] = "A short, heavy club often used in law enforcement.";
-	itemDescriptions["kris"] = "A wavy-bladed dagger originating in Southeast Asia said to contain blessings... or curses.";
-	itemDescriptions["tire iron"] = "A useful tool for changing tires made of steel, also useful for bashing in skulls.";
-	itemDescriptions["tree branch"] = "It may just be a chunk of wood, but it's heavy enough to make an effective bludgeon.";
-	itemDescriptions["machete"] = "With a blade longer than a foot, this is great for chopping underbrush.";
-
-	itemDescriptions["medkit"] = "A kit with medical supplies for patching medium injuries";
-	itemDescriptions["baseball bat"] = "Nearly a yard long, this Louisville Slugger is weighted for maximum smashing!";
-	return itemDescriptions[name];
-
+std::string Engine::GetItemDescription(std::string name){
+	try {
+		std::map<std::string, std::string> itemDescriptions;
+		itemDescriptions["knife"] = "A blade and a handle to hold it, what more could you need?";
+		itemDescriptions["nightstick"] = "A short, heavy club often used in law enforcement.";
+		itemDescriptions["kris"] = "A wavy-bladed dagger originating in Southeast Asia said to contain blessings... or curses.";
+		itemDescriptions["tire iron"] = "A useful tool for changing tires made of steel, also useful for bashing in skulls.";
+		itemDescriptions["tree branch"] = "It may just be a chunk of wood, but it's heavy enough to make an effective bludgeon.";
+		itemDescriptions["machete"] = "With a blade longer than a foot, this is great for chopping underbrush.";
+		itemDescriptions["medkit"] = "A kit with medical supplies for patching medium injuries";
+		itemDescriptions["baseball bat"] = "Nearly a yard long, this Louisville Slugger is weighted for maximum smashing!";
+		return itemDescriptions[name];
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in Engine::GetItemDescription");
+		throw 0;
+	}
 }

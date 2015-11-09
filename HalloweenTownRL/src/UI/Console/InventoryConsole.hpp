@@ -18,12 +18,12 @@ class InventoryConsole : public ConsoleUI{
 public :
 	InventoryConsole();
 private:
-	void userInput();
-	Actor* getItem(int itemIndex);
-	void useItem(Actor* item);
+	void UserInput();
+	Actor* GetItem(int itemIndex);
+	void UseItem(Actor* item);
 	Actor* player;
 	std::map<char, int> keyMapping;
-	void populateKeyMapping();
+	void PopulateKeyMapping();
 
 
 };

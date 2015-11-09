@@ -20,10 +20,10 @@ public:
 	ConsoleUI(std::vector<Message> messages, int width, int startX, int startY);
 	ConsoleUI(std::vector<ConsoleLine*> consoleLines, int width, int startX, int startY);
 	~ConsoleUI();
-	void display();
-	void flush();
-	void setConsoleLines(std::vector<ConsoleLine*> consoleLines);
-	void clear();
+	void Display();
+	void Flush();
+	void SetConsoleLines(std::vector<ConsoleLine*> consoleLines);
+	void Clear();
 	ConsoleFrame* frame;
 	ConsoleSelection* selection;
 private:

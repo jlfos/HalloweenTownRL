@@ -5,6 +5,7 @@
 #include "../Engine.hpp"
 #include "../UI/Gui.hpp"
 #include "Destructible.hpp"
+#include "../LoggerWrapper.hpp"
 #include "PlayerDestructible.hpp"
 #include "../Tile/TileColors.hpp"
 
@@ -21,7 +22,7 @@ void PlayerDestructible::Die(Actor *owner){
 		engine.gameStatus=Engine::DEFEAT;
 	}
 	catch(...){
-		std::cerr << "An error occurred in PlayerDestructible::Die";
+		LoggerWrapper::Error("An error occurred in PlayerDestructible::Die");
 		throw 0;
 	}
 }
@@ -32,7 +33,7 @@ void PlayerDestructible::Save(TCODZip &zip){
 		Destructible::Save(zip);
 	}
 	catch(...){
-		std::cerr << "An error occurred in PlayerDestructible::Save" << std::endl;
+		LoggerWrapper::Error("An error occurred in PlayerDestructible::Save");
 		throw 0;
 	}
 }
@@ -42,7 +43,7 @@ void PlayerDestructible::Load(TCODZip &zip){
 		Destructible::Load(zip);
 	}
 	catch(...){
-		std::cerr << "An error occurred in PlayerDestructible::Load" << std::endl;
+		LoggerWrapper::Error("An error occurred in PlayerDestructible::Load");
 		throw 0;
 	}
 }

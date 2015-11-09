@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include "libtcod.hpp"
+#include "../../LoggerWrapper.hpp"
 #include "Message.hpp"
 #include "../../Tile/TileColors.hpp"
 Message::Message(std::string text) : Message(text, TileColors::white) {
@@ -41,7 +42,7 @@ TCODColor Message::getForegroundColor(){
 }
 
 
-std::vector<Message> Message::wordWrapText(std::string text, unsigned int lineSize){
+std::vector<Message> Message::WordWrapText(std::string text, unsigned int lineSize){
 	try{
 		std::vector<Message> messages;
 		std::string buffer = "";
@@ -89,7 +90,7 @@ std::vector<Message> Message::wordWrapText(std::string text, unsigned int lineSi
 		return messages;
 	}
 	catch(...){
-		std::cerr << "An error occurred in ConsoleUI::wordWrapText" << std::endl;
+		LoggerWrapper::Error("An error occurred in ConsoleUI::WordWrapText");
 		throw 0;
 	}
 

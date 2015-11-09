@@ -6,6 +6,7 @@
 #include <iostream>
 #include "libtcod.hpp"
 #include "Lightsource.hpp"
+#include "LoggerWrapper.hpp"
 
 Lightsource::Lightsource(int radius): radius(radius){
 
@@ -18,7 +19,7 @@ void Lightsource::Load(TCODZip &zip){
 		radius = zip.getInt();
 	}
 	catch(...){
-		std::cerr << "An error occurred with Lightsource::Load"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Lightsource::Load");
 		throw 0;
 	}
 }
@@ -29,29 +30,29 @@ void Lightsource::Save(TCODZip &zip){
 		zip.putInt(radius);
 	}
 	catch(...){
-		std::cerr << "An error occurred with Lightsource::Save"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Lightsource::Save");
 		throw 0;
 	}
 }
 
 
-int Lightsource::getRadius(){
+int Lightsource::GetRadius(){
 	try{
 		return radius;
 	}
 	catch(...){
-		std::cerr << "An error occurred with Lightsource::getRadius"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Lightsource::GetRadius");
 		throw 0;
 	}
 }
 
 
-void Lightsource::setRadius(int radius){
+void Lightsource::SetRadius(int radius){
 	try{
 		this->radius = radius;
 	}
 	catch(...){
-		std::cerr << "An error occurred with Lightsource::getRadius"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Lightsource::getRadius");
 		throw 0;
 	}
 }

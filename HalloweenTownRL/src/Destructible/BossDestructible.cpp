@@ -10,6 +10,7 @@
 #include "Destructible.hpp"
 #include "../Engine.hpp"
 #include "../UI/Gui.hpp"
+#include "../LoggerWrapper.hpp"
 #include "../Tile/TileColors.hpp"
 
 BossDestructible::BossDestructible(float maxHp, float defense, int exp, std::string corpseName) :
@@ -23,7 +24,7 @@ void BossDestructible::Die(Actor* owner){
 		engine.gameStatus=Engine::VICTORY;
 	}
 	catch(...){
-		std::cerr << "An error occurred in BossDestructible::Die";
+		LoggerWrapper::Error("An error occurred in BossDestructible::Die");
 		throw 0;
 	}
 }
@@ -34,7 +35,7 @@ void BossDestructible::Save(TCODZip &zip){
 		Destructible::Save(zip);
 	}
 	catch(...){
-		std::cerr << "An error occurred in BossDestructible::Save" << std::endl;
+		LoggerWrapper::Error("An error occurred in BossDestructible::Save");
 		throw 0;
 	}
 }
@@ -44,7 +45,7 @@ void BossDestructible::Load(TCODZip &zip){
 		Destructible::Load(zip);
 	}
 	catch(...){
-		std::cerr << "An error occurred in BossDestructible::Load" << std::endl;
+		LoggerWrapper::Error("An error occurred in BossDestructible::Load");
 		throw 0;
 	}
 }

@@ -4,21 +4,21 @@
  *  Created on: Jul 26, 2015
  */
 
-#include <iostream>
+#include "../LoggerWrapper.hpp"
 #include "Point.hpp"
 
 Point::Point(int x, int y){
 
 	if(x < 0 && y < 0){
-		std::cerr << "X and Y are both negative. Negative values are not legal for the Point constructor." << std::endl;
+		LoggerWrapper::Error("X and Y are both negative. Negative values are not legal for the Point constructor.");
 		throw 0;
 	}
 	else if(x < 0){
-		std::cerr << "X is negative. Negative values are not legal for the Point constructor." << std::endl;
+		LoggerWrapper::Error("X is negative. Negative values are not legal for the Point constructor.");
 		throw 0;
 	}
 	else if(y < 0){
-		std::cerr << "Y is negative. Negative values are not legal for the Point constructor." << std::endl;
+		LoggerWrapper::Error("Y is negative. Negative values are not legal for the Point constructor.");
 		throw 0;
 	}
 	else{

@@ -1,6 +1,5 @@
-#include <iostream>
 #include "Engine.hpp"
-
+#include "LoggerWrapper.hpp"
 
 Engine engine(80, 57);
 
@@ -17,7 +16,7 @@ int main() {
 		return 0;
 	}
 	catch(...){
-		std::cerr << "An error occurred with main()"  << std::endl;
+		LoggerWrapper::Error("An error occurred with main()");
 		throw 0;
 	}
 }

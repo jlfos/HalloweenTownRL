@@ -5,7 +5,7 @@
 #include "../Engine.hpp"
 #include "Healer.hpp"
 #include "Item.hpp"
-
+#include "../LoggerWrapper.hpp"
 Item::Item(ItemType type){
 	this->type = type;
 }
@@ -20,7 +20,7 @@ bool Item::Pick(Actor *owner, Actor *wearer){
 		return false;
 	}
 	catch(...){
-		std::cerr << "An error occurred with Item::Pick"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Item::Pick");
 		throw 0;
 	}
 }
@@ -38,7 +38,7 @@ bool Item::Use(Actor *owner, Actor *wearer){
 		return false;
 	}
 	catch(...){
-		std::cerr << "An error occurred with Item::Use"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Item::Use");
 		throw 0;
 	}
 }
@@ -55,7 +55,7 @@ Item *Item::Create(TCODZip &zip){
 		return Item;
 	}
 	catch(...){
-		std::cerr << "An error occurred with Item::Create"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Item::Create");
 		throw 0;
 	}
 }

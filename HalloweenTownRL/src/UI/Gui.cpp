@@ -13,13 +13,13 @@
 #include "../Destructible/Destructible.hpp"
 #include "../Engine.hpp"
 #include "Gui.hpp"
+#include "../LoggerWrapper.hpp"
 #include "Console/Message.hpp"
 #include "../Ai/PlayerAi.hpp"
 #include "../Tile/TileColors.hpp"
 
 static const int PANEL_HEIGHT=7;
 static const int BAR_WIDTH=20;
-static const int MSG_X=BAR_WIDTH+2;
 static const int MSG_HEIGHT=47;
 
 Gui::Gui() :log(new std::deque<Message>()) {
@@ -31,7 +31,7 @@ Gui::Gui() :log(new std::deque<Message>()) {
 
 	}
 	catch(...){
-		std::cerr << "An error occurred with Gui::Gui"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Gui::Gui");
 		throw 0;
 	}
 
@@ -46,7 +46,7 @@ Gui::~Gui() {
 		log->clear();
 	}
 	catch(...){
-		std::cerr << "An error occurred with Gui::~Gui"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Gui::~Gui");
 		throw 0;
 	}
 }
@@ -96,8 +96,8 @@ void Gui::Render() {
 		con->print(equipment, 2, str.c_str());
 		str = "Ammo: (N/A)";
 		con->print(equipment, 3, str.c_str());
-		activeLog->setConsoleLines(ConsoleLine::createConsoleLines(getActiveLog()));
-		activeLog->display();
+		activeLog->SetConsoleLines(ConsoleLine::CreateConsoleLines(GetActiveLog()));
+		activeLog->Display();
 
 		// blit the GUI console on the root console
 		TCODConsole::blit(con,0,0,engine.screenWidth,PANEL_HEIGHT,
@@ -110,7 +110,7 @@ void Gui::Render() {
 //		TCODConsole::root->setChar(2, engine.screenHeight-3, TileCharacters::LEFT_ARROW);
 	}
 	catch(...){
-		std::cerr << "An error occurred with Gui::render"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Gui::render");
 		throw 0;
 	}
 }
@@ -121,11 +121,11 @@ void Gui::RenderBar(int x, int y, int width, const char *name,
 
 	try{
 		std::string format = "%s : %g/%g";
-		if(name == "Level 1"){
+		if(strcmp(name, "Level 1") == 0){
 			format = "Level 1";
 
 		}
-		if(name == "Flashlight"){
+		if(strcmp(name ,"Flashlight") == 0){
 			format = "Flashlight";
 		}
 		// fill the background
@@ -152,7 +152,7 @@ void Gui::RenderBar(int x, int y, int width, const char *name,
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred with Gui::renderBar"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Gui::renderBar");
 		throw 0;
 	}
 }
@@ -162,7 +162,7 @@ void Gui::Clear(){
 		log->clear();
 	}
 	catch(...){
-		std::cerr << "An error occurred with Gui::clear"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Gui::clear");
 		throw 0;
 	}
 }
@@ -179,7 +179,7 @@ void Gui::Save(TCODZip &zip){
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred with Gui::save"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Gui::save");
 		throw 0;
 	}
 }
@@ -195,7 +195,7 @@ void Gui::Load(TCODZip &zip){
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred with Gui::load"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Gui::load");
 		throw 0;
 	}
 }
@@ -205,12 +205,12 @@ std::string Gui::PauseMenuPick() {
 		if(menu)
 			return menu->Pick();
 		else{
-			std::cerr << "You attempted to call Pick on an uninitialized PauseMenu" << std::endl;
+			LoggerWrapper::Error("You attempted to call Pick on an uninitialized PauseMenu");
 			throw 0;
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred in PauseMenuPick()" << std::endl;
+		LoggerWrapper::Error("An error occurred in PauseMenuPick()");
 		throw 0;
 	}
 }
@@ -220,12 +220,12 @@ void Gui::PauseMenuClear() {
 		if(menu)
 			return menu->Clear();
 		else{
-			std::cerr << "You attempted to call Clear on an uninitialized PauseMenu" << std::endl;
+			LoggerWrapper::Error("You attempted to call Clear on an uninitialized PauseMenu");
 			throw 0;
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred in PauseMenuClear()" << std::endl;
+		LoggerWrapper::Error("An error occurred in PauseMenuClear()");
 		throw 0;
 	}
 
@@ -255,7 +255,7 @@ void Gui::RenderMouseLook() {
 		con->print(1,0,buf);
 	}
 	catch(...){
-		std::cerr << "An error occurred with Gui::renderMouseLook"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Gui::renderMouseLook");
 		throw 0;
 	}
 }
@@ -292,49 +292,79 @@ void Gui::PushMessage(const TCODColor &col, const char *text, ...) {
 		} while ( lineEnd );
 	}
 	catch(...){
-		std::cerr << "An error occurred with Gui::message"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Gui::message");
 		throw 0;
 	}
 }
 
 void Gui::ShowLog(){
-	// draw the message log
-	int y=1;
-	TCODConsole::root->clear();
+	try {
+		// draw the message log
+		int y=1;
+		TCODConsole::root->clear();
 
-	for(Message message : (*log)) {
-		TCODConsole::root->setDefaultForeground(message.getBackgroundColor() * colorCoef);
-		TCODConsole::root->print(1, y, message.getText().c_str(), message.getBackgroundColor());
-//		TCODConsole::root->setChar(1, y, 32);
-		y++;
-		if ( colorCoef < 1.0f ) {
-			colorCoef+=0.3f;
+		for(Message message : (*log)) {
+			TCODConsole::root->setDefaultForeground(message.getBackgroundColor() * colorCoef);
+			TCODConsole::root->print(1, y, message.getText().c_str(), message.getBackgroundColor());
+		//		TCODConsole::root->setChar(1, y, 32);
+			y++;
+			if ( colorCoef < 1.0f ) {
+				colorCoef+=0.3f;
+			}
 		}
+		TCODConsole::root->flush();
 	}
-	TCODConsole::root->flush();
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in Gui::ShowLog");
+		throw 0;
+	}
 }
 
 void Gui::PopulatePauseMenu(bool saveFileExists) {
-	if(menu)
-		menu->PopulateMenu(saveFileExists);
-	else
-		menu = new PauseMenu(saveFileExists);
-}
-
-void Gui::setCharAdjusted(int x, int y, int c) {
-	TCODConsole::root->setChar(x, y + 7, c);
-}
-
-void Gui::setForegroundAdjusted(int x, int y, TCODColor color) {
-	TCODConsole::root->setCharForeground(x, y + 7, color);
-}
-
-std::vector<Message> Gui::getActiveLog() {
-	std::vector<Message> activeLog;
-//	int i = 0;
-	for(unsigned int i = 0; i < 5 && i < log->size() ; i++){
-
-		activeLog.push_back(log->at(i));
+	try {
+		if(menu)
+			menu->PopulateMenu(saveFileExists);
+		else
+			menu = new PauseMenu(saveFileExists);
 	}
-	return activeLog;
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in Gui::PopulatePauseMenu");
+		throw 0;
+	}
+}
+
+void Gui::SetCharAdjusted(int x, int y, int c) {
+	try {
+		TCODConsole::root->setChar(x, y + 7, c);
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in Gui::SetCharAdjusted");
+		throw 0;
+	}
+}
+
+void Gui::SetForegroundAdjusted(int x, int y, TCODColor color) {
+	try {
+		TCODConsole::root->setCharForeground(x, y + 7, color);
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in Gui::SetForegroundAdjusted");
+		throw 0;
+	}
+}
+
+std::vector<Message> Gui::GetActiveLog() {
+	try {
+		std::vector<Message> activeLog;
+
+		for(unsigned int i = 0; i < 5 && i < log->size() ; i++){
+
+			activeLog.push_back(log->at(i));
+		}
+		return activeLog;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in Gui::GetActiveLog");
+		throw 0;
+	}
 }

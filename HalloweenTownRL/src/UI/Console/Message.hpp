@@ -20,7 +20,7 @@ public:
 	std::string getText();
 	TCODColor getBackgroundColor();
 	TCODColor getForegroundColor();
-	static std::vector<Message> wordWrapText(std::string, unsigned int lineSize);
+	static std::vector<Message> WordWrapText(std::string, unsigned int lineSize);
 private:
 	std::string text;
 	TCODColor backgroundColor;

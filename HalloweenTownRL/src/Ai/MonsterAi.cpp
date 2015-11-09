@@ -5,6 +5,7 @@
 #include "../Attacker.hpp"
 #include "../Destructible/Destructible.hpp"
 #include "../Engine.hpp"
+#include "../LoggerWrapper.hpp"
 #include "MonsterAi.hpp"
 
 
@@ -35,7 +36,7 @@ void MonsterAi::Update(Actor *owner){
 	   }
 	}
 	catch(...){
-		std::cerr << "An error occurred in MonsterAi::update" << std::endl;
+		LoggerWrapper::Error("An error occurred in MonsterAi::update");
 		throw 0;
 	}
 }
@@ -74,7 +75,7 @@ void MonsterAi::MoveOrAttack(Actor *owner, int targetX, int targetY){
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred in MonsterAi::moveOrAttack" << std::endl;
+		LoggerWrapper::Error("An error occurred in MonsterAi::moveOrAttack");
 		throw 0;
 	}
 }
@@ -84,7 +85,7 @@ void MonsterAi::Load(TCODZip &zip){
 		moveCount=zip.getInt();
 	}
 	catch(...){
-		std::cerr << "An error occurred in MonsterAi::load" << std::endl;
+		LoggerWrapper::Error("An error occurred in MonsterAi::load");
 		throw 0;
 	}
 }
@@ -95,7 +96,7 @@ void MonsterAi::Save(TCODZip &zip){
 		zip.putInt(moveCount);
 	}
 	catch(...){
-		std::cerr << "An error occurred in MonsterAi::save" << std::endl;
+		LoggerWrapper::Error("An error occurred in MonsterAi::save");
 		throw 0;
 	}
 }

@@ -5,6 +5,7 @@
  */
 #include <vector>
 #include "ConsoleLine.hpp"
+#include "../../LoggerWrapper.hpp"
 #include "Message.hpp"
 #include "Rectangle.hpp"
 
@@ -27,13 +28,19 @@ std::vector<Rectangle> ConsoleLine::getRectangle(){
 /**
  * Takes a vector of messages and returns a vector of consoleline pointers
  */
-std::vector<ConsoleLine*> ConsoleLine::createConsoleLines(std::vector<Message> messages){
-	std::vector<ConsoleLine*> consoleLines;
-	for(Message m : messages){
-		ConsoleLine* cl = new ConsoleLine(m);
-		consoleLines.push_back(cl);
+std::vector<ConsoleLine*> ConsoleLine::CreateConsoleLines(std::vector<Message> messages){
+	try {
+		std::vector<ConsoleLine*> consoleLines;
+		for(Message m : messages){
+			ConsoleLine* cl = new ConsoleLine(m);
+			consoleLines.push_back(cl);
+		}
+		return consoleLines;
 	}
-	return consoleLines;
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in ConsoleLine::CreateConsoleLines(vector)");
+		throw 0;
+	}
 
 }
 
@@ -41,7 +48,13 @@ std::vector<ConsoleLine*> ConsoleLine::createConsoleLines(std::vector<Message> m
  * Takes a string of text, word wraps it (via Message::wordWrapText) and returns a vector
  * of consoleline pointers.
  */
-std::vector<ConsoleLine*> ConsoleLine::createConsoleLines(std::string text, unsigned int lineSize) {
-	std::vector<Message> messages = Message::wordWrapText(text, lineSize);
-	return createConsoleLines(messages);
+std::vector<ConsoleLine*> ConsoleLine::CreateConsoleLines(std::string text, unsigned int lineSize) {
+	try {
+		std::vector<Message> messages = Message::WordWrapText(text, lineSize);
+		return CreateConsoleLines(messages);
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in ConsoleLine::CreateConsoleLines(text, int)");
+		throw 0;
+	}
 }

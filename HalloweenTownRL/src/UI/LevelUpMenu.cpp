@@ -7,14 +7,21 @@
 #include <iostream>
 
 #include "LevelUpMenu.hpp"
+#include "../LoggerWrapper.hpp"
 #include "MenuUI.hpp"
 
 LevelUpMenu::LevelUpMenu(){
-	Clear();
+	try {
+		Clear();
 
-	SetHeader("You leveled up! Pick an attribute to increase:");
-	AddItem("Strength");
-	AddItem("Constitution");
-	AddItem("Agility");
+		SetHeader("You leveled up! Pick an attribute to increase:");
+		AddItem("Strength");
+		AddItem("Constitution");
+		AddItem("Agility");
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in LevelUpMenu::LevelUpMenu()");
+		throw 0;
+	}
 }
 

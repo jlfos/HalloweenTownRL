@@ -13,6 +13,11 @@
 const float fogOfWarModifer = 0.1;
 const float edgeOfVision = 0.2;
 
+#ifndef M_LOG
+//#define M_LOG
+#endif
+
+
 Map::Map(int width, int height) :
 		width(width), height(height), tiles(width * height, Tile()) {
 	try{
@@ -24,7 +29,7 @@ Map::Map(int width, int height) :
 		actors = new TCODList<Actor>();
 	}
 	catch(...){
-		std::cerr << "An error occurred with Map::Map(int, int)"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Map::Map(int, int)");
 		throw 0;
 	}
 }
@@ -40,7 +45,7 @@ Map::Map(int width, int height, MapGenerator* generator):
 		actors = new TCODList<Actor>();
 	}
 	catch(...){
-		std::cerr << "An error occurred with Map::Map(int, int, MapGenerator)"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Map::Map(int, int, MapGenerator)");
 		throw 0;
 	}
 
@@ -48,7 +53,9 @@ Map::Map(int width, int height, MapGenerator* generator):
 
 void Map::Init() {
 	try{
-
+#ifdef M_LOG
+		LoggerWrapper::Debug("Initializing Map");
+#endif
 		if(rng== nullptr)
 			rng = new TCODRandom(seed, TCOD_RNG_MT);
 
@@ -59,7 +66,6 @@ void Map::Init() {
 			map = generator->Generate(this, true);
 			generator->PopulateActors(this);
 
-
 			for(Actor *actor : actors){
 				if(actor->lightsource!=nullptr){
 					computeLight(actor, true);
@@ -68,7 +74,7 @@ void Map::Init() {
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred with Map::Init"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Map::Init");
 		throw 0;
 	}
 }
@@ -105,19 +111,26 @@ ActorFactory::EnemyDifficulty Map::GetDifficulty(){
 		return current;
 	}
 	catch(...){
-		std::cerr << "An error occurred in Map::GetDifficulty" << std::endl;
+		LoggerWrapper::Error("An error occurred in Map::GetDifficulty");
 		throw 0;
 	}
 }
 
+int Map::GetCharacter(int x, int y){
+	return tiles.at(x + y * 80).character;
+}
 
 void Map::PopulateActors(){
 	try{
+#ifdef M_LOG
+		LoggerWrapper::Debug("Populating actors");
+#endif
 		if(generator)
 			generator->PopulateActors(this);
 	}
 	catch(...){
-		std::cerr << "An error occurred in Map::PopulateActors()" << std::endl;
+		LoggerWrapper::Error("An error occurred in Map::PopulateActors()");
+		throw 0;
 	}
 }
 
@@ -134,7 +147,7 @@ void Map::Save(TCODZip &zip) {
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred with Map::Save"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Map::Save");
 		throw 0;
 	}
 }
@@ -150,7 +163,6 @@ void Map::TimeLastSeen(Time* time){
 
 void Map::Load(TCODZip &zip) {
 	try{
-
 		seed = zip.getInt();
 		rng = new TCODRandom(seed, TCOD_RNG_MT);
 		map = generator->Generate(this, false);
@@ -166,7 +178,7 @@ void Map::Load(TCODZip &zip) {
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred with Map::Load"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Map::Load");
 		throw 0;
 	}
 }
@@ -185,7 +197,7 @@ Map::~Map() {
 		actors.clearAndDelete();
 	}
 	catch(...){
-		std::cerr << "An error occurred with Map::~Map"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Map::~Map");
 		throw 0;
 	}
 }
@@ -212,7 +224,7 @@ Map::TileType Map::GetTileType(int x, int y) const {
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred with Map::IsWall"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Map::IsWall");
 		throw 0;
 	}
 }
@@ -222,7 +234,7 @@ int Map::GetWidth(){
 		return width;
 	}
 	catch(...){
-		std::cerr << "An error occurred in Map::GetWidth" << std::endl;
+		LoggerWrapper::Error("An error occurred in Map::GetWidth");
 		throw 0;
 	}
 }
@@ -232,7 +244,7 @@ int Map::GetHeight(){
 		return height;
 	}
 	catch(...){
-		std::cerr << "An error occurred in Map::GetHeight" << std::endl;
+		LoggerWrapper::Error("An error occurred in Map::GetHeight");
 		throw 0;
 	}
 }
@@ -246,7 +258,7 @@ void Map::SetTileProperties(int tileIndex, TCODColor visible, int character){
 		tiles.at(tileIndex).character = character;
 	}
 	catch(...){
-		std::cerr << "An error occurred in Map::SetTileProperties" << std::endl;
+		LoggerWrapper::Error("An error occurred in Map::SetTileProperties");
 		throw 0;
 	}
 
@@ -257,27 +269,22 @@ void Map::SetTileProperties(Point point, TCODColor visible, int character) {
 		SetTileProperties((point.getTileIndex(80)), visible, character);
 	}
 	catch(...){
-		std::cerr << "An error occurred in Map::SetTileProperties" << std::endl;
+		LoggerWrapper::Error("An error occurred in Map::SetTileProperties");
 		throw 0;
 	}
 }
 
 
-int Map::GetCharacter(int x, int y){
-	return tiles.at(x + y * 80).character;
-}
-
 
 bool Map::TileHasBeenSet(int tileIndex){
 	try{
-		int charcTemp = tiles.at(tileIndex).character;
 		if(tiles.at(tileIndex).character == TileCharacters::Default::RAINBOW)
 			return false;
 		else
 			return true;
 	}
 	catch(...){
-		std::cerr << "An error occurred in Map::TileHasBeenSet" << std::endl;
+		LoggerWrapper::Error("An error occurred in Map::TileHasBeenSet");
 		throw 0;
 	}
 
@@ -289,7 +296,7 @@ bool Map::TileHasBeenSet(Point point) {
 		return TileHasBeenSet(point.getTileIndex(80));
 	}
 	catch(...){
-		std::cerr << "An error occurred in Map::TileHasBeenSet" << std::endl;
+		LoggerWrapper::Error("An error occurred in Map::TileHasBeenSet");
 		throw 0;
 	}
 }
@@ -308,7 +315,7 @@ bool Map::CanWalk(int x, int y) const {
 		return true;
 	}
 	catch(...){
-		std::cerr << "An error occurred with Map::CanWalk"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Map::CanWalk");
 		throw 0;
 	}
 }
@@ -318,7 +325,7 @@ bool Map::IsExplored(int x, int y) const {
 		return tiles.at(x + y * width).explored;
 	}
 	catch(...){
-		std::cerr << "An error occurred with Map::IsExplored"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Map::IsExplored");
 		throw 0;
 	}
 }
@@ -335,7 +342,7 @@ bool Map::IsInFov(int x, int y) {
 		return false;
 	}
 	catch(...){
-		std::cerr << "An error occurred with Map::IsInFov"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Map::IsInFov");
 		throw 0;
 	}
 
@@ -346,7 +353,7 @@ void Map::ComputeFov()  {
 		map->computeFov(engine.player->x, engine.player->y, engine.fovRadius);
 	}
 	catch(...){
-		std::cerr << "An error occurred with Map::ComputeFov"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Map::ComputeFov");
 		throw 0;
 	}
 }
@@ -356,18 +363,18 @@ void Map::Render() {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				 if (IsInFov(x, y)) {
-					engine.gui->setCharAdjusted(x, y, tiles.at(x + y * width).character);
-					engine.gui->setForegroundAdjusted(x, y, tiles.at(x + y * width).visibleColor * tiles.at(x + y * width).visibility);
+					engine.gui->SetCharAdjusted(x, y, tiles.at(x + y * width).character);
+					engine.gui->SetForegroundAdjusted(x, y, tiles.at(x + y * width).visibleColor * tiles.at(x + y * width).visibility);
 				}
 				else if (IsExplored(x, y)) {
-					engine.gui->setCharAdjusted(x, y, tiles.at(x + y * width).character);
-					engine.gui->setForegroundAdjusted(x, y, tiles.at(x + y * width).visibleColor * fogOfWarModifer);
+					engine.gui->SetCharAdjusted(x, y, tiles.at(x + y * width).character);
+					engine.gui->SetForegroundAdjusted(x, y, tiles.at(x + y * width).visibleColor * fogOfWarModifer);
 				}
 			}
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred with Map::Render"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Map::Render");
 		throw 0;
 	}
 
@@ -401,17 +408,17 @@ void Map::computeLight(Actor* owner, bool isVisible, int radius){
 					}
 			}
 			else{
-				std::cerr << "Lightsource cannot be null" << std::endl;
+				LoggerWrapper::Error("Lightsource cannot be null");
 				throw 0;
 			}
 		}
 		else{
-			std::cerr << "Owner cannot be null" << std::endl;
+			LoggerWrapper::Error("Owner cannot be null");
 			throw 0;
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred in Map::computeLight"  << std::endl;
+		LoggerWrapper::Error("An error occurred in Map::computeLight");
 		throw 0;
 	}
 }
@@ -420,14 +427,14 @@ void Map::computeLight(Actor* owner, bool isVisible, int radius){
 void Map::computeLight(Actor* owner, bool isVisible){
 	try{
 		if(owner->lightsource)
-			computeLight(owner, isVisible, owner->lightsource->getRadius());
+			computeLight(owner, isVisible, owner->lightsource->GetRadius());
 		else{
-			std::cerr << "You cannot computeLight on an actor that is not a lightsource" << std::endl;
+			LoggerWrapper::Error("You cannot computeLight on an actor that is not a lightsource");
 			throw 0;
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred in Map::computeLight"  << std::endl;
+		LoggerWrapper::Error("An error occurred in Map::computeLight");
 		throw 0;
 	}
 }
@@ -443,7 +450,7 @@ void Map::computeNonplayerLights(){
 
 	}
 	catch(...){
-		std::cerr << "An error occurred in Map::computeLights"  << std::endl;
+		LoggerWrapper::Error("An error occurred in Map::computeLights");
 		throw 0;
 	}
 }
@@ -455,7 +462,7 @@ float Map::getTileVisibility(int x, int y){
 		return tiles.at(x + y * width).visibility;
 	}
 	catch(...){
-		std::cerr << "An error occurred in Map::getTileVisibility" << std::endl;
+		LoggerWrapper::Error("An error occurred in Map::getTileVisibility");
 		throw 0;
 	}
 }

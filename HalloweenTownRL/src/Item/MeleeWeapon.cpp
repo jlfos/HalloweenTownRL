@@ -4,9 +4,6 @@
  *  Created on: Jul 1, 2015
  */
 
-
-
-
 #include <iostream>
 #include "MeleeWeapon.hpp"
 #include "../Ai/Ai.hpp"
@@ -16,6 +13,7 @@
 #include "../Engine.hpp"
 #include "../UI/Gui.hpp"
 #include "Item.hpp"
+#include "../LoggerWrapper.hpp"
 #include "../Tile/TileColors.hpp"
 MeleeWeapon::MeleeWeapon(float amount) : Item(ItemType::MELEE_WEAPON), amount(amount){
 
@@ -36,7 +34,7 @@ bool MeleeWeapon::Use(Actor *owner, Actor *wearer){
 		return false;
 	}
 	catch(...){
-		std::cerr << "An error occurred with MeleeWeapon::Use" ;
+		LoggerWrapper::Error("An error occurred with MeleeWeapon::Use");
 		throw 0;
 	}
 }
@@ -46,7 +44,7 @@ void MeleeWeapon::Load(TCODZip &zip){
 		amount=zip.getFloat();
 	}
 	catch(...){
-		std::cerr << "An error occurred with MeleeWeapon::Load"  << std::endl;
+		LoggerWrapper::Error("An error occurred with MeleeWeapon::Load");
 		throw 0;
 	}
 }
@@ -57,7 +55,7 @@ void MeleeWeapon::Save(TCODZip &zip){
 		zip.putFloat(amount);
 	}
 	catch(...){
-		std::cerr << "An error occurred with MeleeWeapon::Save"  << std::endl;
+		LoggerWrapper::Error("An error occurred with MeleeWeapon::Save");
 		throw 0;
 	}
 }

@@ -14,8 +14,8 @@ class Lightsource : public Persistent {
 		Lightsource(int radius);
 		void Load(TCODZip &zip);
 		void Save(TCODZip &zip);
-		int getRadius();
-		void setRadius(int radius);
+		int GetRadius();
+		void SetRadius(int radius);
 	private:
 		int radius;
 };

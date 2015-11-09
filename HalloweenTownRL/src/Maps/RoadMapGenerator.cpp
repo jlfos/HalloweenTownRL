@@ -13,7 +13,7 @@
 #include "../Tile/TileColors.hpp"
 #include "../LoggerWrapper.hpp"
 
-#ifdef LOGGER
+#ifndef RMG_LOGGER
 #define RMG_LOGGER
 #endif
 
@@ -33,6 +33,9 @@ RoadMapGenerator::RoadMapGenerator(MapGenerator::Orientation orientation){
 
 void RoadMapGenerator::CreateHouse(int lotX, int lotY, TCODColor visible) {
 	try {
+#ifdef RMG_LOGGER
+		LoggerWrapper::Debug("Creating House");
+#endif
 		Point lotStart(lotX, lotY);
 		Point lotEnd(lotX + 20, lotY + 20);
 		DrawFence(lotStart, lotEnd);
@@ -46,7 +49,7 @@ void RoadMapGenerator::CreateHouse(int lotX, int lotY, TCODColor visible) {
 		EraseFence(lotStart, lotEnd);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in CreateHouse");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::CreateHouse");
 		throw 0;
 	}
 }
@@ -129,7 +132,7 @@ void RoadMapGenerator::DrawGrass(int x, int y, int width, TCODMap* roadMap){
 		map->SetTileProperties(tileIndex, visible, character);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in DrawGrass");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawGrass");
 		throw 0;
 	}
 }
@@ -144,40 +147,45 @@ void RoadMapGenerator::DrawRoad(int x, int y, int width, TCODMap* roadMap){
 		map->SetTileProperties(tileIndex, visible, character);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in DrawRoad");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawRoad");
 		throw 0;
 	}
 }
 
 void RoadMapGenerator::DrawNextDoor(Room* ra) {
-
-	switch (ra->getOrientation()) {
-	case MapGenerator::Orientation::NORTH:
-		#ifdef RMG_LOGGER
-		LoggerWrapper::Info( "Next door is south" );
-		#endif
-		DrawSouthDoor(ra->getNWCorner(), ra->getSECorner());
-		break;
-	case MapGenerator::Orientation::EAST:
-		#ifdef RMG_LOGGER
-		LoggerWrapper::Info("Next door is west");
-		#endif
-		DrawWestDoor(ra->getNWCorner(), ra->getSECorner());
-		break;
-	case MapGenerator::Orientation::SOUTH:
-		#ifdef RMG_LOGGER
-		LoggerWrapper::Info("Next door is north");
-		#endif
-		DrawNorthDoor(ra->getNWCorner(), ra->getSECorner());
-		break;
-	case MapGenerator::Orientation::WEST:
-		#ifdef RMG_LOGGER
-		LoggerWrapper::Info("Next door is east");
-		#endif
-		DrawEastDoor(ra->getNWCorner(), ra->getSECorner());
-		break;
-	default:
-		LoggerWrapper::Error("The value " + std::to_string(ra->getOrientation()) + " is not currently supported");
+	try {
+		switch (ra->getOrientation()) {
+		case MapGenerator::Orientation::NORTH:
+			#ifdef RMG_LOGGER
+			LoggerWrapper::Info( "Next door is south" );
+			#endif
+			DrawSouthDoor(ra->getNWCorner(), ra->getSECorner());
+			break;
+		case MapGenerator::Orientation::EAST:
+			#ifdef RMG_LOGGER
+			LoggerWrapper::Info("Next door is west");
+			#endif
+			DrawWestDoor(ra->getNWCorner(), ra->getSECorner());
+			break;
+		case MapGenerator::Orientation::SOUTH:
+			#ifdef RMG_LOGGER
+			LoggerWrapper::Info("Next door is north");
+			#endif
+			DrawNorthDoor(ra->getNWCorner(), ra->getSECorner());
+			break;
+		case MapGenerator::Orientation::WEST:
+			#ifdef RMG_LOGGER
+			LoggerWrapper::Info("Next door is east");
+			#endif
+			DrawEastDoor(ra->getNWCorner(), ra->getSECorner());
+			break;
+		default:
+			LoggerWrapper::Error("The value " + std::to_string(ra->getOrientation()) + " is not currently supported");
+			throw 0;
+		}
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawNextDoor");
 		throw 0;
 	}
 }
@@ -207,15 +215,13 @@ void RoadMapGenerator::DrawWalls(Orientation previousOrientation, const Room& ro
 		}
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in DrawWalls");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawWalls");
 		throw 0;
 	}
 }
 
 int RoadMapGenerator::GenerateRoom(Room room, TCODColor color, Orientation previousOrientation, int roomsLeft) {
 	try{
-
-
 		DrawWalls(previousOrientation, room, color);
 
 		DrawInterior(room.getNWCorner(), room.getSECorner(), roomsLeft);
@@ -258,7 +264,7 @@ void RoadMapGenerator::DrawNorthWall(Point start, Point end, TCODColor color) {
 		DrawNECorner(end, color);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in DrawNorthWall");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawNorthWall");
 		throw 0;
 	}
 }
@@ -270,7 +276,7 @@ void RoadMapGenerator::DrawSouthWall(Point start, Point end, TCODColor color) {
 		DrawSECorner(end, color);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in DrawSouthWall");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawSouthWall");
 		throw 0;
 	}
 }
@@ -282,7 +288,7 @@ void RoadMapGenerator::DrawEastWall(Point start, Point end, TCODColor color) {
 		DrawSECorner(end, color);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in DrawEastWall");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawEastWall");
 		throw 0;
 	}
 }
@@ -294,7 +300,7 @@ void RoadMapGenerator::DrawWestWall(Point start, Point end, TCODColor color) {
 		DrawSWCorner(end, color);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in DrawWestWall");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawWestWall");
 		throw 0;
 	}
 }
@@ -307,7 +313,7 @@ void RoadMapGenerator::DrawHorizontalLine(Point start, Point end, int character,
 		}
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in DrawHorizontalLine");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawHorizontalLine");
 		throw 0;
 	}
 }
@@ -320,7 +326,7 @@ void RoadMapGenerator::DrawVerticalLine(Point start, Point end, int character, T
 		}
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in DrawVerticalLine");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawVerticalLine");
 		throw 0;
 	}
 }
@@ -347,7 +353,7 @@ void RoadMapGenerator::DrawInterior(Point start, Point end, int character) { //T
 		}
 	}
 	catch(...){
-		LoggerWrapper::Error("An error occurred in GenerateInterior");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::GenerateInterior");
 		throw 0;
 	}
 }
@@ -360,7 +366,7 @@ void RoadMapGenerator::DrawDoor(const Point& door) {
 		map->SetTileProperties(door, color, character);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in DrawDoor");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawDoor");
 		throw 0;
 	}
 }
@@ -371,7 +377,7 @@ void RoadMapGenerator::DrawNorthDoor(Point start, Point end) {
 		DrawDoor(door);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in DrawNorthDoor");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawNorthDoor");
 		throw 0;
 	}
 }
@@ -382,7 +388,7 @@ void RoadMapGenerator::DrawEastDoor(Point start, Point end) {
 		DrawDoor(door);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in DrawEastDoor");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawEastDoor");
 		throw 0;
 	}
 }
@@ -393,7 +399,7 @@ void RoadMapGenerator::DrawSouthDoor(Point start, Point end) {
 		DrawDoor(door);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in DrawSouthDoor");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawSouthDoor");
 		throw 0;
 	}
 }
@@ -404,7 +410,7 @@ void RoadMapGenerator::DrawWestDoor(Point start, Point end) {
 		DrawDoor(door);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in DrawWestDoor");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawWestDoor");
 		throw 0;
 	}
 }
@@ -415,7 +421,7 @@ void RoadMapGenerator::DrawNECorner(Point point, TCODColor color) {
 		map->SetTileProperties(point, color, character);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in DrawNECorner");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawNECorner");
 		throw 0;
 	}
 }
@@ -426,7 +432,7 @@ void RoadMapGenerator::DrawSECorner(Point point, TCODColor color) {
 		map->SetTileProperties(point, color, character);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in DrawSECorner");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawSECorner");
 		throw 0;
 	}
 }
@@ -437,7 +443,7 @@ void RoadMapGenerator::DrawSWCorner(Point point, TCODColor color) {
 		map->SetTileProperties(point, color, character);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in DrawSWCorner");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawSWCorner");
 		throw 0;
 	}
 }
@@ -448,7 +454,7 @@ void RoadMapGenerator::DrawNWCorner(Point point, TCODColor color) {
 		map->SetTileProperties(point, color, character);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in DrawNWCorner");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawNWCorner");
 		throw 0;
 	}
 }
@@ -483,7 +489,7 @@ Room* RoadMapGenerator::FindNextDoor(Point start, Point end) {
 	return r;
 	}
 	catch(...){
-		LoggerWrapper::Error("An error occurred in FindNextDoor");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::FindNextDoor");
 		throw 0;
 	}
 }
@@ -496,7 +502,7 @@ void RoadMapGenerator::DrawFence(Point start, Point end) {
 		DrawWestWall(start, Point(start.getX(), end.getY()), TCODColor::white);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in DrawFence");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawFence");
 		throw 0;
 	}
 }
@@ -512,7 +518,7 @@ void RoadMapGenerator::EraseFence(Point start, Point end) {
 		map->SetTileProperties(ra.getSECorner(), TCODColor::white, TileCharacters::RAINBOW);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in EraseFence");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::EraseFence");
 		throw 0;
 	}
 
@@ -699,7 +705,7 @@ Room* RoadMapGenerator::FindNextDoor(Point start, Point end, Orientation potenti
 		}
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in FindNextDoor");
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::FindNextDoor");
 		throw 0;
 	}
 

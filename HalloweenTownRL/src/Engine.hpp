@@ -44,7 +44,7 @@ public :
     void SendToBack(Actor *actor);
     void NextLevel(Map::TileType type);
 	Time currentTime;
-	std::string getItemDescription(std::string name);
+	std::string GetItemDescription(std::string name);
 private:
 	enum class MapType {FOREST_NORTH, FOREST_SOUTH, ROAD_EW, CITY, CITY_BOSS };
 	void ExitGame();
@@ -59,7 +59,7 @@ private:
 	int WORLD_SIZE_LONGITUDE;
 
 	std::vector<std::vector<Map*>> *CreateMaps(std::vector<std::vector<Engine::MapType>>);
-	void bossUpdate();
+	void BossUpdate();
 
 
 //	std::set<MonsterEntry, MonsterEntry::MonsterEntry_compare> monsterLog;

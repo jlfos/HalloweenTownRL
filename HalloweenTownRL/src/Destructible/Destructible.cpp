@@ -5,6 +5,7 @@
 #include "BossDestructible.hpp"
 #include "Destructible.hpp"
 #include "../Engine.hpp"
+#include "../LoggerWrapper.hpp"
 #include "MonsterDestructible.hpp"
 #include "PlayerDestructible.hpp"
 #include "../Tile/TileCharacters.hpp"
@@ -58,7 +59,7 @@ Destructible *Destructible::Create(TCODZip &zip){
 		return destructible;
 	}
 	catch(...){
-		std::cerr << "An error occurred in Destructible::Create" << std::endl;
+		LoggerWrapper::Error("An error occurred in Destructible::Create");
 		throw 0;
 	}
 }
@@ -87,7 +88,7 @@ float Destructible::TakeDamage(Actor *owner, float damage){
 		return damage;
 	}
 	catch(...){
-		std::cerr << "An error occurred in Destructible::TakeDamage" << std::endl;
+		LoggerWrapper::Error("An error occurred in Destructible::TakeDamage");
 		throw 0;
 	}
 }
@@ -103,7 +104,7 @@ float Destructible::Heal(float amount){
 		return amount;
 	}
 	catch(...){
-		std::cerr << "An error occurred in Destructible::Heal" << std::endl;
+		LoggerWrapper::Error("An error occurred in Destructible::Heal");
 		throw 0;
 	}
 }
@@ -117,7 +118,7 @@ void Destructible::Die(Actor *owner){
 		engine.SendToBack(owner);
 	}
 	catch(...){
-		std::cerr << "An error occurred in Destructible::Die" << std::endl;
+		LoggerWrapper::Error("An error occurred in Destructible::Die");
 		throw 0;
 	}
 }
@@ -139,7 +140,7 @@ void Destructible::Load(TCODZip &zip){
 		corpseName=strdup(zip.getString());
 	}
 	catch(...){
-		std::cerr << "An error occurred in Destructible::Load" << std::endl;
+		LoggerWrapper::Error("An error occurred in Destructible::Load");
 		throw 0;
 	}
 }
@@ -152,7 +153,7 @@ void Destructible::Save(TCODZip &zip){
 		zip.putString(corpseName.c_str());
 	}
 	catch(...){
-		std::cerr << "An error occurred in Destructible::Save" << std::endl;
+		LoggerWrapper::Error("An error occurred in Destructible::Save");
 		throw 0;
 	}
 }

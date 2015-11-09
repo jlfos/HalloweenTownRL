@@ -8,7 +8,12 @@
 
 #include <mersenne.hpp>
 #include <initializer_list>
-#include <iostream>
+
+#include "LoggerWrapper.hpp"
+
+#ifndef RW_LOGGER
+#define RW_LOGGER
+#endif
 
 RandomWrapper::RandomWrapper() {
 
@@ -30,14 +35,17 @@ MapGenerator::Orientation RandomWrapper::GetOrientation() {
 	if(indexO < data.size()){
 
 		MapGenerator::Orientation  orientation = data.at(indexO);
-		std::cout << "not rand ori " << orientation << std::endl;
-
+#ifdef RW_LOGGER
+		LoggerWrapper::Debug ("not rand ori " + std::to_string(orientation));
+#endif
 		indexO++;
 		return orientation;
 	}
 	else{
 		MapGenerator::Orientation  orientation = (MapGenerator::Orientation)rng->getInt(0,3);
-		std::cout << "ori rand " << orientation << std::endl;
+#ifdef RW_LOGGER
+		LoggerWrapper::Debug ("ori rand" + std::to_string(orientation));
+#endif
 		return orientation;
 	}
 }
@@ -49,17 +57,16 @@ RandomWrapper::~RandomWrapper() {
 int RandomWrapper::getInt(int min, int max) {
 	try{
 		if(min>max){
-			std::cerr << "Min cannot be larger then max" << std::endl;
+			LoggerWrapper::Error("Min cannot be larger then max");
 			throw 0;
 		}
 		else{
 			int temp = rng->getInt(min, max);
-//			std::cout << "int rand " << temp << std::endl;
 			return temp;
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred in RandomWrapper::getInt" << std::endl;
+		LoggerWrapper::Error("An error occurred in RandomWrapper::getInt");
 		throw 0;
 	}
 }
@@ -68,7 +75,7 @@ int RandomWrapper::getInt(int min, int max) {
 int RandomWrapper::getInt(int min, int max, bool test) {
 	try{
 		if(min>max){
-			std::cerr << "Min cannot be larger then max" << std::endl;
+			LoggerWrapper::Error("Min cannot be larger then max");
 			throw 0;
 		}
 		else{
@@ -80,13 +87,15 @@ int RandomWrapper::getInt(int min, int max, bool test) {
 			else{
 				temp = rng->getInt(min, max);
 			}
-			std::cout << "int rand " << temp << std::endl;
+#ifdef RW_LOGGER
+			LoggerWrapper::Debug("int rand " + std::to_string(temp));
+#endif
 			return temp;
 
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred in RandomWrapper::getInt" << std::endl;
+		LoggerWrapper::Error("An error occurred in RandomWrapper::getInt");
 		throw 0;
 	}
 }

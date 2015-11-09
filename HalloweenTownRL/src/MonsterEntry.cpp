@@ -6,37 +6,38 @@
 #include <string>
 #include "libtcod.hpp"
 
+#include "LoggerWrapper.hpp"
 #include "MonsterEntry.hpp"
-MonsterEntry::MonsterEntry(std::string name, std::string description, std::string initialYear, int characterCode, TCODColor characterColor):
-	name(name), description(description), initialYear(initialYear), characterCode(characterCode), characterColor(characterColor), encountered(false){
+
+MonsterEntry::MonsterEntry(std::string name, std::string description, std::string initialYear,
+		int characterCode, TCODColor characterColor) :
+		name(name), description(description), initialYear(initialYear), characterCode(
+				characterCode), characterColor(characterColor), encountered(false) {
 }
 
-bool MonsterEntry::Compare(const MonsterEntry &left, const MonsterEntry &right){
-	if(left.name!=right.name)
+bool MonsterEntry::Compare(const MonsterEntry &left, const MonsterEntry &right) {
+	if (left.name != right.name)
 		return true;
 	else
 		return false;
 }
 
-
-
-std::string MonsterEntry::getName(){
+std::string MonsterEntry::getName() {
 	return name;
 }
 
-
-std::string MonsterEntry::getDescription(){
+std::string MonsterEntry::getDescription() {
 	return description;
 }
 
-std::string MonsterEntry::getInitialYear(){
+std::string MonsterEntry::getInitialYear() {
 	return initialYear;
 }
 
-int MonsterEntry::getCharacterCode(){
+int MonsterEntry::getCharacterCode() {
 	return characterCode;
 }
 
-TCODColor MonsterEntry::getCharacterColor(){
+TCODColor MonsterEntry::getCharacterColor() {
 	return characterColor;
 }

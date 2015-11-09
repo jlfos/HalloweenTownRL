@@ -4,6 +4,7 @@
 #include "Destructible/Destructible.hpp"
 #include "Engine.hpp"
 #include "UI/Gui.hpp"
+#include "LoggerWrapper.hpp"
 #include "Tile/TileColors.hpp"
 
 Attacker::Attacker(float basePower) :Attacker(basePower, "") {
@@ -34,7 +35,7 @@ void Attacker::Attack(Actor *owner, Actor *target){
 		}
 	}
 	catch(...){
-		std::cerr << "An error occurred with Attacker::Attack"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Attacker::Attack");
 		throw 0;
 	}
 }
@@ -44,7 +45,7 @@ void Attacker::Load(TCODZip &zip){
 		basePower=zip.getFloat();
 	}
 	catch(...){
-		std::cerr << "An error occurred with Attacker::Load"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Attacker::Load");
 		throw 0;
 	}
 }
@@ -81,7 +82,7 @@ void Attacker::Save(TCODZip &zip){
 		zip.putFloat(basePower);
 	}
 	catch(...){
-		std::cerr << "An error occurred with Attacker::Save"  << std::endl;
+		LoggerWrapper::Error("An error occurred with Attacker::Save");
 		throw 0;
 	}
 }

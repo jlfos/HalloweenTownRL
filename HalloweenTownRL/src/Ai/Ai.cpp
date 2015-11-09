@@ -2,6 +2,7 @@
 #include "libtcod.hpp"
 #include "Ai.hpp"
 #include "PlayerAi.hpp"
+#include "../LoggerWrapper.hpp"
 #include "MonsterAi.hpp"
 
 Ai *Ai::Create(TCODZip &zip){
@@ -16,7 +17,7 @@ Ai *Ai::Create(TCODZip &zip){
 		return ai;
 	}
 	catch(...){
-		std::cerr << "An error occurred in Ai::create" << std::endl;
+		LoggerWrapper::Error("An error occurred in Ai::create");
 		throw 0;
 	}
 }

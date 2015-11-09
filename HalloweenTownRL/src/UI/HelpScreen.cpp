@@ -1,8 +1,10 @@
 #include "libtcod.hpp"
 #include "Gui.hpp"
 #include "HelpScreen.hpp"
-#include "../Tile/TileColors.hpp"
+#include "../LoggerWrapper.hpp"
 #include "Console/Message.hpp"
+#include "../Tile/TileColors.hpp"
+
 
 HelpScreen::HelpScreen() : ScreenUI(){
 	log.clear();

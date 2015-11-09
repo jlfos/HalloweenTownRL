@@ -24,8 +24,8 @@ class RandomWrapper {
 		int getInt(int min, int max, bool test);
 	private:
 		std::unique_ptr<TCODRandom> rng;
-		int indexO;
-		int indexI;
+		u_int indexO;
+		u_int indexI;
 		std::vector<MapGenerator::Orientation> data;
 		std::vector<int> dataI;
 		std::vector<int> dataO;
