@@ -136,91 +136,66 @@ void NeighborhoodMapGenerator::EraseFence(Point start, Point end) {
 }
 
 
-//TODO There are still cases where a room will overwrite another room.
+
 Room* NeighborhoodMapGenerator::FindNextDoor(Point start, Point end, Orientation potential) {
 	try {
 		switch(potential){
 		case MapGenerator::Orientation::NORTH:{
-			int y = 1; //TODO Clean this function up. Its really ugly.
-		//I think you could break each of these case statements out into their own methods. Those methods might be broken into generate offset
-		// and generate points/room. Point generation is done a case by case basis so I don't think that is something that can be made generic.
-			for(; y <= maxRoomSizeY && y < start.getY(); y++){  //Check north
-				if(map->TileHasBeenSet(Point(end.getX() , start.getY() - y))){
-					break;
-				}
-			}
-			y--;
+			Point tempStart(end.getX() , start.getY());
+			bool xNeg = true;
+			bool yNeg = true;
 
-			if(y < minRoomSizeY)
-				return nullptr;
+			Point tempEnd = CheckVerticalRoom(tempStart, xNeg, yNeg);
 
-			int x = 1;
-			for(; x <= maxRoomSizeX && x < start.getX(); x++){
-				if(map->TileHasBeenSet(Point(end.getX() - x, start.getY() - y))){
-					break;
-				}
-			}
-
-			x--;
-			if(x < minRoomSizeX)
-				return nullptr;
-
-			int temp = y;
-			for(; temp > 1; temp--){
-				if(map->TileHasBeenSet(Point(end.getX() - x, start.getY() - temp))){
-#ifdef NMG_LOGGER
-					LoggerWrapper::Debug("Northern Drawback failed " + Point(end.getX() - x, start.getY() - temp).ToString());
-#endif
+			if(InvalidRoomCorners(tempStart, tempEnd)){
+				tempStart = Point(start);
+				xNeg = false;
+				tempEnd = CheckVerticalRoom(tempStart, xNeg, yNeg);
+				if(InvalidRoomCorners(tempStart, tempEnd)){
 					return nullptr;
 				}
 			}
 
-//			y -= temp;
-//			if(y < minRoomSizeY)
-//				return nullptr;
+			int	x = std::abs((int)tempStart.getX() - (int)tempEnd.getX());
+			int y = std::abs((int)tempStart.getY() - (int)tempEnd.getY());
 
 			int offsetX = randomWrap.getInt(minRoomSizeX, x);
 			int offsetY = randomWrap.getInt(minRoomSizeY, y);
+			Room* r;
+			if(xNeg){
+				Point newEnd(end.getX(), start.getY());
+				Point newStart(newEnd.getX() - offsetX, newEnd.getY() - offsetY);
+				r = new Room(newStart, newEnd, MapGenerator::Orientation::NORTH);
+			}
+			else{
+				Point newStart(tempStart.getX(), tempEnd.getY());
+				Point newEnd(newStart.getX() + offsetX , newStart.getY() + offsetY);
 
-			Point newEnd(end.getX(), start.getY());
-			Point newStart(newEnd.getX() - offsetX, newEnd.getY() - offsetY);
-			Room* r = new Room(newStart, newEnd, MapGenerator::Orientation::NORTH);
+				r = new Room(newStart, newEnd, MapGenerator::Orientation::NORTH);
+			}
+
 			return r;
 
 		}
 		break;
 		case MapGenerator::Orientation::SOUTH:{
-			int y = 1;
-			for(; y <= maxRoomSizeY; y++){  //Check south
-				if(map->TileHasBeenSet(Point(start.getX() , end.getY() + y))){
-					break;
-				}
-			}
-			y--;
+			Point tempStart(start.getX() , end.getY());
+			bool xNeg = false;
+			bool yNeg = false;
 
-			if(y < minRoomSizeY)
-				return nullptr;
+			Point tempEnd = CheckVerticalRoom(tempStart, xNeg, yNeg);
 
-			int x = 1;
-			for(; x <= maxRoomSizeX; x++){
-				if(map->TileHasBeenSet(Point(start.getX() + x, end.getY() + y))){
-					break;
-				}
-			}
-
-			x--;
-			if(x < minRoomSizeX)
-				return nullptr;
-
-			int temp = y;
-			for(; temp > 1; temp--){
-				if(map->TileHasBeenSet(Point(start.getX() + x, end.getY() + temp))){
-#ifdef NMG_LOGGER
-					LoggerWrapper::Debug("Southern Drawback failed " + Point(end.getX() - x, start.getY() - temp).ToString());
-#endif
+			if(InvalidRoomCorners(tempStart, tempEnd)){
+				tempStart = Point(end);
+				xNeg = true;
+				tempEnd = CheckVerticalRoom(tempStart, xNeg, yNeg);
+				if(InvalidRoomCorners(tempStart, tempEnd)){
 					return nullptr;
 				}
 			}
+
+			int	x = std::abs((int)tempStart.getX() - (int)tempEnd.getX());
+			int y = std::abs((int)tempStart.getY() - (int)tempEnd.getY());
 
 			int offsetX = randomWrap.getInt(minRoomSizeX, x);
 			int offsetY = randomWrap.getInt(minRoomSizeY, y);
@@ -236,92 +211,74 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Point start, Point end, Orientation
 		}
 		break;
 		case MapGenerator::Orientation::EAST:{
-			int x = 1;
-			for(; x <= maxRoomSizeX; x++){ //Check east
-				if(map->TileHasBeenSet(Point(end.getX() + x, start.getY()))){
-					break;
-				}
-			}
-			x--;
-			if(x < minRoomSizeX)
-				return nullptr;
 
-			int y = 1;
-			for(; y <= maxRoomSizeY; y++){  //Check southeast
-				if(map->TileHasBeenSet(Point(end.getX() + x , start.getY() + y))){
-					break;
-				}
-			}
-			y--;
+			Point tempStart(end.getX(), start.getY());
+			bool xNeg = false;
+			bool yNeg = false;
+			Point tempEnd = CheckHorizontalRoom(tempStart, xNeg, yNeg);
 
-			if(y < minRoomSizeY)
-				return nullptr;
-
-			int temp = x;
-			for(; temp > 1; temp--){  //Check east
-				if(map->TileHasBeenSet(Point(end.getX() + temp , start.getY() + y))){
-#ifdef NMG_LOGGER
-					LoggerWrapper::Debug("Eastern Drawback failed " + Point(end.getX() - x, start.getY() - temp).ToString());
-#endif
+			if(InvalidRoomCorners(tempStart, tempEnd)){
+				tempStart = Point(end);
+				yNeg = true;
+				tempEnd = CheckHorizontalRoom(tempStart, xNeg, yNeg);
+				if(InvalidRoomCorners(tempStart, tempEnd)){
 					return nullptr;
 				}
 			}
 
+			int	x = std::abs((int)tempStart.getX() - (int)tempEnd.getX());
+			int y = std::abs((int)tempStart.getY() - (int)tempEnd.getY());
+
 			int offsetX = randomWrap.getInt(minRoomSizeX, x);
 			int offsetY = randomWrap.getInt(minRoomSizeY, y);
 
-			Point newStart(end.getX(), start.getY());
-			Point newEnd(newStart.getX() + offsetX, newStart.getY() + offsetY);
-
-			Room* r = new Room(newStart, newEnd, MapGenerator::Orientation::EAST);
+			Room* r = nullptr;
+			if(yNeg){
+				Point newStart(tempStart.getX(), tempEnd.getY());
+				Point newEnd(tempEnd.getX(), tempStart.getY());
+				r = new Room(newStart, newEnd, MapGenerator::Orientation::EAST);
+			}
+			else{
+				Point newStart(end.getX(), start.getY());
+				Point newEnd(newStart.getX() + offsetX, newStart.getY() + offsetY);
+				r = new Room(newStart, newEnd, MapGenerator::Orientation::EAST);
+			}
 
 			return r;
 
 		}
 		break;
 		case MapGenerator::Orientation::WEST:{
-			int x = 1;
-			for(; x <= maxRoomSizeX && x < start.getX(); x++){
-				if(map->TileHasBeenSet(Point(start.getX() - x, end.getY()))){
-					break;
-				}
-			}
+			Point tempStart(start.getX(), end.getY());
+			bool xNeg = true;
+			bool yNeg = true;
+			Point tempEnd = CheckHorizontalRoom(tempStart, xNeg, yNeg);
 
-			x--;
-			if(x < minRoomSizeX)
-				return nullptr;
-
-			int y = 1;
-			for(; y <= maxRoomSizeY && y < start.getY(); y++){  //Check west
-				if(map->TileHasBeenSet(Point(start.getX() - x, end.getY() - y))){
-					break;
-				}
-			}
-			y--;
-
-			if(y < minRoomSizeY)
-				return nullptr;
-
-
-			int temp = x;
-			for(; temp > 1; temp--){  //Check west
-				if(map->TileHasBeenSet(Point(start.getX() - temp, end.getY() - y))){
-#ifdef NMG_LOGGER
-					LoggerWrapper::Debug("Western Drawback failed " + Point(end.getX() - x, start.getY() - temp).ToString());
-#endif
+			if(InvalidRoomCorners(tempStart, tempEnd)){
+				tempStart = Point(start);
+				yNeg = false;
+				tempEnd = CheckHorizontalRoom(tempStart, xNeg, yNeg);
+				if(InvalidRoomCorners(tempStart, tempEnd)){
 					return nullptr;
 				}
 			}
 
-
-
-
+			int	x = std::abs((int)tempStart.getX() - (int)tempEnd.getX());
+			int y = std::abs((int)tempStart.getY() - (int)tempEnd.getY());
 			int offsetX = randomWrap.getInt(minRoomSizeX, x);
 			int offsetY = randomWrap.getInt(minRoomSizeY, y);
-			Point newEnd(start.getX(), end.getY());
-			Point newStart(newEnd.getX() - offsetX, newEnd.getY() - offsetY);
 
-			Room* r = new Room(newStart, newEnd, MapGenerator::Orientation::WEST);
+			Room* r = nullptr;
+			if(yNeg){
+				Point newEnd = Point(start.getX(), end.getY());
+				Point newStart(newEnd.getX() - offsetX, newEnd.getY() - offsetY);
+				r = new Room(newStart, newEnd, MapGenerator::Orientation::WEST);
+			}
+			else{
+				Point newEnd = Point(tempStart.getX(), tempEnd.getY());
+				Point newStart(newEnd.getX() - offsetX, newEnd.getY() - offsetY);
+				r = new Room(newStart, newEnd, MapGenerator::Orientation::WEST);
+			}
 
 			return r;
 		}
@@ -502,7 +459,7 @@ void NeighborhoodMapGenerator::DrawInterior(Point start, Point end, int characte
 		TCODColor visible = TCODColor::grey;
 		for(uint i = start.getX() + 1 ; i < end.getX(); i++){
 			for(uint j = start.getY() + 1 ; j < end.getY(); j++){
-				int character = TileCharacters::Default::PERIOD;
+//				int character = TileCharacters::Default::PERIOD;
 				map->SetTileProperties(Point(i, j), visible, character);
 			}
 		}
@@ -687,4 +644,137 @@ void NeighborhoodMapGenerator::CreateHouse(int lotX, int lotY, TCODColor visible
 		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::CreateHouse");
 		throw 0;
 	}
+}
+
+Point NeighborhoodMapGenerator::CheckHorizontalRoom(Point start, bool xNegFlag, bool yNegFlag) {
+	try {
+		int xCof,yCof;
+
+		if(xNegFlag)
+			xCof = -1;
+		else
+			xCof = 1;
+
+		if(yNegFlag)
+			yCof = -1;
+		else
+			yCof = 1;
+
+		int x = 1;
+		for(; x <= maxRoomSizeX; x++){ //Check east
+			if(map->TileHasBeenSet(start.getX() + (x * xCof), start.getY()) ||
+					start.getX() + (x * xCof) == 0 ||
+					start.getX() + (x * xCof) == mapWidth - 1){
+				break;
+			}
+		}
+		x--;
+		LoggerWrapper::Debug(" CVH, east/west check complete");
+		if(x < minRoomSizeX)
+			return start;
+
+		int y = 1;
+		for(; y <= maxRoomSizeY; y++){  //Check southeast
+			if(map->TileHasBeenSet(start.getX() + (x * xCof) , start.getY() + (y * yCof)) ||
+					start.getY() + (y * yCof) == 0 ||
+					start.getY() + (y * yCof) == mapHeight - 2){
+				break;
+			}
+		}
+		y--;
+		LoggerWrapper::Debug(" CVH, north/south check complete");
+		if(y < minRoomSizeY)
+			return start;
+
+		int tempY = 0;
+		for(; tempY <= y; tempY++ ){
+			if(map->TileHasBeenSet(start.getX() + (1 * xCof), start.getY() + (tempY * yCof))){
+				tempY--;
+				if(tempY < minRoomSizeY){
+					return start;
+				}
+				else{
+					break;
+				}
+			}
+		}
+		y = tempY;
+		LoggerWrapper::Debug(" CVH complete");
+		return Point(start.getX() + (x * xCof) , start.getY() + (y * yCof));
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::CheckHorizontalRoom");
+		throw 0;
+	}
+}
+
+Point NeighborhoodMapGenerator::CheckVerticalRoom(Point start, bool xNegFlag, bool yNegFlag) {
+	try {
+		int xCof,yCof;
+
+		if(xNegFlag)
+			xCof = -1;
+		else
+			xCof = 1;
+
+		if(yNegFlag)
+			yCof = -1;
+		else
+			yCof = 1;
+
+		int y = 1;
+		for(; y <= maxRoomSizeY; y++){ //Check east
+			if(map->TileHasBeenSet(start.getX(), start.getY() + (y * yCof)) ||
+					start.getY() + (y * yCof) == 0 || start.getY() + (y * yCof) == mapHeight - 2){
+				break;
+			}
+		}
+		y--;
+		LoggerWrapper::Debug(" CVR, north/south check complete");
+		if(y < minRoomSizeY)
+			return start;
+
+		int x = 1;
+		for(; x <= maxRoomSizeX; x++){  //Check southeast
+			if(map->TileHasBeenSet(start.getX() + (x * xCof) , start.getY() + (y * yCof))  ||
+					start.getX() + (x * xCof) == 0 || start.getX() + (x * xCof) == mapWidth - 1){
+				break;
+			}
+		}
+		x--;
+
+		if(x < minRoomSizeX)
+			return start;
+
+		LoggerWrapper::Debug(" CVR, east/west check complete");
+		int tempX = 0;
+		for(; tempX <= x; tempX++ ){
+			if(map->TileHasBeenSet(start.getX() + (tempX * xCof), start.getY() + (1 * yCof))){
+				tempX--;
+				if(tempX < minRoomSizeX){
+					return start;
+				}
+				else{
+					break;
+				}
+			}
+		}
+		LoggerWrapper::Debug(" CVR complete");
+		x = tempX;
+		return Point(start.getX() + (x * xCof) , start.getY() + (y * yCof));
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::CheckVerticalRoom");
+		throw 0;
+	}
+
+}
+
+bool NeighborhoodMapGenerator::InvalidRoomCorners(Point start, Point end) {
+	bool result = start.getX() == end.getX() || start.getY() == end.getY() ||
+			start.getX() == 0 || start.getY() == 0 ||
+			end.getX() == 0 || end.getY() == 0 ||
+			start.getX() >= mapWidth - 1 || start.getY() >= mapHeight - 2 ||
+			end.getX() >= mapWidth - 1 || end.getY() >= mapHeight - 2;
+	return result;
 }

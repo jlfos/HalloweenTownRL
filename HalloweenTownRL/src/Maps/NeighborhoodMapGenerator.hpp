@@ -14,8 +14,8 @@
 class NeighborhoodMapGenerator : public MapGenerator {
 
 private:
-	int mapWidth;
-	int mapHeight;
+	u_int mapWidth;
+	u_int mapHeight;
 	int minRoomSizeX;
 	int minRoomSizeY;
 	int maxRoomSizeX;
@@ -56,6 +56,9 @@ private:
 	void CreateHouse(int lotX, int lotY, TCODColor visible);
 	void DrawRoad(int x, int y, TCODMap* roadMap);
 	void DrawGrass(int x, int y, TCODMap* roadMap);
+	bool InvalidRoomCorners(Point start, Point end);
+	Point CheckHorizontalRoom(Point start, bool xNegFlag, bool yNegFlag);
+	Point CheckVerticalRoom(Point start, bool xNegFlag, bool yNegFlag);
 };
 
 

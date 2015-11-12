@@ -244,8 +244,10 @@ void Map::SetTileProperties(Point point, TCODColor visible, int character) {
 bool Map::TileHasBeenSet(int x, int y) const{
 	try{
 		if(!ValidPoint(x, y)){
+#ifdef M_LOG
 			LoggerWrapper::Error("Invalid point " + Point(x, y).ToString());
-			throw 0;
+#endif
+			return false;
 		}
 		else{
 			if(tiles.at(x + y * width).character == TileCharacters::Default::RAINBOW)
