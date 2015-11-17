@@ -57,6 +57,8 @@ private:
 	void DrawRoad(int x, int y, TCODMap* roadMap);
 	void DrawGrass(int x, int y, TCODMap* roadMap);
 	bool InvalidRoomCorners(Point start, Point end);
+	bool ValidEWDoor(const int x, const int y);
+	bool ValidNSDoor(const int x, const int y);
 	Point CheckHorizontalRoom(Point start, bool xNegFlag, bool yNegFlag);
 	Point CheckVerticalRoom(Point start, bool xNegFlag, bool yNegFlag);
 };
