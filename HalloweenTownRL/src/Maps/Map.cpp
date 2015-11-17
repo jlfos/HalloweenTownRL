@@ -76,7 +76,13 @@ ActorFactory::EnemyDifficulty Map::GetDifficulty(){
 }
 
 int Map::GetCharacter(int x, int y){
-	return tiles.at(x + y * 80).character;
+	try {
+		return tiles.at(x + y * 80).character;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in Map::GetCharacter");
+		throw 0;
+	}
 }
 
 void Map::PopulateActors(){

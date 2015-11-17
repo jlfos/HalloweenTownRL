@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <string>
 #include <iostream>
 #include <memory>
@@ -391,7 +392,32 @@ void NeighborhoodMapGenerator::DrawSouthDoor(Point start, Point end) {
 
 void NeighborhoodMapGenerator::DrawNECorner(Point point, TCODColor color) {
 	try {
-		int character = TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_RIGHT;
+		int connectionsEast[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_RIGHT};
+		int connectionsNorth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_LEFT };
+
+		bool eastConnect = false;
+
+		bool northConnect = false;
+
+		if(point.getY() > 0){
+			northConnect = std::find(std::begin(connectionsNorth), std::end(connectionsNorth), map->GetCharacter(point.getX(), point.getY() - 1)) != std::end(connectionsNorth);
+		}
+		eastConnect = std::find(std::begin(connectionsEast), std::end(connectionsEast), map->GetCharacter(point.getX() + 1, point.getY())) != std::end(connectionsEast);
+		int character;
+		if(eastConnect || northConnect){
+			if(eastConnect && northConnect){
+				character = TileCharacters::Default::DOUBLE_PIPE_CROSS;
+			}
+			else if(eastConnect){
+				character = TileCharacters::Default::DOUBLE_PIPE_T_TOP;
+			}
+			else{
+				character = TileCharacters::Default::DOUBLE_PIPE_T_RIGHT;
+			}
+		}
+		else{
+			character = TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_RIGHT;
+		}
 		map->SetTileProperties(point, color, character);
 	}
 	catch (...) {
@@ -402,7 +428,27 @@ void NeighborhoodMapGenerator::DrawNECorner(Point point, TCODColor color) {
 
 void NeighborhoodMapGenerator::DrawSECorner(Point point, TCODColor color) {
 	try {
-		int character = TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_RIGHT;
+		int connectionsEast[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_RIGHT, TileCharacters::Default::DOUBLE_PIPE_T_RIGHT};
+		int connectionsSouth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_LEFT };
+
+		bool eastConnect = std::find(std::begin(connectionsEast), std::end(connectionsEast), map->GetCharacter(point.getX() + 1, point.getY())) != std::end(connectionsEast);
+		bool southConnect = std::find(std::begin(connectionsSouth), std::end(connectionsSouth), map->GetCharacter(point.getX(), point.getY() + 1) ) != std::end(connectionsSouth);
+
+		int character;
+		if(eastConnect || southConnect){
+			if(eastConnect && southConnect){
+				character = TileCharacters::Default::DOUBLE_PIPE_CROSS;
+			}
+			else if(eastConnect){
+				character = TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM;
+			}
+			else{
+				character = TileCharacters::Default::DOUBLE_PIPE_T_RIGHT;
+			}
+		}
+		else{
+			character = TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_RIGHT;
+		}
 		map->SetTileProperties(point, color, character);
 	}
 	catch (...) {
@@ -413,7 +459,13 @@ void NeighborhoodMapGenerator::DrawSECorner(Point point, TCODColor color) {
 
 void NeighborhoodMapGenerator::DrawSWCorner(Point point, TCODColor color) {
 	try {
-		int character = TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_LEFT;
+		int character;
+		if(map->GetCharacter(point.getX(), point.getY() + 1) == TileCharacters::Default::DOUBLE_PIPE_VERTICAL){
+			character = TileCharacters::Default::DOUBLE_PIPE_T_LEFT;
+		}
+		else{
+			character = TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_LEFT;;
+		}
 		map->SetTileProperties(point, color, character);
 	}
 	catch (...) {
@@ -424,7 +476,13 @@ void NeighborhoodMapGenerator::DrawSWCorner(Point point, TCODColor color) {
 
 void NeighborhoodMapGenerator::DrawNWCorner(Point point, TCODColor color) {
 	try {
-		int character = TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_LEFT;
+		int character;
+		if(point.getX() > 0 && map->GetCharacter(point.getX() - 1, point.getY()) == TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL){
+			character = TileCharacters::Default::DOUBLE_PIPE_T_TOP;
+		}
+		else{
+			character = TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_LEFT;
+		}
 		map->SetTileProperties(point, color, character);
 	}
 	catch (...) {
