@@ -67,6 +67,7 @@ public :
     void ComputeAllLights();
     float GetTileVisibility(int x, int y);
     int GetCharacter(int x, int y);
+    int GetCharacter(Point p);
 private:
     bool IsExplored(int x, int y) const;
     bool ValidPoint(u_int x, u_int y) const;

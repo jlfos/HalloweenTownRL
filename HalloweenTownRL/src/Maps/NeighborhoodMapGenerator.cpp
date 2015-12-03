@@ -198,12 +198,17 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Point start, Point end, Orientation
 
 			int offsetX = randomWrap.getInt(minRoomSizeX, x);
 			int offsetY = randomWrap.getInt(minRoomSizeY, y);
-
-			Point newStart(start.getX(), end.getY());
-			Point newEnd(newStart.getX() + offsetX, newStart.getY() + offsetY);
-
-
-			Room* r = new Room(newStart, newEnd, MapGenerator::Orientation::SOUTH);
+			Room* r;
+			if(xNeg){
+				Point newStart(tempStart.getX() - offsetX, tempStart.getY());
+				Point newEnd(tempStart.getX(), tempStart.getY() + offsetY);
+				r = new Room(newStart, newEnd, MapGenerator::Orientation::SOUTH);
+			}
+			else{
+				Point newStart(start.getX(), end.getY());
+				Point newEnd(newStart.getX() + offsetX, newStart.getY() + offsetY);
+				r = new Room(newStart, newEnd, MapGenerator::Orientation::SOUTH);
+			}
 
 			return r;
 
@@ -314,9 +319,9 @@ void NeighborhoodMapGenerator::DrawNorthDoor(Point start, Point end) {
 		do{
 			x = randomWrap.getInt(start.getX() + 1, end.getX() - 1 );
 
-//			if(ValidNSDoor(x, start.getY())){
-//				validDoor = true;
-//			}
+			if(ValidEWDoor(x, start.getY())){
+				validDoor = true;
+			}
 
 		} while(!validDoor);
 		Point door(x, start.getY());
@@ -335,9 +340,9 @@ void NeighborhoodMapGenerator::DrawEastDoor(Point start, Point end) {
 		bool validDoor = true;//false;
 		do{
 			y = randomWrap.getInt(start.getY() + 1, end.getY() - 1);
-//			if(ValidEWDoor(end.getX(), y)){
-//				validDoor = true;
-//			}
+			if(ValidEWDoor(end.getX(), y)){
+				validDoor = true;
+			}
 		} while(!validDoor);
 		Point door(end.getX(), y );
 		DrawDoor(door);
@@ -354,9 +359,9 @@ void NeighborhoodMapGenerator::DrawWestDoor(Point start, Point end) {
 		bool validDoor = true;//false;
 		do{
 			y = randomWrap.getInt(start.getY() + 1, end.getY() - 1);
-//			if(ValidEWDoor(start.getX(), y)){
-//				validDoor = true;
-//			}
+			if(ValidEWDoor(start.getX(), y)){
+				validDoor = true;
+			}
 		} while(!validDoor);
 		Point door(start.getX(), y);
 		DrawDoor(door);
@@ -373,9 +378,9 @@ void NeighborhoodMapGenerator::DrawSouthDoor(Point start, Point end) {
 		bool validDoor = true;//false;
 		do{
 			x = randomWrap.getInt(start.getX() + 1, end.getX() - 1);
-//			if(ValidNSDoor(x, end.getY())){
-//				validDoor = true;
-//			}
+			if(ValidEWDoor(x, end.getY())){
+				validDoor = true;
+			}
 
 		}while(!validDoor);
 
@@ -392,8 +397,8 @@ void NeighborhoodMapGenerator::DrawSouthDoor(Point start, Point end) {
 
 void NeighborhoodMapGenerator::DrawNECorner(Point point, TCODColor color) {
 	try {
-		int connectionsEast[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_RIGHT};
-		int connectionsNorth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_LEFT };
+		int connectionsEast[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_RIGHT, TileCharacters::Default::DOUBLE_PIPE_CROSS};
+		int connectionsNorth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_LEFT, TileCharacters::Default::DOUBLE_PIPE_T_LEFT };
 
 		bool eastConnect = false;
 
@@ -429,7 +434,7 @@ void NeighborhoodMapGenerator::DrawNECorner(Point point, TCODColor color) {
 void NeighborhoodMapGenerator::DrawSECorner(Point point, TCODColor color) {
 	try {
 		int connectionsEast[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_RIGHT, TileCharacters::Default::DOUBLE_PIPE_T_RIGHT};
-		int connectionsSouth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_LEFT };
+		int connectionsSouth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_LEFT , TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM, TileCharacters::Default::DOUBLE_PIPE_CROSS, TileCharacters::Default::DOUBLE_PIPE_T_TOP};
 
 		bool eastConnect = std::find(std::begin(connectionsEast), std::end(connectionsEast), map->GetCharacter(point.getX() + 1, point.getY())) != std::end(connectionsEast);
 		bool southConnect = std::find(std::begin(connectionsSouth), std::end(connectionsSouth), map->GetCharacter(point.getX(), point.getY() + 1) ) != std::end(connectionsSouth);
@@ -459,9 +464,26 @@ void NeighborhoodMapGenerator::DrawSECorner(Point point, TCODColor color) {
 
 void NeighborhoodMapGenerator::DrawSWCorner(Point point, TCODColor color) {
 	try {
+		int connectionsWest[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_LEFT};
+		int connectionsSouth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM, TileCharacters::Default::DOUBLE_PIPE_T_RIGHT, TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_RIGHT };
+		bool westConnect = false;
+		bool southConnect = false;
+		if(point.getX() > 0)
+			westConnect = std::find(std::begin(connectionsWest), std::end(connectionsWest), map->GetCharacter(point.getX() - 1, point.getY())) != std::end(connectionsWest);
+
+		southConnect = std::find(std::begin(connectionsSouth), std::end(connectionsSouth), map->GetCharacter(point.getX(), point.getY() + 1) ) != std::end(connectionsSouth);
+
 		int character;
-		if(map->GetCharacter(point.getX(), point.getY() + 1) == TileCharacters::Default::DOUBLE_PIPE_VERTICAL){
-			character = TileCharacters::Default::DOUBLE_PIPE_T_LEFT;
+		if(westConnect || southConnect){
+			if(westConnect && southConnect){
+				character = TileCharacters::Default::DOUBLE_PIPE_CROSS;
+			}
+			else if(westConnect){
+				character = TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM;
+			}
+			else{
+				character = TileCharacters::Default::DOUBLE_PIPE_T_LEFT;
+			}
 		}
 		else{
 			character = TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_LEFT;;
@@ -476,9 +498,30 @@ void NeighborhoodMapGenerator::DrawSWCorner(Point point, TCODColor color) {
 
 void NeighborhoodMapGenerator::DrawNWCorner(Point point, TCODColor color) {
 	try {
+		int connectionsWest[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_T_LEFT};
+		int connectionsNorth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_T_TOP};
+
+		bool westConnect = false;
+
+		bool northConnect = false;
+
+
+		if(point.getY() > 0)
+			northConnect = std::find(std::begin(connectionsNorth), std::end(connectionsNorth), map->GetCharacter(point.getX(), point.getY() - 1)) != std::end(connectionsNorth);
+		if(point.getX() > 0){
+			westConnect = std::find(std::begin(connectionsWest), std::end(connectionsWest), map->GetCharacter(point.getX() - 1, point.getY())) != std::end(connectionsWest);
+		}
 		int character;
-		if(point.getX() > 0 && map->GetCharacter(point.getX() - 1, point.getY()) == TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL){
-			character = TileCharacters::Default::DOUBLE_PIPE_T_TOP;
+		if(westConnect || northConnect){
+			if(westConnect && northConnect){
+				character = TileCharacters::Default::DOUBLE_PIPE_CROSS;
+			}
+			else if(westConnect){
+				character = TileCharacters::Default::DOUBLE_PIPE_T_TOP;
+			}
+			else{
+				character = TileCharacters::Default::DOUBLE_PIPE_T_LEFT;
+			}
 		}
 		else{
 			character = TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_LEFT;
@@ -810,15 +853,13 @@ Point NeighborhoodMapGenerator::CheckHorizontalRoom(Point start, bool xNegFlag, 
 
 bool NeighborhoodMapGenerator::ValidEWDoor(const int x, const int y) {
 	bool validDoor = false;
-	int leftChar = map->GetCharacter(x - 1, y);
-	int rightChar = map->GetCharacter(x + 1, y);
-	LoggerWrapper::Debug("Left Char " + std::to_string(leftChar) + " " + "Right Char" + std::to_string(rightChar));
-	if((rightChar == TileCharacters::Default::PERIOD ||
-			(rightChar == TileCharacters::Default::RAINBOW)) &&
-			(leftChar == TileCharacters::Default::PERIOD ||
-					leftChar == TileCharacters::Default::RAINBOW)){
-		validDoor = true;
-	}
+	LoggerWrapper::Debug("Door X:" + std::to_string(x) + " Y:" + std::to_string(y));
+	int character =  map->GetCharacter(x, y);
+	int invalidCharacters[] = {TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM, TileCharacters::Default::DOUBLE_PIPE_T_LEFT, TileCharacters::Default::DOUBLE_PIPE_T_RIGHT, TileCharacters::Default::DOUBLE_PIPE_T_TOP };
+	validDoor = std::find(std::begin(invalidCharacters), std::end(invalidCharacters), character) == std::end(invalidCharacters);
+	if(validDoor)
+		LoggerWrapper::Debug("Character of door tile " + std::to_string(character));
+
 	return validDoor;
 }
 

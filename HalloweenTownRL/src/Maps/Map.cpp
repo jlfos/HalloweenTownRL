@@ -84,6 +84,15 @@ int Map::GetCharacter(int x, int y){
 		throw 0;
 	}
 }
+int Map::GetCharacter(Point p) {
+	try {
+		return GetCharacter(p.getX(), p.getY());
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in Map::GetCharacter");
+		throw 0;
+	}
+}
 
 void Map::PopulateActors(){
 	try{
@@ -457,3 +466,5 @@ bool Map::ValidPoint(u_int x, u_int y) const{
 	else
 		return true;
 }
+
+
