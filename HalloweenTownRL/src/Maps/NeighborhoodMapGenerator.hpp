@@ -20,7 +20,8 @@ private:
 	int minRoomSizeY;
 	int maxRoomSizeX;
 	int maxRoomSizeY;
-	MapGenerator::Orientation flagOri;
+	int lotSize;
+	MapGenerator::Orientation mapOri;
 	Map* map;
 	TCODMap* neighborhoodMap;
 public:

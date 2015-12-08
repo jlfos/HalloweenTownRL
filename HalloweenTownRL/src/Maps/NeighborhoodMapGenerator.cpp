@@ -17,11 +17,12 @@
 #endif
 
 NeighborhoodMapGenerator::NeighborhoodMapGenerator(int width, int height,
-		MapGenerator::Orientation orientation): mapWidth(width), mapHeight(height), flagOri(orientation) {
+		MapGenerator::Orientation orientation): mapWidth(width), mapHeight(height), mapOri(orientation) {
 	minRoomSizeX = 4;
 	minRoomSizeY = 4;
 	maxRoomSizeX = 9;
 	maxRoomSizeY = 9;
+	lotSize = 20;
 
 }
 
@@ -41,8 +42,8 @@ TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 		int lotX = 0;
 		int lotY = 0;
 		CreateHouse(lotX, lotY, visible);
-		CreateHouse(lotX + 20, lotY, visible);
-		CreateHouse(lotX + 40, lotY, visible);
+		CreateHouse(lotX + lotSize, lotY, visible);
+		CreateHouse(lotX + lotSize * 2, lotY, visible);
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height-1; y++) {
@@ -61,7 +62,7 @@ TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 					neighborhoodMap->setProperties(x, y, true, true);
 
 					bool roadFlag = false;
-					switch(flagOri){
+					switch(mapOri){
 						case MapGenerator::Orientation::NORTH:
 						case MapGenerator::Orientation::SOUTH:
 							roadFlag = x <= (width/2)+3  &&  x >= (width/2)-3;
@@ -71,7 +72,7 @@ TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 							roadFlag = y <= (height/2)+3  &&  y >= (height/2)-3;
 							break;
 						default:
-							LoggerWrapper::Error("Case " + std::to_string(flagOri) + " is not currently supported");
+							LoggerWrapper::Error("Case " + std::to_string(mapOri) + " is not currently supported");
 							break;
 					}
 
@@ -314,7 +315,7 @@ void NeighborhoodMapGenerator::DrawDoor(const Point& door) {
 
 void NeighborhoodMapGenerator::DrawNorthDoor(Point start, Point end) {
 	try {
-		bool validDoor = true;//false;
+		bool validDoor = false;
 		int x;
 		do{
 			x = randomWrap.getInt(start.getX() + 1, end.getX() - 1 );
@@ -337,7 +338,7 @@ void NeighborhoodMapGenerator::DrawNorthDoor(Point start, Point end) {
 void NeighborhoodMapGenerator::DrawEastDoor(Point start, Point end) {
 	try {
 		int y;
-		bool validDoor = true;//false;
+		bool validDoor = false;
 		do{
 			y = randomWrap.getInt(start.getY() + 1, end.getY() - 1);
 			if(ValidEWDoor(end.getX(), y)){
@@ -356,7 +357,7 @@ void NeighborhoodMapGenerator::DrawEastDoor(Point start, Point end) {
 void NeighborhoodMapGenerator::DrawWestDoor(Point start, Point end) {
 	try {
 		int y;
-		bool validDoor = true;//false;
+		bool validDoor = false;
 		do{
 			y = randomWrap.getInt(start.getY() + 1, end.getY() - 1);
 			if(ValidEWDoor(start.getX(), y)){
@@ -375,7 +376,7 @@ void NeighborhoodMapGenerator::DrawWestDoor(Point start, Point end) {
 void NeighborhoodMapGenerator::DrawSouthDoor(Point start, Point end) {
 	try {
 		int x;
-		bool validDoor = true;//false;
+		bool validDoor = false;
 		do{
 			x = randomWrap.getInt(start.getX() + 1, end.getX() - 1);
 			if(ValidEWDoor(x, end.getY())){
@@ -465,7 +466,7 @@ void NeighborhoodMapGenerator::DrawSECorner(Point point, TCODColor color) {
 void NeighborhoodMapGenerator::DrawSWCorner(Point point, TCODColor color) {
 	try {
 		int connectionsWest[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_LEFT};
-		int connectionsSouth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM, TileCharacters::Default::DOUBLE_PIPE_T_RIGHT, TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_RIGHT };
+		int connectionsSouth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM, TileCharacters::Default::DOUBLE_PIPE_T_RIGHT, TileCharacters::Default::DOUBLE_PIPE_T_LEFT, TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_RIGHT, TileCharacters::Default::DOUBLE_PIPE_CROSS };
 		bool westConnect = false;
 		bool southConnect = false;
 		if(point.getX() > 0)
@@ -772,13 +773,31 @@ void NeighborhoodMapGenerator::CreateHouse(int lotX, int lotY, TCODColor visible
 		LoggerWrapper::Debug("Creating House");
 #endif
 		Point lotStart(lotX, lotY);
-		Point lotEnd(lotX + 20, lotY + 20);
+		Point lotEnd(lotX + lotSize, lotY + lotSize);
 		DrawFence(lotStart, lotEnd);
-		Point buildingStart(lotX + 10, lotY + 10);
+		int xSectionCount = lotSize / (minRoomSizeX + 1);
+		int xSection = randomWrap.getInt(0, xSectionCount - 1);
+		int xOffset = minRoomSizeX * xSection;
+		int ySectionCount = lotSize / (minRoomSizeY + 1);
+		int ySection;
+		if(mapOri == Orientation::SOUTH){
+			ySection = ySectionCount - 1;
+		}
+		else if(mapOri == Orientation::NORTH){
+			ySection = 0;
+		}
+		else{
+			LoggerWrapper::Error("An incorrect orientation was used in CreateHouse " + std::to_string(mapOri));
+			throw 0;
+		}
+		int yOffset = minRoomSizeY * ySection;
+		Point buildingStart(lotX + xOffset, lotY + yOffset);
 		MapGenerator::Orientation side = randomWrap.GetOrientation();
 		int roomsLeft = 6;
-		int sizeX = randomWrap.getInt(minRoomSizeX, maxRoomSizeX);
-		int sizeY = randomWrap.getInt(minRoomSizeY, maxRoomSizeY);
+		int maxXSize = std::min( (lotX + lotSize) - (lotX + xOffset), maxRoomSizeX);
+		int maxYSize = std::min( (lotY + lotSize) - (lotY + yOffset), maxRoomSizeY);
+		int sizeX = randomWrap.getInt(minRoomSizeX, maxXSize - 1);
+		int sizeY = randomWrap.getInt(minRoomSizeY, maxYSize - 1);
 		Room initialRoom(buildingStart, sizeX, sizeY, side);
 		GenerateRoom(initialRoom, visible, Orientation::NONE, roomsLeft);
 //		EraseFence(lotStart, lotEnd);
@@ -856,10 +875,9 @@ bool NeighborhoodMapGenerator::ValidEWDoor(const int x, const int y) {
 	LoggerWrapper::Debug("Door X:" + std::to_string(x) + " Y:" + std::to_string(y));
 	int character =  map->GetCharacter(x, y);
 	int invalidCharacters[] = {TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM, TileCharacters::Default::DOUBLE_PIPE_T_LEFT, TileCharacters::Default::DOUBLE_PIPE_T_RIGHT, TileCharacters::Default::DOUBLE_PIPE_T_TOP };
-	validDoor = std::find(std::begin(invalidCharacters), std::end(invalidCharacters), character) == std::end(invalidCharacters);
-	if(validDoor)
-		LoggerWrapper::Debug("Character of door tile " + std::to_string(character));
+	validDoor = (std::find(std::begin(invalidCharacters), std::end(invalidCharacters), character) == std::end(invalidCharacters));
 
+	LoggerWrapper::Debug("Character of door tile " + std::to_string(character) + " is valid " + std::to_string(validDoor));
 	return validDoor;
 }
 
