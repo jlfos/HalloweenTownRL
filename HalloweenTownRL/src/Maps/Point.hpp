@@ -13,6 +13,7 @@ class Point {
 public:
 	Point(uint x, uint y);
 	Point(const Point& p);
+	Point(const Point& p, uint x, uint y);
 	virtual ~Point();
 
 	uint getX() const;

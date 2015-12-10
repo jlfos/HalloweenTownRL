@@ -111,7 +111,7 @@ std::vector<std::vector<Map*>> *Engine::CreateMaps(std::vector<std::vector<Engin
 					firstMapFlag = true;
 					playerMapX = j;
 					playerMapY = i;
-					generator = new NeighborhoodMapGenerator(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, MapGenerator::Orientation::SOUTH);
+					generator = new NeighborhoodMapGenerator(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, MapGenerator::Orientation::EAST);
 					break;
 				case Engine::MapType::CITY:
 					generator = new CityMapGenerator(false);

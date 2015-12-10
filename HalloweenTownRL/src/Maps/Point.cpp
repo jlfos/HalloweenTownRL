@@ -35,6 +35,11 @@ Point::~Point() {
 
 }
 
+Point::Point(const Point &p, uint x, uint y){
+	this->x = p.x + x;
+	this->y = p.y + y;
+}
+
 uint Point::getX() const {
 	return x;
 }

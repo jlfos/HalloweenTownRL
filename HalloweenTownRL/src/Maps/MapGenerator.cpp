@@ -13,6 +13,8 @@ void MapGenerator::DrawHorizontalLine(Map* map, Point start, Point end, int char
 	try {
 		for(u_int i = start.getX(); i <= end.getX() && i < map->GetWidth(); i++){
 			Point temp = Point(i, end.getY());
+
+
 			if(map->GetCharacter(temp.getX(), temp.getY() + 1) == TileCharacters::Default::DOUBLE_PIPE_VERTICAL){
 				character = TileCharacters::Default::DOUBLE_PIPE_T_TOP;
 			}

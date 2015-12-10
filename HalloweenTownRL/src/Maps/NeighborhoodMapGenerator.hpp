@@ -20,10 +20,12 @@ private:
 	int minRoomSizeY;
 	int maxRoomSizeX;
 	int maxRoomSizeY;
-	int lotSize;
+	int lotSizeX;
+	int lotSizeY;
 	MapGenerator::Orientation mapOri;
 	Map* map;
 	TCODMap* neighborhoodMap;
+	int treeChance;
 public:
 	NeighborhoodMapGenerator(int width, int height, MapGenerator::Orientation orientation);
 	void PopulateActors(Map* map);
@@ -56,7 +58,9 @@ private:
 	void DrawWalls(Orientation previousOrientation, const Room& room, TCODColor color);
 	void CreateHouse(int lotX, int lotY, TCODColor visible);
 	void DrawRoad(int x, int y, TCODMap* roadMap);
+	void DrawSidewalk(int x, int y, TCODMap* roadMap);
 	void DrawGrass(int x, int y, TCODMap* roadMap);
+	void GenerateTree(int x, int y, TCODMap* forestMap, Map* map);
 	bool InvalidRoomCorners(Point start, Point end);
 	bool ValidEWDoor(const int x, const int y);
 	bool ValidNSDoor(const int x, const int y);

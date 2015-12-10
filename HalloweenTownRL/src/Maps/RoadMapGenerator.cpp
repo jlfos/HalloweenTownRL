@@ -79,8 +79,10 @@ TCODMap* RoadMapGenerator::Generate(Map* map, bool generateActors){
 
 					if(roadFlag)
 						DrawRoad(x, y, roadMap);
-					else
-					DrawGrass(x, y, roadMap);
+					else{
+
+						DrawGrass(x, y, roadMap);
+					}
 				}
 
 			}

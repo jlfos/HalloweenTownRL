@@ -37,7 +37,6 @@ class RoadMapGenerator : public MapGenerator{
 		int minSizeY;
 		int maxSizeX;
 		int maxSizeY;
-
 };
 
 

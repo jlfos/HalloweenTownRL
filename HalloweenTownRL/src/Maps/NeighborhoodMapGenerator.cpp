@@ -20,10 +20,11 @@ NeighborhoodMapGenerator::NeighborhoodMapGenerator(int width, int height,
 		MapGenerator::Orientation orientation): mapWidth(width), mapHeight(height), mapOri(orientation) {
 	minRoomSizeX = 4;
 	minRoomSizeY = 4;
-	maxRoomSizeX = 9;
-	maxRoomSizeY = 9;
-	lotSize = 20;
-
+	maxRoomSizeX = 7;
+	maxRoomSizeY = 7;
+	lotSizeX = 26;
+	lotSizeY = 14;
+	treeChance = 30;
 }
 
 void NeighborhoodMapGenerator::PopulateActors(Map* map) {
@@ -38,13 +39,15 @@ TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 		this->map = map;
 		TCODColor visible = TCODColor::grey;
 
-		//TODO This is as close to 0,0 as I can go. I get exceptions otherwise. I need to look into this
 		int lotX = 0;
-		int lotY = 0;
+		int lotY = 3;
+		int yStreetSize = 7;
 		CreateHouse(lotX, lotY, visible);
-		CreateHouse(lotX + lotSize, lotY, visible);
-		CreateHouse(lotX + lotSize * 2, lotY, visible);
-
+		CreateHouse(lotX + lotSizeX, lotY, visible);
+		CreateHouse(lotX + lotSizeX * 2, lotY, visible);
+		CreateHouse(lotX, lotY + lotSizeY + yStreetSize, visible);
+		CreateHouse(lotX + lotSizeX, lotY + lotSizeY + yStreetSize, visible);
+		CreateHouse(lotX + lotSizeX * 2, lotY + lotSizeY + yStreetSize, visible);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height-1; y++) {
 				//TODO this needs to be set properly for the demo and lightsource needs to be fixed
@@ -62,29 +65,47 @@ TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 					neighborhoodMap->setProperties(x, y, true, true);
 
 					bool roadFlag = false;
+					int lampPostRate = 17;
 					switch(mapOri){
 						case MapGenerator::Orientation::NORTH:
 						case MapGenerator::Orientation::SOUTH:
-							roadFlag = x <= (width/2)+3  &&  x >= (width/2)-3;
+							roadFlag = (x <= (width/2)+3  &&  x >= (width/2)-3);
 							break;
 						case MapGenerator::Orientation::EAST:
 						case MapGenerator::Orientation::WEST:
-							roadFlag = y <= (height/2)+3  &&  y >= (height/2)-3;
+							if(y == (height / 2 ) + 2  ||  y == (height / 2) - 3){
+								if(y == (height / 2) + 2 && x % lampPostRate==0 && (x / lampPostRate) % 2 != 0 ) {
+									map->actors.push(ActorFactory::CreateLampPost(x, y));
+								}
+								else if(y == (height / 2) - 3 && x % lampPostRate==0 && (x / lampPostRate) % 2 == 0 ){
+									map->actors.push(ActorFactory::CreateLampPost(x, y));
+								}
+								else{
+									DrawSidewalk(x, y, neighborhoodMap);
+								}
+							}
+							else if(y <= (height/2)+3  &&  y >= (height/2)-3){
+								DrawRoad(x, y, neighborhoodMap);
+							}
+							else{
+								int tree = randomWrap.getInt(treeChance, 100);
+								if(tree%100==0){
+									GenerateTree(x, y, neighborhoodMap, map);
+								}
+								else{
+									DrawGrass(x, y, neighborhoodMap);
+								}
+							}
 							break;
 						default:
 							LoggerWrapper::Error("Case " + std::to_string(mapOri) + " is not currently supported");
 							break;
 					}
-
-					if(roadFlag)
-						DrawRoad(x, y, neighborhoodMap);
-					else
-					DrawGrass(x, y, neighborhoodMap);
 				}
 
 			}
 		}
-		map->actors.push(ActorFactory::CreateLampPost(75, 7));
+
 
 		return neighborhoodMap;
 	}
@@ -108,8 +129,34 @@ void NeighborhoodMapGenerator::DrawGrass(int x, int y, TCODMap* roadMap){
 	}
 }
 
+void NeighborhoodMapGenerator::GenerateTree(int x, int y, TCODMap* forestMap, Map* map){
+	try {
+		forestMap->setProperties(x, y, false, false);
+		TCODColor visible = TileColors::brown;
+		int character = TileCharacters::Default::YEN_SYMBOL;
+		map->SetTileProperties(x, y, visible, character);
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in ForestMapGenerator::GenerateTree");
+		throw 0;
+	}
+}
+
 
 void NeighborhoodMapGenerator::DrawRoad(int x, int y, TCODMap* roadMap){
+	try {
+		roadMap->setProperties(x, y, true, true);
+		TCODColor visible = TileColors::grey;
+		int character = TileCharacters::Default::PERIOD;
+		map->SetTileProperties(x, y, visible, character);
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawRoad");
+		throw 0;
+	}
+}
+
+void NeighborhoodMapGenerator::DrawSidewalk(int x, int y, TCODMap* roadMap){
 	try {
 		roadMap->setProperties(x, y, true, true);
 		TCODColor visible = TileColors::lightGrey;
@@ -398,7 +445,7 @@ void NeighborhoodMapGenerator::DrawSouthDoor(Point start, Point end) {
 
 void NeighborhoodMapGenerator::DrawNECorner(Point point, TCODColor color) {
 	try {
-		int connectionsEast[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_RIGHT, TileCharacters::Default::DOUBLE_PIPE_CROSS};
+		int connectionsEast[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_RIGHT, TileCharacters::Default::DOUBLE_PIPE_CROSS, TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM, TileCharacters::Default::DOUBLE_PIPE_T_TOP};
 		int connectionsNorth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_LEFT, TileCharacters::Default::DOUBLE_PIPE_T_LEFT };
 
 		bool eastConnect = false;
@@ -434,8 +481,8 @@ void NeighborhoodMapGenerator::DrawNECorner(Point point, TCODColor color) {
 
 void NeighborhoodMapGenerator::DrawSECorner(Point point, TCODColor color) {
 	try {
-		int connectionsEast[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_RIGHT, TileCharacters::Default::DOUBLE_PIPE_T_RIGHT};
-		int connectionsSouth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_LEFT , TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM, TileCharacters::Default::DOUBLE_PIPE_CROSS, TileCharacters::Default::DOUBLE_PIPE_T_TOP};
+		int connectionsEast[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_RIGHT, TileCharacters::Default::DOUBLE_PIPE_T_RIGHT, TileCharacters::Default::DOUBLE_PIPE_T_TOP};
+		int connectionsSouth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_LEFT , TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM, TileCharacters::Default::DOUBLE_PIPE_CROSS};
 
 		bool eastConnect = std::find(std::begin(connectionsEast), std::end(connectionsEast), map->GetCharacter(point.getX() + 1, point.getY())) != std::end(connectionsEast);
 		bool southConnect = std::find(std::begin(connectionsSouth), std::end(connectionsSouth), map->GetCharacter(point.getX(), point.getY() + 1) ) != std::end(connectionsSouth);
@@ -499,8 +546,8 @@ void NeighborhoodMapGenerator::DrawSWCorner(Point point, TCODColor color) {
 
 void NeighborhoodMapGenerator::DrawNWCorner(Point point, TCODColor color) {
 	try {
-		int connectionsWest[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_T_LEFT};
-		int connectionsNorth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_T_TOP};
+		int connectionsWest[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_T_LEFT, TileCharacters::Default::DOUBLE_PIPE_CROSS};
+		int connectionsNorth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_T_TOP, TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_RIGHT, TileCharacters::Default::DOUBLE_PIPE_T_RIGHT};
 
 		bool westConnect = false;
 
@@ -773,33 +820,47 @@ void NeighborhoodMapGenerator::CreateHouse(int lotX, int lotY, TCODColor visible
 		LoggerWrapper::Debug("Creating House");
 #endif
 		Point lotStart(lotX, lotY);
-		Point lotEnd(lotX + lotSize, lotY + lotSize);
+		Point lotEnd(lotX + lotSizeX, lotY + lotSizeY);
 		DrawFence(lotStart, lotEnd);
-		int xSectionCount = lotSize / (minRoomSizeX + 1);
+		int xSectionCount = lotSizeX / (minRoomSizeX + 1);
 		int xSection = randomWrap.getInt(0, xSectionCount - 1);
 		int xOffset = minRoomSizeX * xSection;
-		int ySectionCount = lotSize / (minRoomSizeY + 1);
+		int ySectionCount = lotSizeY / (minRoomSizeY + 1);
 		int ySection;
+		MapGenerator::Orientation side;
 		if(mapOri == Orientation::SOUTH){
 			ySection = ySectionCount - 1;
+			side = Orientation::NORTH;
 		}
 		else if(mapOri == Orientation::NORTH){
 			ySection = 0;
+			side = Orientation::SOUTH;
 		}
 		else{
-			LoggerWrapper::Error("An incorrect orientation was used in CreateHouse " + std::to_string(mapOri));
-			throw 0;
+			//TODO This needs to be fixed. Instead of branching on mapOri it should probably branch off a orientation parameter.
+			ySection = ySectionCount - 1;
+			side = Orientation::NORTH;
+//			LoggerWrapper::Error("An incorrect orientation was used in CreateHouse " + std::to_string(mapOri));
+//			throw 0;
 		}
 		int yOffset = minRoomSizeY * ySection;
+		xOffset = std::max(1, xOffset);
+
 		Point buildingStart(lotX + xOffset, lotY + yOffset);
-		MapGenerator::Orientation side = randomWrap.GetOrientation();
+		LoggerWrapper::Debug("StartX: " + std::to_string(buildingStart.getX()) + " StartY: " + std::to_string(buildingStart.getY()));
+
 		int roomsLeft = 6;
-		int maxXSize = std::min( (lotX + lotSize) - (lotX + xOffset), maxRoomSizeX);
-		int maxYSize = std::min( (lotY + lotSize) - (lotY + yOffset), maxRoomSizeY);
-		int sizeX = randomWrap.getInt(minRoomSizeX, maxXSize - 1);
-		int sizeY = randomWrap.getInt(minRoomSizeY, maxYSize - 1);
-		Room initialRoom(buildingStart, sizeX, sizeY, side);
-		GenerateRoom(initialRoom, visible, Orientation::NONE, roomsLeft);
+		//lot start + lot size (aka end of lot)
+		int maxXSize = std::min( (lotX + lotSizeX) - (lotX + xOffset), maxRoomSizeX);
+		int maxYSize = std::min( (lotY + lotSizeY) - (lotY + yOffset), maxRoomSizeY);
+		Point buildingEnd(lotX, lotY);
+		do{
+			int sizeX = randomWrap.getInt(minRoomSizeX, maxXSize);
+			int sizeY = randomWrap.getInt(minRoomSizeY, maxYSize);
+			buildingEnd = Point(buildingStart, sizeX, sizeY);
+		}while(map->TileHasBeenSet(buildingEnd));
+		Room initialRoom(buildingStart, buildingEnd, side);
+		GenerateRoom(initialRoom, visible, Orientation::SOUTH, roomsLeft);
 //		EraseFence(lotStart, lotEnd);
 	}
 	catch (...) {
