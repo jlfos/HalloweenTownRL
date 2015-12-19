@@ -32,6 +32,7 @@ public:
 	TCODMap* Generate(Map* map, bool generateActors);
 
 private:
+	enum class BORDERS { T, T_R, T_B, T_L, T_R_B, T_R_B_L};
 	RandomWrapper randomWrap;
 	int GenerateRoom(Room room, TCODColor color, Orientation previousOrientation, int roomsLeft);
 	void GenerateRoom(Point start, Point end, TCODColor color, Orientation orientation, int roomsLeft);
@@ -40,6 +41,7 @@ private:
 	void DrawEastWall(Point start, Point end, TCODColor color);
 	void DrawWestWall(Point start, Point end, TCODColor color);
 	void DrawInterior(Point start, Point end, int character);
+	void DrawFilledSquare(Point start, Point end, TCODColor visible,  int character);
 	void DrawNECorner(Point point, TCODColor color);
 	void DrawSECorner(Point point, TCODColor color);
 	void DrawSWCorner(Point point, TCODColor color);
@@ -56,16 +58,19 @@ private:
 	void GenerateRoom(const Room& room, TCODColor color, int roomsLeft);
 	void DrawNextDoor(Room* ra);
 	void DrawWalls(Orientation previousOrientation, const Room& room, TCODColor color);
-	void CreateHouse(int lotX, int lotY, TCODColor visible);
+	void CreateHouse(int lotX, int lotY, MapGenerator::Orientation side,TCODColor visible);
 	void DrawRoad(int x, int y, TCODMap* roadMap);
 	void DrawSidewalk(int x, int y, TCODMap* roadMap);
 	void DrawGrass(int x, int y, TCODMap* roadMap);
 	void GenerateTree(int x, int y, TCODMap* forestMap, Map* map);
 	bool InvalidRoomCorners(Point start, Point end);
-	bool ValidEWDoor(const int x, const int y);
-	bool ValidNSDoor(const int x, const int y);
+	bool ValidDoor(const int x, const int y);
 	Point CheckHorizontalRoom(Point start, bool xNegFlag, bool yNegFlag);
 	Point CheckVerticalRoom(Point start, bool xNegFlag, bool yNegFlag);
+
+	void DrawSquareBorders(Point start, Point end, TCODColor visible, BORDERS border, int character);
+
+
 };
 
 

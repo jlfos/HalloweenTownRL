@@ -42,12 +42,12 @@ TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 		int lotX = 0;
 		int lotY = 3;
 		int yStreetSize = 7;
-		CreateHouse(lotX, lotY, visible);
-		CreateHouse(lotX + lotSizeX, lotY, visible);
-		CreateHouse(lotX + lotSizeX * 2, lotY, visible);
-		CreateHouse(lotX, lotY + lotSizeY + yStreetSize, visible);
-		CreateHouse(lotX + lotSizeX, lotY + lotSizeY + yStreetSize, visible);
-		CreateHouse(lotX + lotSizeX * 2, lotY + lotSizeY + yStreetSize, visible);
+		CreateHouse(lotX, lotY, MapGenerator::Orientation::NORTH, visible);
+		CreateHouse(lotX + lotSizeX, lotY, MapGenerator::Orientation::NORTH, visible);
+		CreateHouse(lotX + lotSizeX * 2, lotY, MapGenerator::Orientation::NORTH, visible);
+		CreateHouse(lotX, lotY + lotSizeY + yStreetSize, MapGenerator::Orientation::SOUTH, visible);
+		CreateHouse(lotX + lotSizeX, lotY + lotSizeY + yStreetSize, MapGenerator::Orientation::SOUTH, visible);
+		CreateHouse(lotX + lotSizeX * 2, lotY + lotSizeY + yStreetSize, MapGenerator::Orientation::SOUTH, visible);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height-1; y++) {
 				//TODO this needs to be set properly for the demo and lightsource needs to be fixed
@@ -367,7 +367,7 @@ void NeighborhoodMapGenerator::DrawNorthDoor(Point start, Point end) {
 		do{
 			x = randomWrap.getInt(start.getX() + 1, end.getX() - 1 );
 
-			if(ValidEWDoor(x, start.getY())){
+			if(ValidDoor(x, start.getY())){
 				validDoor = true;
 			}
 
@@ -388,7 +388,7 @@ void NeighborhoodMapGenerator::DrawEastDoor(Point start, Point end) {
 		bool validDoor = false;
 		do{
 			y = randomWrap.getInt(start.getY() + 1, end.getY() - 1);
-			if(ValidEWDoor(end.getX(), y)){
+			if(ValidDoor(end.getX(), y)){
 				validDoor = true;
 			}
 		} while(!validDoor);
@@ -407,7 +407,7 @@ void NeighborhoodMapGenerator::DrawWestDoor(Point start, Point end) {
 		bool validDoor = false;
 		do{
 			y = randomWrap.getInt(start.getY() + 1, end.getY() - 1);
-			if(ValidEWDoor(start.getX(), y)){
+			if(ValidDoor(start.getX(), y)){
 				validDoor = true;
 			}
 		} while(!validDoor);
@@ -426,7 +426,7 @@ void NeighborhoodMapGenerator::DrawSouthDoor(Point start, Point end) {
 		bool validDoor = false;
 		do{
 			x = randomWrap.getInt(start.getX() + 1, end.getX() - 1);
-			if(ValidEWDoor(x, end.getY())){
+			if(ValidDoor(x, end.getY())){
 				validDoor = true;
 			}
 
@@ -645,7 +645,7 @@ void NeighborhoodMapGenerator::DrawInterior(Point start, Point end, int characte
 		TCODColor visible = TCODColor::grey;
 		for(uint i = start.getX() + 1 ; i < end.getX(); i++){
 			for(uint j = start.getY() + 1 ; j < end.getY(); j++){
-//				int character = TileCharacters::Default::PERIOD;
+				int character = TileCharacters::Default::PERIOD;
 				map->SetTileProperties(Point(i, j), visible, character);
 			}
 		}
@@ -655,6 +655,27 @@ void NeighborhoodMapGenerator::DrawInterior(Point start, Point end, int characte
 		throw 0;
 	}
 }
+
+
+void NeighborhoodMapGenerator::DrawFilledSquare(Point start, Point end, TCODColor visible, int character) { //TODO this needs to go back to being period but I will keep it like this for debugging purposes
+	try{
+		for(uint i = start.getX() ; i <= end.getX(); i++){
+			for(uint j = start.getY() ; j <= end.getY(); j++){
+				map->SetTileProperties(Point(i, j), visible, character);
+			}
+		}
+	}
+	catch(...){
+		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::GenerateInterior");
+		throw 0;
+	}
+}
+
+void NeighborhoodMapGenerator::DrawSquareBorders(Point start, Point end, TCODColor visible, BORDERS border, int character){
+
+}
+
+
 
 void NeighborhoodMapGenerator::DrawNorthWall(Point start, Point end, TCODColor color) {
 	try {
@@ -793,7 +814,6 @@ void NeighborhoodMapGenerator::DrawWalls(Orientation previousOrientation, const 
 
 		}
 		if (previousOrientation != MapGenerator::Orientation::NORTH) {
-
 			if (previousOrientation == MapGenerator::Orientation::NONE)
 				DrawNorthDoor(room.getNWCorner(), room.getSECorner());
 		}
@@ -814,7 +834,7 @@ void NeighborhoodMapGenerator::DrawWalls(Orientation previousOrientation, const 
 	}
 }
 
-void NeighborhoodMapGenerator::CreateHouse(int lotX, int lotY, TCODColor visible) {
+void NeighborhoodMapGenerator::CreateHouse(int lotX, int lotY, MapGenerator::Orientation side, TCODColor visible) {
 	try {
 #ifdef NMG_LOGGER
 		LoggerWrapper::Debug("Creating House");
@@ -822,34 +842,35 @@ void NeighborhoodMapGenerator::CreateHouse(int lotX, int lotY, TCODColor visible
 		Point lotStart(lotX, lotY);
 		Point lotEnd(lotX + lotSizeX, lotY + lotSizeY);
 		DrawFence(lotStart, lotEnd);
-		int xSectionCount = lotSizeX / (minRoomSizeX + 1);
-		int xSection = randomWrap.getInt(0, xSectionCount - 1);
+
+		int xSectionCount = lotSizeX / (minRoomSizeX); //Break into sections based off the minimum room size
+		int xSection = randomWrap.getInt(0, xSectionCount - 1); //Randomly selects which X section will be used
 		int xOffset = minRoomSizeX * xSection;
-		int ySectionCount = lotSizeY / (minRoomSizeY + 1);
+		xOffset = std::max(1, xOffset); //Calculates the offset and makes sure that it is at least 1
+
+		int ySectionCount = lotSizeY / (minRoomSizeY);
 		int ySection;
-		MapGenerator::Orientation side;
-		if(mapOri == Orientation::SOUTH){
-			ySection = ySectionCount - 1;
-			side = Orientation::NORTH;
-		}
-		else if(mapOri == Orientation::NORTH){
+		switch(side){
+		case Orientation::SOUTH:
 			ySection = 0;
-			side = Orientation::SOUTH;
-		}
-		else{
-			//TODO This needs to be fixed. Instead of branching on mapOri it should probably branch off a orientation parameter.
+			break;
+		case Orientation::NORTH:
 			ySection = ySectionCount - 1;
-			side = Orientation::NORTH;
-//			LoggerWrapper::Error("An incorrect orientation was used in CreateHouse " + std::to_string(mapOri));
-//			throw 0;
+			break;
+		default:
+			LoggerWrapper::Error("An incorrect orientation was used in CreateHouse " + std::to_string(mapOri));
+			throw 0;
+			break;
+
 		}
 		int yOffset = minRoomSizeY * ySection;
-		xOffset = std::max(1, xOffset);
+		yOffset = std::max(1, yOffset);
 
 		Point buildingStart(lotX + xOffset, lotY + yOffset);
 		LoggerWrapper::Debug("StartX: " + std::to_string(buildingStart.getX()) + " StartY: " + std::to_string(buildingStart.getY()));
 
 		int roomsLeft = 6;
+
 		//lot start + lot size (aka end of lot)
 		int maxXSize = std::min( (lotX + lotSizeX) - (lotX + xOffset), maxRoomSizeX);
 		int maxYSize = std::min( (lotY + lotSizeY) - (lotY + yOffset), maxRoomSizeY);
@@ -859,9 +880,11 @@ void NeighborhoodMapGenerator::CreateHouse(int lotX, int lotY, TCODColor visible
 			int sizeY = randomWrap.getInt(minRoomSizeY, maxYSize);
 			buildingEnd = Point(buildingStart, sizeX, sizeY);
 		}while(map->TileHasBeenSet(buildingEnd));
+
 		Room initialRoom(buildingStart, buildingEnd, side);
-		GenerateRoom(initialRoom, visible, Orientation::SOUTH, roomsLeft);
-//		EraseFence(lotStart, lotEnd);
+		GenerateRoom(initialRoom, visible, side, roomsLeft);
+		EraseFence(lotStart, lotEnd);
+
 	}
 	catch (...) {
 		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::CreateHouse");
@@ -931,7 +954,7 @@ Point NeighborhoodMapGenerator::CheckHorizontalRoom(Point start, bool xNegFlag, 
 	}
 }
 
-bool NeighborhoodMapGenerator::ValidEWDoor(const int x, const int y) {
+bool NeighborhoodMapGenerator::ValidDoor(const int x, const int y) {
 	bool validDoor = false;
 	LoggerWrapper::Debug("Door X:" + std::to_string(x) + " Y:" + std::to_string(y));
 	int character =  map->GetCharacter(x, y);
@@ -942,17 +965,6 @@ bool NeighborhoodMapGenerator::ValidEWDoor(const int x, const int y) {
 	return validDoor;
 }
 
-bool NeighborhoodMapGenerator::ValidNSDoor(const int x, const int y) {
-	bool validDoor = false;
-	if( (map->GetCharacter(x, y + 1 ) == TileCharacters::Default::PERIOD ||
-			map->GetCharacter(x, y + 1 ) == TileCharacters::Default::RAINBOW) &&
-			(map->GetCharacter(x, y - 1 ) == TileCharacters::Default::PERIOD ||
-					map->GetCharacter(x, y - 1 ) == TileCharacters::Default::RAINBOW)){
-		validDoor = true;
-	}
-	return validDoor;
-
-}
 
 Point NeighborhoodMapGenerator::CheckVerticalRoom(Point start, bool xNegFlag, bool yNegFlag) {
 	try {
