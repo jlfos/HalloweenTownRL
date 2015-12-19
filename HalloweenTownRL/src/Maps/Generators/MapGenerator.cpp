@@ -3,10 +3,10 @@
  *
  *  Created on: Nov 9, 2015
  */
-#include "../LoggerWrapper.hpp"
-#include "Map.hpp"
+#include "../../LoggerWrapper.hpp"
+#include "../Map.hpp"
 #include "MapGenerator.hpp"
-#include "../Tile/TileColors.hpp"
+#include "../../Tile/TileColors.hpp"
 
 
 void MapGenerator::DrawHorizontalLine(Map* map, Point start, Point end, int character, TCODColor color) {

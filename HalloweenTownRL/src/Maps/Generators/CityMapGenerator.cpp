@@ -7,10 +7,10 @@
 #include <iostream>
 #include "libtcod.hpp"
 #include "CityMapGenerator.hpp"
-#include "../LoggerWrapper.hpp"
-#include "../Maps/Map.hpp"
-#include "../Tile/TileCharacters.hpp"
-#include "../Tile/TileColors.hpp"
+#include "../../LoggerWrapper.hpp"
+#include "../Map.hpp"
+#include "../../Tile/TileCharacters.hpp"
+#include "../../Tile/TileColors.hpp"
 
 CityMapGenerator::CityMapGenerator(bool boss) :boss(boss) {
 	rng = TCODRandom::getInstance();

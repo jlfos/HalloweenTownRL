@@ -8,9 +8,9 @@
 #define NEIGHBORHOODMAPGENERATOR_HPP
 #include "libtcod.hpp"
 #include "MapGenerator.hpp"
-#include "Point.hpp"
-#include "Room.hpp"
-#include "../RandomWrapper.hpp"
+#include "../Point.hpp"
+#include "../Room.hpp"
+#include "../../RandomWrapper.hpp"
 class NeighborhoodMapGenerator : public MapGenerator {
 
 private:

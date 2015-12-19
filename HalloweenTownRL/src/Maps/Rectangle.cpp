@@ -6,10 +6,9 @@
 
 #include "Rectangle.hpp"
 
-Rectangle::Rectangle(Point nwCorner, Point seCorner, TCODColor color, int character) {
-	this->nwCorner = nwCorner;
-	this->seCorner = seCorner;
-	this->color = color;
+Rectangle::Rectangle(Point nwCorner, Point seCorner, TCODColor color, int character) :
+	nwCorner(nwCorner), seCorner(seCorner), color(color){
+
 	this->details.neCorner = character;
 	this->details.northSide = character;
 	this->details.nwCorner = character;

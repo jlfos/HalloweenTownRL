@@ -8,7 +8,7 @@
 #include <set>
 #include "libtcod.hpp"
 #include "Map.hpp"
-#include "MapGenerator.hpp"
+#include "Generators/MapGenerator.hpp"
 #include "RoadMapGenerator.hpp"
 #include "../Tile/TileColors.hpp"
 #include "../LoggerWrapper.hpp"

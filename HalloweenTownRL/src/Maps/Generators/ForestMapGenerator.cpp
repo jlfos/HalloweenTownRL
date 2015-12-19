@@ -5,13 +5,13 @@
  */
 #include <iostream>
 #include "libtcod.hpp"
-#include "../Actor/Actor.hpp"
-#include "../Actor/ActorFactory.hpp"
+#include "../../Actor/Actor.hpp"
+#include "../../Actor/ActorFactory.hpp"
 #include "ForestMapGenerator.hpp"
-#include "../LoggerWrapper.hpp"
-#include "Map.hpp"
+#include "../../LoggerWrapper.hpp"
+#include "../Map.hpp"
 #include "MapGenerator.hpp"
-#include "../Tile/TileColors.hpp"
+#include "../../Tile/TileColors.hpp"
 
 
 ForestMapGenerator::ForestMapGenerator() : ForestMapGenerator(MapGenerator::Orientation::NORTH){

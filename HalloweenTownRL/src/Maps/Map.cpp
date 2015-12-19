@@ -7,7 +7,7 @@
 #include "../UI/Gui.hpp"
 #include "../LoggerWrapper.hpp"
 #include "Map.hpp"
-#include "MapGenerator.hpp"
+#include "Generators/MapGenerator.hpp"
 #include "../Tile/TileColors.hpp"
 
 const float fogOfWarModifer = 0.1;

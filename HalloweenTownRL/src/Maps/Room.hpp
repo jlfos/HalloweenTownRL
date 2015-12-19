@@ -7,7 +7,7 @@
 #ifndef ROOM_HPP
 #define ROOM_HPP
 
-#include "MapGenerator.hpp"
+#include "Generators/MapGenerator.hpp"
 #include "Point.hpp"
 
 

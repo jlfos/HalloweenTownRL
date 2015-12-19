@@ -6,11 +6,11 @@
 
 #include "libtcod.hpp"
 
-#include "Map.hpp"
+#include "../Map.hpp"
 #include "MapGenerator.hpp"
 #include "NeighborhoodMapGenerator.hpp"
-#include "../Tile/TileColors.hpp"
-#include "../LoggerWrapper.hpp"
+#include "../../Tile/TileColors.hpp"
+#include "../../LoggerWrapper.hpp"
 
 #ifndef NMG_LOGGER
 #define NMG_LOGGER

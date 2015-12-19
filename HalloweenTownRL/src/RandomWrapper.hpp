@@ -10,7 +10,7 @@
 #include "libtcod.hpp"
 #include <memory>
 
-#include "Maps/MapGenerator.hpp"
+#include "Maps/Generators/MapGenerator.hpp"
 
 class RoadMapGenerator;
 
