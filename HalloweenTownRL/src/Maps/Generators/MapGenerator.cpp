@@ -57,3 +57,57 @@ void MapGenerator::DrawVerticalLine(Map* map, Point start, Point end, int charac
 		throw 0;
 	}
 }
+
+
+void MapGenerator::DrawGrass(Map* map, TCODMap* roadMap, int x, int y){
+	try {
+		roadMap->setProperties(x, y, true, true);
+		TCODColor visible = TileColors::green;
+		int character = TileCharacters::Default::PERIOD;
+		map->SetTileProperties(x, y, visible, character);
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawGrass");
+		throw 0;
+	}
+}
+
+void MapGenerator::DrawTree(Map* map, TCODMap* forestMap, int x, int y){
+	try {
+		forestMap->setProperties(x, y, false, false);
+		TCODColor visible = TileColors::brown;
+		int character = TileCharacters::Default::YEN_SYMBOL;
+		map->SetTileProperties(x, y, visible, character);
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in ForestMapGenerator::GenerateTree");
+		throw 0;
+	}
+}
+
+
+void MapGenerator::DrawRoad(Map* map, TCODMap* roadMap, int x, int y){
+	try {
+		roadMap->setProperties(x, y, true, true);
+		TCODColor visible = TileColors::grey;
+		int character = TileCharacters::Default::PERIOD;
+		map->SetTileProperties(x, y, visible, character);
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawRoad");
+		throw 0;
+	}
+}
+
+void MapGenerator::DrawSidewalk(Map* map, TCODMap* roadMap, int x, int y){
+	try {
+		roadMap->setProperties(x, y, true, true);
+		TCODColor visible = TileColors::lightGrey;
+		int character = TileCharacters::Default::PERIOD;
+		map->SetTileProperties(x, y, visible, character);
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawRoad");
+		throw 0;
+	}
+}

@@ -7,11 +7,11 @@
 #include <memory>
 #include <set>
 #include "libtcod.hpp"
-#include "Map.hpp"
-#include "Generators/MapGenerator.hpp"
+#include "../Map.hpp"
+#include "MapGenerator.hpp"
 #include "RoadMapGenerator.hpp"
-#include "../Tile/TileColors.hpp"
-#include "../LoggerWrapper.hpp"
+#include "../../Tile/TileColors.hpp"
+#include "../../LoggerWrapper.hpp"
 
 #ifndef RMG_LOGGER
 //#define RMG_LOGGER

@@ -10,10 +10,9 @@
 
 #include <memory>
 #include "libtcod.hpp"
-#include "Generators/MapGenerator.hpp"
-#include "Point.hpp"
-#include "../RandomWrapper.hpp"
-#include "Room.hpp"
+#include "MapGenerator.hpp"
+#include "../Point.hpp"
+#include "../../RandomWrapper.hpp"
 class Map;
 class RandomWrapper;
 

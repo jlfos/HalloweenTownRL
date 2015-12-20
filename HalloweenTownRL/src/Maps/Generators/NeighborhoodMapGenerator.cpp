@@ -81,19 +81,19 @@ TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 									map->actors.push(ActorFactory::CreateLampPost(x, y));
 								}
 								else{
-									DrawSidewalk(x, y, neighborhoodMap);
+									DrawSidewalk(map, neighborhoodMap, x, y);
 								}
 							}
 							else if(y <= (height/2)+3  &&  y >= (height/2)-3){
-								DrawRoad(x, y, neighborhoodMap);
+								DrawRoad(map, neighborhoodMap, x, y);
 							}
 							else{
 								int tree = randomWrap.getInt(treeChance, 100);
 								if(tree%100==0){
-									GenerateTree(x, y, neighborhoodMap, map);
+									DrawTree(map, neighborhoodMap, x, y);
 								}
 								else{
-									DrawGrass(x, y, neighborhoodMap);
+									DrawGrass(map, neighborhoodMap, x, y);
 								}
 							}
 							break;
@@ -102,11 +102,8 @@ TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 							break;
 					}
 				}
-
 			}
 		}
-
-
 		return neighborhoodMap;
 	}
 	catch(...){
@@ -115,75 +112,16 @@ TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 	}
 }
 
-
-void NeighborhoodMapGenerator::DrawGrass(int x, int y, TCODMap* roadMap){
-	try {
-		roadMap->setProperties(x, y, true, true);
-		TCODColor visible = TileColors::green;
-		int character = TileCharacters::Default::PERIOD;
-		map->SetTileProperties(x, y, visible, character);
-	}
-	catch (...) {
-		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawGrass");
-		throw 0;
-	}
-}
-
-void NeighborhoodMapGenerator::GenerateTree(int x, int y, TCODMap* forestMap, Map* map){
-	try {
-		forestMap->setProperties(x, y, false, false);
-		TCODColor visible = TileColors::brown;
-		int character = TileCharacters::Default::YEN_SYMBOL;
-		map->SetTileProperties(x, y, visible, character);
-	}
-	catch (...) {
-		LoggerWrapper::Error("An error occurred in ForestMapGenerator::GenerateTree");
-		throw 0;
-	}
-}
-
-
-void NeighborhoodMapGenerator::DrawRoad(int x, int y, TCODMap* roadMap){
-	try {
-		roadMap->setProperties(x, y, true, true);
-		TCODColor visible = TileColors::grey;
-		int character = TileCharacters::Default::PERIOD;
-		map->SetTileProperties(x, y, visible, character);
-	}
-	catch (...) {
-		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawRoad");
-		throw 0;
-	}
-}
-
-void NeighborhoodMapGenerator::DrawSidewalk(int x, int y, TCODMap* roadMap){
-	try {
-		roadMap->setProperties(x, y, true, true);
-		TCODColor visible = TileColors::lightGrey;
-		int character = TileCharacters::Default::PERIOD;
-		map->SetTileProperties(x, y, visible, character);
-	}
-	catch (...) {
-		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawRoad");
-		throw 0;
-	}
-}
-
 void NeighborhoodMapGenerator::EraseFence(Point start, Point end) {
 	try {
-		Room ra(start, end, MapGenerator::Orientation::NORTH);
-		DrawHorizontalLine(map, ra.getNWCorner(), ra.getNECorner(), TileCharacters::RAINBOW, TCODColor::white);
-		DrawVerticalLine(map, ra.getNECorner(), ra.getSECorner(), TileCharacters::RAINBOW, TCODColor::white);
-		DrawHorizontalLine(map, ra.getSWCorner(), ra.getSECorner(), TileCharacters::RAINBOW, TCODColor::white);
-		DrawVerticalLine(map, ra.getNWCorner(), ra.getSWCorner(), TileCharacters::RAINBOW, TCODColor::white);
-		map->SetTileProperties(ra.getSECorner(), TCODColor::white, TileCharacters::RAINBOW);
+		Rectangle fence(start, end, TCODColor::white, TileCharacters::Default::RAINBOW);
+		fence.Draw(map);
 	}
 	catch (...) {
 		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::EraseFence");
 		throw 0;
 	}
 }
-
 
 
 Room* NeighborhoodMapGenerator::FindNextDoor(Point start, Point end, Orientation potential) {
@@ -442,146 +380,6 @@ void NeighborhoodMapGenerator::DrawSouthDoor(Point start, Point end) {
 }
 
 
-
-void NeighborhoodMapGenerator::DrawNECorner(Point point, TCODColor color) {
-	try {
-		int connectionsEast[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_RIGHT, TileCharacters::Default::DOUBLE_PIPE_CROSS, TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM, TileCharacters::Default::DOUBLE_PIPE_T_TOP};
-		int connectionsNorth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_LEFT, TileCharacters::Default::DOUBLE_PIPE_T_LEFT };
-
-		bool eastConnect = false;
-
-		bool northConnect = false;
-
-		if(point.getY() > 0){
-			northConnect = std::find(std::begin(connectionsNorth), std::end(connectionsNorth), map->GetCharacter(point.getX(), point.getY() - 1)) != std::end(connectionsNorth);
-		}
-		eastConnect = std::find(std::begin(connectionsEast), std::end(connectionsEast), map->GetCharacter(point.getX() + 1, point.getY())) != std::end(connectionsEast);
-		int character;
-		if(eastConnect || northConnect){
-			if(eastConnect && northConnect){
-				character = TileCharacters::Default::DOUBLE_PIPE_CROSS;
-			}
-			else if(eastConnect){
-				character = TileCharacters::Default::DOUBLE_PIPE_T_TOP;
-			}
-			else{
-				character = TileCharacters::Default::DOUBLE_PIPE_T_RIGHT;
-			}
-		}
-		else{
-			character = TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_RIGHT;
-		}
-		map->SetTileProperties(point, color, character);
-	}
-	catch (...) {
-		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawNECorner");
-		throw 0;
-	}
-}
-
-void NeighborhoodMapGenerator::DrawSECorner(Point point, TCODColor color) {
-	try {
-		int connectionsEast[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_RIGHT, TileCharacters::Default::DOUBLE_PIPE_T_RIGHT, TileCharacters::Default::DOUBLE_PIPE_T_TOP};
-		int connectionsSouth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_LEFT , TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM, TileCharacters::Default::DOUBLE_PIPE_CROSS};
-
-		bool eastConnect = std::find(std::begin(connectionsEast), std::end(connectionsEast), map->GetCharacter(point.getX() + 1, point.getY())) != std::end(connectionsEast);
-		bool southConnect = std::find(std::begin(connectionsSouth), std::end(connectionsSouth), map->GetCharacter(point.getX(), point.getY() + 1) ) != std::end(connectionsSouth);
-
-		int character;
-		if(eastConnect || southConnect){
-			if(eastConnect && southConnect){
-				character = TileCharacters::Default::DOUBLE_PIPE_CROSS;
-			}
-			else if(eastConnect){
-				character = TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM;
-			}
-			else{
-				character = TileCharacters::Default::DOUBLE_PIPE_T_RIGHT;
-			}
-		}
-		else{
-			character = TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_RIGHT;
-		}
-		map->SetTileProperties(point, color, character);
-	}
-	catch (...) {
-		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawSECorner");
-		throw 0;
-	}
-}
-
-void NeighborhoodMapGenerator::DrawSWCorner(Point point, TCODColor color) {
-	try {
-		int connectionsWest[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_LEFT};
-		int connectionsSouth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM, TileCharacters::Default::DOUBLE_PIPE_T_RIGHT, TileCharacters::Default::DOUBLE_PIPE_T_LEFT, TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_RIGHT, TileCharacters::Default::DOUBLE_PIPE_CROSS };
-		bool westConnect = false;
-		bool southConnect = false;
-		if(point.getX() > 0)
-			westConnect = std::find(std::begin(connectionsWest), std::end(connectionsWest), map->GetCharacter(point.getX() - 1, point.getY())) != std::end(connectionsWest);
-
-		southConnect = std::find(std::begin(connectionsSouth), std::end(connectionsSouth), map->GetCharacter(point.getX(), point.getY() + 1) ) != std::end(connectionsSouth);
-
-		int character;
-		if(westConnect || southConnect){
-			if(westConnect && southConnect){
-				character = TileCharacters::Default::DOUBLE_PIPE_CROSS;
-			}
-			else if(westConnect){
-				character = TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM;
-			}
-			else{
-				character = TileCharacters::Default::DOUBLE_PIPE_T_LEFT;
-			}
-		}
-		else{
-			character = TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_LEFT;;
-		}
-		map->SetTileProperties(point, color, character);
-	}
-	catch (...) {
-		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawSWCorner");
-		throw 0;
-	}
-}
-
-void NeighborhoodMapGenerator::DrawNWCorner(Point point, TCODColor color) {
-	try {
-		int connectionsWest[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_T_LEFT, TileCharacters::Default::DOUBLE_PIPE_CROSS};
-		int connectionsNorth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_T_TOP, TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_RIGHT, TileCharacters::Default::DOUBLE_PIPE_T_RIGHT};
-
-		bool westConnect = false;
-
-		bool northConnect = false;
-
-
-		if(point.getY() > 0)
-			northConnect = std::find(std::begin(connectionsNorth), std::end(connectionsNorth), map->GetCharacter(point.getX(), point.getY() - 1)) != std::end(connectionsNorth);
-		if(point.getX() > 0){
-			westConnect = std::find(std::begin(connectionsWest), std::end(connectionsWest), map->GetCharacter(point.getX() - 1, point.getY())) != std::end(connectionsWest);
-		}
-		int character;
-		if(westConnect || northConnect){
-			if(westConnect && northConnect){
-				character = TileCharacters::Default::DOUBLE_PIPE_CROSS;
-			}
-			else if(westConnect){
-				character = TileCharacters::Default::DOUBLE_PIPE_T_TOP;
-			}
-			else{
-				character = TileCharacters::Default::DOUBLE_PIPE_T_LEFT;
-			}
-		}
-		else{
-			character = TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_LEFT;
-		}
-		map->SetTileProperties(point, color, character);
-	}
-	catch (...) {
-		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawNWCorner");
-		throw 0;
-	}
-}
-
 Room* NeighborhoodMapGenerator::FindNextDoor(Point start, Point end) {
 	try{
 	bool notFound = true;
@@ -619,10 +417,8 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Point start, Point end) {
 
 void NeighborhoodMapGenerator::DrawFence(Point start, Point end) {
 	try {
-		DrawNorthWall(start, Point(end.getX(), start.getY()), TCODColor::white);
-		DrawSouthWall(Point(start.getX(), end.getY()), end, TCODColor::white);
-		DrawEastWall(Point(end.getX(), start.getY()), end, TCODColor::white);
-		DrawWestWall(start, Point(start.getX(), end.getY()), TCODColor::white);
+		Rectangle fence(start, end, TCODColor::white, TileCharacters::Default::DOUBLE_EXCLAMATION);
+		fence.Draw(map);
 	}
 	catch (...) {
 		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawFence");
@@ -671,59 +467,6 @@ void NeighborhoodMapGenerator::DrawFilledSquare(Point start, Point end, TCODColo
 	}
 }
 
-void NeighborhoodMapGenerator::DrawSquareBorders(Point start, Point end, TCODColor visible, BORDERS border, int character){
-
-}
-
-
-
-void NeighborhoodMapGenerator::DrawNorthWall(Point start, Point end, TCODColor color) {
-	try {
-		DrawNWCorner(start, color);
-		DrawHorizontalLine(map, Point(start.getX() + 1, start.getY()), end, TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, color);
-		DrawNECorner(end, color);
-	}
-	catch (...) {
-		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawNorthWall");
-		throw 0;
-	}
-}
-
-void NeighborhoodMapGenerator::DrawSouthWall(Point start, Point end, TCODColor color) {
-	try {
-		DrawSWCorner(start, color);
-		DrawHorizontalLine(map, Point(start.getX() + 1, start.getY()), end, TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, color);
-		DrawSECorner(end, color);
-	}
-	catch (...) {
-		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawSouthWall");
-		throw 0;
-	}
-}
-
-void NeighborhoodMapGenerator::DrawEastWall(Point start, Point end, TCODColor color) {
-	try {
-		DrawNECorner(start, color);
-		DrawVerticalLine(map, Point(start.getX(), start.getY() + 1), end, TileCharacters::Default::DOUBLE_PIPE_VERTICAL, color);
-		DrawSECorner(end, color);
-	}
-	catch (...) {
-		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawEastWall");
-		throw 0;
-	}
-}
-
-void NeighborhoodMapGenerator::DrawWestWall(Point start, Point end, TCODColor color) {
-	try {
-		DrawNWCorner(start, color);
-		DrawVerticalLine(map, Point(start.getX(), start.getY() + 1), end, TileCharacters::Default::DOUBLE_PIPE_VERTICAL, color);
-		DrawSWCorner(end, color);
-	}
-	catch (...) {
-		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawWestWall");
-		throw 0;
-	}
-}
 
 int NeighborhoodMapGenerator::GenerateRoom(Room room, TCODColor color, Orientation previousOrientation, int roomsLeft) {
 	try{
@@ -800,13 +543,10 @@ void NeighborhoodMapGenerator::DrawNextDoor(Room* ra) {
 	}
 }
 
-void NeighborhoodMapGenerator::DrawWalls(Orientation previousOrientation, const Room& room,
+void NeighborhoodMapGenerator::DrawWalls(Orientation previousOrientation, Room& room,
 		TCODColor color) {
 	try {
-		DrawNorthWall(room.getNWCorner(), room.getNECorner(), color);
-		DrawSouthWall(room.getSWCorner(), room.getSECorner(), color);
-		DrawEastWall(room.getNECorner(), room.getSECorner(), color);
-		DrawWestWall(room.getNWCorner(), room.getSWCorner(), color);
+		room.Draw(map);
 		if (previousOrientation != MapGenerator::Orientation::SOUTH) {
 
 			if (previousOrientation == MapGenerator::Orientation::NONE)

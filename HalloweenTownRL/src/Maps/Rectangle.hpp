@@ -22,20 +22,22 @@ struct RectangleDetails{
 
 class Rectangle {
 public:
+	Rectangle(Point nwCorner, Point seCorner, TCODColor color);
 	Rectangle(Point nwCorner, Point seCorner, TCODColor color, int character);
 	Rectangle(Point nwCorner, Point seCorner, TCODColor color, RectangleDetails details);
-	void Draw(Map* map);
+	virtual void Draw(Map* map);
 
 private:
-	Point nwCorner;
-	Point seCorner;
-	TCODColor color;
-	RectangleDetails details;
 	void DrawNorthSide(Map* map);
 	void DrawEastSide(Map* map);
 	void DrawSouthSide(Map* map);
 	void DrawWestSide(Map* map);
 
+protected:
+	Point nwCorner;
+	Point seCorner;
+	TCODColor color;
+	 RectangleDetails details;
 
 
 

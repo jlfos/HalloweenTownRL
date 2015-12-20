@@ -4,7 +4,15 @@
  *  Created on: Dec 19, 2015
  */
 
+#include "Map.hpp"
 #include "Rectangle.hpp"
+#include "../Tile/TileCharacters.hpp"
+
+
+Rectangle::Rectangle(Point nwCorner, Point seCorner, TCODColor color) :
+Rectangle(nwCorner, seCorner, color, TileCharacters::Default::RAINBOW){
+}
+
 
 Rectangle::Rectangle(Point nwCorner, Point seCorner, TCODColor color, int character) :
 	nwCorner(nwCorner), seCorner(seCorner), color(color){
@@ -61,3 +69,5 @@ void Rectangle::DrawWestSide(Map* map) {
 	}
 	map->SetTileProperties(Point(nwCorner.getX(), seCorner.getY()) , color, details.swCorner);
 }
+
+

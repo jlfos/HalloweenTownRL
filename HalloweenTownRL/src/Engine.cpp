@@ -13,7 +13,7 @@
 #include "Maps/Generators/MapGenerator.hpp"
 #include "Maps/Generators/NeighborhoodMapGenerator.hpp"
 #include "MonsterEntry.hpp"
-#include "Maps/RoadMapGenerator.hpp"
+#include "Maps/Generators/RoadMapGenerator.hpp"
 #include "Tile/TileColors.hpp"
 #include "Tile/TileCharacters.hpp"
 #include "UI/VictoryScreen.hpp"

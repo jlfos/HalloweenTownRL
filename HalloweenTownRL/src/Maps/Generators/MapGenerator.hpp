@@ -18,7 +18,10 @@ class MapGenerator{
 		virtual void PopulateActors(Map* map) = 0;
 		void DrawHorizontalLine(Map* map, Point start, Point end, int character, TCODColor color);
 		void DrawVerticalLine(Map* map, Point start, Point end, int character, TCODColor color);
-
+		void DrawTree(Map* map, TCODMap* roadMap, int x, int y);
+		void DrawRoad(Map* map, TCODMap* roadMap, int x, int y);
+		void DrawSidewalk(Map* map, TCODMap* roadMap, int x, int y);
+		void DrawGrass(Map* map, TCODMap* roadMap, int x, int y);
 };
 
 

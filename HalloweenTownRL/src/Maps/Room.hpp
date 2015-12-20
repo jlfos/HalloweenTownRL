@@ -7,11 +7,12 @@
 #ifndef ROOM_HPP
 #define ROOM_HPP
 
+#include "Map.hpp"
 #include "Generators/MapGenerator.hpp"
 #include "Point.hpp"
+#include "Rectangle.hpp"
 
-
-class Room {
+class Room : public Rectangle{
 public:
 	Room(Point nwCorner, Point seCorner, MapGenerator::Orientation orientation);
 	Room(Point nwCorner, int offsetX, int offsetY, MapGenerator::Orientation orientation);
@@ -20,12 +21,18 @@ public:
 	const Point& getNECorner() const;
 	const Point& getSECorner() const;
 	const Point& getSWCorner() const;
+	void Draw(Map* map);
 
 private:
 	Point nwCorner;
 	Point seCorner;
 	MapGenerator::Orientation orientation;
-
+	void DrawNECorner(Map* map, Point point);
+	void DrawSECorner(Map* map, Point point);
+	void DrawSWCorner(Map* map, Point point);
+	void DrawNWCorner(Map* map, Point point);
+	void DrawHorizontalLine(Map* map, Point start, Point end);
+	void DrawVerticalLine(Map* map, Point start, Point end);
 
 
 };
