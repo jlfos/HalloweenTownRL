@@ -52,7 +52,7 @@ std::string MenuUI::Pick() {
 		//static TCODImage img("tree.png");
 		int selectedItem = 0;
 		TCODConsole::root->clear();
-		TCODConsole::root->setDefaultForeground(TileColors::darkOrange);
+		TCODConsole::root->setDefaultForeground(TileColors::orangeDark);
 		TCODConsole::root->printEx(10, 6,
 				TCOD_bkgnd_flag_t::TCOD_BKGND_COLOR_BURN,
 				TCOD_alignment_t::TCOD_LEFT, header.c_str());
@@ -62,10 +62,10 @@ std::string MenuUI::Pick() {
 			for (std::string it : items) {
 				if (currentItem == selectedItem) {
 					TCODConsole::root->setDefaultForeground(
-							TileColors::lighterOrange);
+							TileColors::orangeLighter);
 				} else {
 					TCODConsole::root->setDefaultForeground(
-							TileColors::lightGrey);
+							TileColors::greyLight);
 				}
 				TCODConsole::root->print(10, 15 + currentItem * 3, it.c_str());
 				currentItem++;

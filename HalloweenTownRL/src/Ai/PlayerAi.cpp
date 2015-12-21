@@ -150,7 +150,7 @@ bool PlayerAi::MoveOrAttack(Actor *owner, int targetX, int targetY){
 		for(Actor* actor : engine.actors){
 			bool corpseOrItem =(actor->destructible && actor->destructible->IsDead()) || actor->item;
 			if(corpseOrItem && actor->x == targetX && actor->y == targetY){
-				engine.gui->PushMessage(TileColors::lightGrey,"There's a %s here", (actor->name).c_str() );
+				engine.gui->PushMessage(TileColors::greyLight,"There's a %s here", (actor->name).c_str() );
 			}
 		}
 		engine.currentMap->ComputeLight(owner, false);
@@ -219,7 +219,7 @@ void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 					if ( actor->item && actor->x == owner->x && actor->y == owner->y ) {
 						if (actor->item->Pick(actor,owner)) {
 							found=true;
-							engine.gui->PushMessage(TileColors::lightGrey,"You picked up the %s.",
+							engine.gui->PushMessage(TileColors::greyLight,"You picked up the %s.",
 								(actor->name).c_str());
 							engine.currentMap->actors.remove(actor);
 							break;
@@ -230,7 +230,7 @@ void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 					}
 				}
 				if (!found) {
-					engine.gui->PushMessage(TileColors::lightGrey,"There's nothing here that you can pick up.");
+					engine.gui->PushMessage(TileColors::greyLight,"There's nothing here that you can pick up.");
 				}
 				engine.gameStatus=Engine::NEW_TURN;
 			}

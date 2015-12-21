@@ -337,18 +337,18 @@ void Engine::BossUpdate() {
 			return;
 		if (xDiffAbs >= yDiffAbs) {
 			if (bossMapX < playerMapX) {
-				engine.gui->PushMessage(TileColors::lightGrey,
+				engine.gui->PushMessage(TileColors::greyLight,
 						"Fate pulls you to the East");
 			} else {
-				engine.gui->PushMessage(TileColors::lightGrey,
+				engine.gui->PushMessage(TileColors::greyLight,
 						"Fate pulls you to the West");
 			}
 		} else {
 			if (bossMapY < playerMapY) {
-				engine.gui->PushMessage(TileColors::lightGrey,
+				engine.gui->PushMessage(TileColors::greyLight,
 						"Fate pulls you to the North");
 			} else {
-				engine.gui->PushMessage(TileColors::lightGrey,
+				engine.gui->PushMessage(TileColors::greyLight,
 						"Fate pulls you to the South");
 			}
 		}

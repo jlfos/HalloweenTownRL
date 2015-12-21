@@ -7,80 +7,166 @@
 #include "../Map.hpp"
 #include "MapGenerator.hpp"
 #include "../../Tile/TileColors.hpp"
+#include "../Rectangle.hpp"
 
 
-void MapGenerator::DrawHorizontalLine(Map* map, Point start, Point end, int character, TCODColor color) {
+void MapGenerator::DrawHorizontalLine(Map* map, Point start, Point end, TCODColor color, int character, bool skipFilledTiles) {
 	try {
+		if(map == nullptr){
+			LoggerWrapper::Error("Map cannot be null");
+			throw 0;
+		}
+
 		for(u_int i = start.getX(); i <= end.getX() && i < map->GetWidth(); i++){
 			Point temp = Point(i, end.getY());
-
-
-			if(map->GetCharacter(temp.getX(), temp.getY() + 1) == TileCharacters::Default::DOUBLE_PIPE_VERTICAL){
-				character = TileCharacters::Default::DOUBLE_PIPE_T_TOP;
-			}
-			else if(temp.getY() != 0 && map->GetCharacter(temp.getX(), temp.getY() - 1) == TileCharacters::Default::DOUBLE_PIPE_VERTICAL){
-				character = TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM;
-			}
-			else{
-				character = TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL;
+			if(skipFilledTiles && map->TileHasBeenSet(temp)){
+					continue;
 			}
 			map->SetTileProperties(temp, color, character);
 		}
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawHorizontalLine");
+		LoggerWrapper::Error("An error occurred in MapGenerator::DrawHorizontalLine");
 		throw 0;
 	}
 }
 
 
-void MapGenerator::DrawVerticalLine(Map* map, Point start, Point end, int character, TCODColor color) {
+void MapGenerator::DrawHorizontalLine(Map* map, Point start, Point end, TCODColor color, int character) {
 	try {
+		DrawHorizontalLine(map, start, end, color, character, false);
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in MapGenerator::DrawHorizontalLine");
+		throw 0;
+	}
+}
+
+
+void MapGenerator::DrawVerticalLine(Map* map, Point start, Point end, TCODColor color, int character, bool skipFilledTiles) {
+	try {
+		if(map == nullptr){
+			LoggerWrapper::Error("Map cannot be null");
+			throw 0;
+		}
 
 		for(u_int i = start.getY(); i <= end.getY() && i < map->GetHeight(); i++){
 			Point temp = Point(start.getX(), i);
-
-			if(map->GetCharacter(temp.getX() + 1, temp.getY()) == TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL){
-				character = TileCharacters::Default::DOUBLE_PIPE_T_LEFT;
-			}
-			else if(temp.getX() != 0 && map->GetCharacter(temp.getX() - 1, temp.getY()) == TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL){
-				character = TileCharacters::Default::DOUBLE_PIPE_T_RIGHT;
-			}
-			else{
-				character = TileCharacters::Default::DOUBLE_PIPE_VERTICAL;
+			if(skipFilledTiles && map->TileHasBeenSet(temp)){
+					continue;
 			}
 			map->SetTileProperties(temp, color, character);
 		}
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawVerticalLine");
+		LoggerWrapper::Error("An error occurred in MapGenerator::DrawVerticalLine");
+		throw 0;
+	}
+}
+
+void MapGenerator::DrawVerticalLine(Map* map, Point start, Point end, TCODColor color, int character) {
+	try {
+		DrawVerticalLine(map, start, end, color, character, false);
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in MapGenerator::DrawVerticalLine");
 		throw 0;
 	}
 }
 
 
+
+void MapGenerator::DrawFilledArea(Map* map, Point start, Point end, TCODColor color, int character, bool skipFilledTiles) {
+	try {
+		if(map == nullptr){
+			LoggerWrapper::Error("Map cannot be null");
+			throw 0;
+		}
+
+		for(u_int i = start.getX(); i <= end.getX() && i < map->GetWidth(); i++){
+			for(u_int j = start.getY(); j <= end.getY() && j < map->GetHeight(); j++){
+				Point temp = Point(i, j);
+				if(skipFilledTiles && map->TileHasBeenSet(temp)){
+						continue;
+				}
+				map->SetTileProperties(temp, color, character);
+			}
+		}
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in MapGenerator::DrawHorizontalLine");
+		throw 0;
+	}
+}
+
+void MapGenerator::DrawFilledArea(Map* map, Point start, Point end, TCODColor color, int character) {
+	try {
+		DrawFilledArea(map, start, end, color, character, false);
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in MapGenerator::DrawHorizontalLine");
+		throw 0;
+	}
+}
+
+void MapGenerator::DrawRectangle(Map* map, Point start, Point end, TCODColor color, int character, bool skipFilledTiles) {
+	try {
+		if(map == nullptr){
+			LoggerWrapper::Error("Map cannot be null");
+			throw 0;
+		}
+
+		Rectangle rectangle(start, end, color, character);
+		rectangle.Draw(map, skipFilledTiles);
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in MapGenerator::DrawRectangle");
+		throw 0;
+	}
+}
+
+void MapGenerator::DrawRectangle(Map* map, Point start, Point end, TCODColor color, int character) {
+	try {
+		DrawRectangle(map, start, end, color, character, false);
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in MapGenerator::DrawRectangle");
+		throw 0;
+	}
+}
+
 void MapGenerator::DrawGrass(Map* map, TCODMap* roadMap, int x, int y){
 	try {
+		if(map == nullptr){
+			LoggerWrapper::Error("Map cannot be null");
+			throw 0;
+		}
+
 		roadMap->setProperties(x, y, true, true);
 		TCODColor visible = TileColors::green;
 		int character = TileCharacters::Default::PERIOD;
 		map->SetTileProperties(x, y, visible, character);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawGrass");
+		LoggerWrapper::Error("An error occurred in MapGenerator::DrawGrass");
 		throw 0;
 	}
 }
 
 void MapGenerator::DrawTree(Map* map, TCODMap* forestMap, int x, int y){
 	try {
+		if(map == nullptr){
+			LoggerWrapper::Error("Map cannot be null");
+			throw 0;
+		}
+
 		forestMap->setProperties(x, y, false, false);
 		TCODColor visible = TileColors::brown;
 		int character = TileCharacters::Default::YEN_SYMBOL;
 		map->SetTileProperties(x, y, visible, character);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in ForestMapGenerator::GenerateTree");
+		LoggerWrapper::Error("An error occurred in MapGenerator::GenerateTree");
 		throw 0;
 	}
 }
@@ -94,7 +180,7 @@ void MapGenerator::DrawRoad(Map* map, TCODMap* roadMap, int x, int y){
 		map->SetTileProperties(x, y, visible, character);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawRoad");
+		LoggerWrapper::Error("An error occurred in MapGenerator::DrawRoad");
 		throw 0;
 	}
 }
@@ -102,12 +188,12 @@ void MapGenerator::DrawRoad(Map* map, TCODMap* roadMap, int x, int y){
 void MapGenerator::DrawSidewalk(Map* map, TCODMap* roadMap, int x, int y){
 	try {
 		roadMap->setProperties(x, y, true, true);
-		TCODColor visible = TileColors::lightGrey;
+		TCODColor visible = TileColors::greyLighter;
 		int character = TileCharacters::Default::PERIOD;
 		map->SetTileProperties(x, y, visible, character);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawRoad");
+		LoggerWrapper::Error("An error occurred in MapGenerator::DrawRoad");
 		throw 0;
 	}
 }

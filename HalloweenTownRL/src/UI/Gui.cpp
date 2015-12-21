@@ -62,7 +62,7 @@ void Gui::Render() {
 		// draw the health bar
 		RenderBar(1,2,BAR_WIDTH,"HP",engine.player->destructible->hp,
 			engine.player->destructible->maxHp,
-			TileColors::lightRed, TileColors::darkerRed);
+			TileColors::redLight, TileColors::redDarker);
 		str = "Traveling Magician: Majestico";
 		con->print(1, 1, str.c_str());
 
@@ -251,7 +251,7 @@ void Gui::RenderMouseLook() {
 			}
 		}
 		// display the list of actors under the mouse cursor
-		con->setDefaultForeground(TileColors::lightGrey);
+		con->setDefaultForeground(TileColors::greyLight);
 		con->print(1,0,buf);
 	}
 	catch(...){

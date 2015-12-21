@@ -25,13 +25,13 @@ public:
 	Rectangle(Point nwCorner, Point seCorner, TCODColor color);
 	Rectangle(Point nwCorner, Point seCorner, TCODColor color, int character);
 	Rectangle(Point nwCorner, Point seCorner, TCODColor color, RectangleDetails details);
-	virtual void Draw(Map* map);
+	virtual void Draw(Map* map, bool skipFilledTiles);
 
 private:
-	void DrawNorthSide(Map* map);
-	void DrawEastSide(Map* map);
-	void DrawSouthSide(Map* map);
-	void DrawWestSide(Map* map);
+	void DrawNorthSide(Map* map, bool skipFilledTiles);
+	void DrawEastSide(Map* map, bool skipFilledTiles);
+	void DrawSouthSide(Map* map, bool skipFilledTiles);
+	void DrawWestSide(Map* map, bool skipFilledTiles);
 
 protected:
 	Point nwCorner;

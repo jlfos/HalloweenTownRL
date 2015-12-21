@@ -48,21 +48,30 @@ TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 		CreateHouse(lotX, lotY + lotSizeY + yStreetSize, MapGenerator::Orientation::SOUTH, visible);
 		CreateHouse(lotX + lotSizeX, lotY + lotSizeY + yStreetSize, MapGenerator::Orientation::SOUTH, visible);
 		CreateHouse(lotX + lotSizeX * 2, lotY + lotSizeY + yStreetSize, MapGenerator::Orientation::SOUTH, visible);
+		bool isTransparent = false;
+		bool isWalkable = false;
+
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height-1; y++) {
 				//TODO this needs to be set properly for the demo and lightsource needs to be fixed
 
 				if(map->TileHasBeenSet(x, y)){
 					if(map->GetCharacter(x, y) != TileCharacters::PERIOD){
-						neighborhoodMap->setProperties(x, y, true, true);
+						isTransparent = true;
+						isWalkable = true;
+						neighborhoodMap->setProperties(x, y, isTransparent, isWalkable);
 						continue;
 					}
 					else{
-						neighborhoodMap->setProperties(x, y, true, true);
+						isTransparent = true;
+						isWalkable = true;
+						neighborhoodMap->setProperties(x, y, isTransparent, isWalkable);
 					}
 				}
 				else{
-					neighborhoodMap->setProperties(x, y, true, true);
+					isTransparent = false;
+					isWalkable = false;
+					neighborhoodMap->setProperties(x, y, isTransparent, isWalkable);
 
 					bool roadFlag = false;
 					int lampPostRate = 17;
@@ -108,17 +117,6 @@ TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 	}
 	catch(...){
 		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::Generate");
-		throw 0;
-	}
-}
-
-void NeighborhoodMapGenerator::EraseFence(Point start, Point end) {
-	try {
-		Rectangle fence(start, end, TCODColor::white, TileCharacters::Default::RAINBOW);
-		fence.Draw(map);
-	}
-	catch (...) {
-		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::EraseFence");
 		throw 0;
 	}
 }
@@ -415,16 +413,6 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Point start, Point end) {
 	}
 }
 
-void NeighborhoodMapGenerator::DrawFence(Point start, Point end) {
-	try {
-		Rectangle fence(start, end, TCODColor::white, TileCharacters::Default::DOUBLE_EXCLAMATION);
-		fence.Draw(map);
-	}
-	catch (...) {
-		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawFence");
-		throw 0;
-	}
-}
 
 void NeighborhoodMapGenerator::DrawInterior(Point start, Point end, int character) { //TODO this needs to go back to being period but I will keep it like this for debugging purposes
 	try{
@@ -442,21 +430,6 @@ void NeighborhoodMapGenerator::DrawInterior(Point start, Point end, int characte
 		for(uint i = start.getX() + 1 ; i < end.getX(); i++){
 			for(uint j = start.getY() + 1 ; j < end.getY(); j++){
 				int character = TileCharacters::Default::PERIOD;
-				map->SetTileProperties(Point(i, j), visible, character);
-			}
-		}
-	}
-	catch(...){
-		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::GenerateInterior");
-		throw 0;
-	}
-}
-
-
-void NeighborhoodMapGenerator::DrawFilledSquare(Point start, Point end, TCODColor visible, int character) { //TODO this needs to go back to being period but I will keep it like this for debugging purposes
-	try{
-		for(uint i = start.getX() ; i <= end.getX(); i++){
-			for(uint j = start.getY() ; j <= end.getY(); j++){
 				map->SetTileProperties(Point(i, j), visible, character);
 			}
 		}
@@ -546,7 +519,7 @@ void NeighborhoodMapGenerator::DrawNextDoor(Room* ra) {
 void NeighborhoodMapGenerator::DrawWalls(Orientation previousOrientation, Room& room,
 		TCODColor color) {
 	try {
-		room.Draw(map);
+		room.Draw(map, false);
 		if (previousOrientation != MapGenerator::Orientation::SOUTH) {
 
 			if (previousOrientation == MapGenerator::Orientation::NONE)
@@ -581,7 +554,10 @@ void NeighborhoodMapGenerator::CreateHouse(int lotX, int lotY, MapGenerator::Ori
 #endif
 		Point lotStart(lotX, lotY);
 		Point lotEnd(lotX + lotSizeX, lotY + lotSizeY);
-		DrawFence(lotStart, lotEnd);
+
+		Point fenceStart(0,0);
+		Point fenceEnd(0,0);
+		DrawRectangle(map, lotStart, lotEnd, TileColors::white, TileCharacters::Default::DOUBLE_EXCLAMATION);
 
 		int xSectionCount = lotSizeX / (minRoomSizeX); //Break into sections based off the minimum room size
 		int xSection = randomWrap.getInt(0, xSectionCount - 1); //Randomly selects which X section will be used
@@ -593,9 +569,13 @@ void NeighborhoodMapGenerator::CreateHouse(int lotX, int lotY, MapGenerator::Ori
 		switch(side){
 		case Orientation::SOUTH:
 			ySection = 0;
+			fenceStart = Point(lotStart, 0, lotSizeY/2);
+			fenceEnd = Point(lotEnd, 0, 3);
 			break;
 		case Orientation::NORTH:
 			ySection = ySectionCount - 1;
+			fenceStart = Point(lotStart, 0, -3);
+			fenceEnd = Point(lotEnd, 0, -lotSizeY/2);
 			break;
 		default:
 			LoggerWrapper::Error("An incorrect orientation was used in CreateHouse " + std::to_string(mapOri));
@@ -623,8 +603,8 @@ void NeighborhoodMapGenerator::CreateHouse(int lotX, int lotY, MapGenerator::Ori
 
 		Room initialRoom(buildingStart, buildingEnd, side);
 		GenerateRoom(initialRoom, visible, side, roomsLeft);
-		EraseFence(lotStart, lotEnd);
-
+		DrawRectangle(map, lotStart, lotEnd, TileColors::white, TileCharacters::Default::RAINBOW);
+		DrawRectangle(map, fenceStart, fenceEnd, TileColors::brownLight, TileCharacters::Default::HASH, true);
 	}
 	catch (...) {
 		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::CreateHouse");
@@ -695,14 +675,20 @@ Point NeighborhoodMapGenerator::CheckHorizontalRoom(Point start, bool xNegFlag, 
 }
 
 bool NeighborhoodMapGenerator::ValidDoor(const int x, const int y) {
-	bool validDoor = false;
-	LoggerWrapper::Debug("Door X:" + std::to_string(x) + " Y:" + std::to_string(y));
-	int character =  map->GetCharacter(x, y);
-	int invalidCharacters[] = {TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM, TileCharacters::Default::DOUBLE_PIPE_T_LEFT, TileCharacters::Default::DOUBLE_PIPE_T_RIGHT, TileCharacters::Default::DOUBLE_PIPE_T_TOP };
-	validDoor = (std::find(std::begin(invalidCharacters), std::end(invalidCharacters), character) == std::end(invalidCharacters));
+	try {
+		bool validDoor = false;
+		LoggerWrapper::Debug("Door X:" + std::to_string(x) + " Y:" + std::to_string(y));
+		int character =  map->GetCharacter(x, y);
+		int invalidCharacters[] = {TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM, TileCharacters::Default::DOUBLE_PIPE_T_LEFT, TileCharacters::Default::DOUBLE_PIPE_T_RIGHT, TileCharacters::Default::DOUBLE_PIPE_T_TOP };
+		validDoor = (std::find(std::begin(invalidCharacters), std::end(invalidCharacters), character) == std::end(invalidCharacters));
 
-	LoggerWrapper::Debug("Character of door tile " + std::to_string(character) + " is valid " + std::to_string(validDoor));
-	return validDoor;
+		LoggerWrapper::Debug("Character of door tile " + std::to_string(character) + " is valid " + std::to_string(validDoor));
+		return validDoor;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::ValidDoor");
+		throw 0;
+	}
 }
 
 
@@ -772,10 +758,16 @@ Point NeighborhoodMapGenerator::CheckVerticalRoom(Point start, bool xNegFlag, bo
 }
 
 bool NeighborhoodMapGenerator::InvalidRoomCorners(Point start, Point end) {
-	bool result = start.getX() == end.getX() || start.getY() == end.getY() ||
-			start.getX() == 0 || start.getY() == 0 ||
-			end.getX() == 0 || end.getY() == 0 ||
-			start.getX() >= mapWidth - 1 || start.getY() >= mapHeight - 2 ||
-			end.getX() >= mapWidth - 1 || end.getY() >= mapHeight - 2;
-	return result;
+	try {
+		bool result = start.getX() == end.getX() || start.getY() == end.getY() ||
+				start.getX() == 0 || start.getY() == 0 ||
+				end.getX() == 0 || end.getY() == 0 ||
+				start.getX() >= mapWidth - 1 || start.getY() >= mapHeight - 2 ||
+				end.getX() >= mapWidth - 1 || end.getY() >= mapHeight - 2;
+		return result;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::InvalidRoomCorners");
+		throw 0;
+	}
 }

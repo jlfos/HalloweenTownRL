@@ -36,10 +36,7 @@ private:
 	int GenerateRoom(Room room, TCODColor color, Orientation previousOrientation, int roomsLeft);
 	void GenerateRoom(Point start, Point end, TCODColor color, Orientation orientation, int roomsLeft);
 	void DrawInterior(Point start, Point end, int character);
-	void DrawFilledSquare(Point start, Point end, TCODColor visible,  int character);
 	void DrawDoor(const Point& door);
-	void DrawFence(Point start, Point end);
-	void EraseFence(Point start, Point end);
 	void DrawNorthDoor(Point start, Point end);
 	void DrawEastDoor(Point start, Point end);
 	void DrawSouthDoor(Point start, Point end);

@@ -21,7 +21,7 @@ public:
 	const Point& getNECorner() const;
 	const Point& getSECorner() const;
 	const Point& getSWCorner() const;
-	void Draw(Map* map);
+	void Draw(Map* map, bool skipFilledTiles);
 
 private:
 	Point nwCorner;

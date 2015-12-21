@@ -68,33 +68,33 @@ Actor *ActorFactory::CreateVampire(int x, int y, EnemyDifficulty difficulty){
 	try{
 		Actor *vampire = nullptr;
 		if(difficulty == EnemyDifficulty::MEDIUM){
-			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "hobo vampire", TileColors::lightestRed);
+			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "hobo vampire", TileColors::redLightest);
 			vampire->destructible = new MonsterDestructible(15, 1, 6, "pile of ash");
 			vampire->attacker = new Attacker(3);
 			vampire->ai = new MonsterAi(35);
 
 		}
 		if(difficulty == EnemyDifficulty::HARD){
-			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "techno vampire", TileColors::lightestRed);
+			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "techno vampire", TileColors::redLightest);
 			vampire->destructible = new MonsterDestructible(30, 2, 12, "pile of ash");
 			vampire->attacker = new Attacker(4);
 			vampire->ai = new MonsterAi(35);
 
 		}
 		else if(difficulty == EnemyDifficulty::VERY_HARD){
-			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "gangster vampire", TileColors::lighterRed);
+			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "gangster vampire", TileColors::redLighter);
 			vampire->destructible = new MonsterDestructible(45, 3, 24, "pile of ash");
 			vampire->attacker = new Attacker(8);
 			vampire->ai = new MonsterAi(35);
 		}
 		else if(difficulty == EnemyDifficulty::INSANE){
-			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "flying vampire", TileColors::lightRed);
+			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "flying vampire", TileColors::redLight);
 			vampire->destructible = new MonsterDestructible(80, 4, 48, "pile of ash");
 			vampire->attacker = new Attacker(16);
 			vampire->ai = new MonsterAi(45);
 		}
 		else if(difficulty == EnemyDifficulty::NIGHTMARE){
-			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "count", TileColors::darkestRed);
+			vampire = new Actor(x, y, TileCharacters::Default::V_LOWERCASE, "count", TileColors::redDarkest);
 			vampire->destructible = new MonsterDestructible(120, 6, 96, "pile of ash");
 			vampire->attacker = new Attacker(20);
 			vampire->ai = new MonsterAi(70);
@@ -179,7 +179,7 @@ Actor *ActorFactory::CreateMonster(int x, int y, EnemyDifficulty difficulty, Map
 
 Actor *ActorFactory::CreateSewerMutant(int x, int y){
 	try{
-		Actor *mutant = new Actor(x, y, TileCharacters::Default::M_LOWERCASE, "sewer mutant", TileColors::desaturatedLime);
+		Actor *mutant = new Actor(x, y, TileCharacters::Default::M_LOWERCASE, "sewer mutant", TileColors::limeDesaturated);
 		mutant->destructible = new MonsterDestructible(25, 1, 0, "dead mutant");
 		mutant->attacker = new Attacker(4);
 		mutant->ai = new MonsterAi();
@@ -195,7 +195,7 @@ Actor *ActorFactory::CreateSewerMutant(int x, int y){
 
 Actor *ActorFactory::CreateGoblin(int x, int y){
 	try{
-		Actor *goblin = new Actor(x, y, TileCharacters::Default::G_LOWERCASE, "goblin", TileColors::darkestGreen);
+		Actor *goblin = new Actor(x, y, TileCharacters::Default::G_LOWERCASE, "goblin", TileColors::greenDarkest);
 		goblin->destructible = new MonsterDestructible(12, 1, 2, "dead goblin");
 		goblin->attacker = new Attacker(3);
 		goblin->ai = new MonsterAi();
@@ -224,7 +224,7 @@ Actor *ActorFactory::CreateDirewolf(int x, int y){
 
 Actor *ActorFactory::CreateDirebear(int x, int y){
 	try{
-		Actor *direBear = new Actor(x, y, TileCharacters::Default::B_UPPERCASE, "dire bear", TileColors::darkerBrown);
+		Actor *direBear = new Actor(x, y, TileCharacters::Default::B_UPPERCASE, "dire bear", TileColors::brownDarker);
 		direBear->destructible = new MonsterDestructible(80, 0, 6, "dead bear");
 		direBear->attacker = new Attacker(15);
 		direBear->ai = new MonsterAi(40);
@@ -396,7 +396,7 @@ Actor *ActorFactory::CreateItem(int x, int y, EnemyDifficulty difficulty){
 Actor *ActorFactory::CreateNightstick(int x, int y){
 	try{
 		Actor *nightstick = new Actor(x, y, TileCharacters::Default::EXCLAMATION, "nightstick",
-				TileColors::lighterGrey);
+				TileColors::greyLighter);
 		nightstick->blocks = false;
 		nightstick->item = new MeleeWeapon(9);
 		return nightstick;
@@ -424,7 +424,7 @@ Actor *ActorFactory::CreateTireIron(int x, int y){
 Actor *ActorFactory::CreateKnife(int x, int y){
 	try{
 		Actor *knife = new Actor(x, y, TileCharacters::Default::FORWARD_SLASH, "knife",
-				TileColors::lighterGrey);
+				TileColors::greyLighter);
 		knife->blocks = false;
 		knife->item = new MeleeWeapon(7);
 		return knife;
@@ -453,7 +453,7 @@ Actor *ActorFactory::CreateKris(int x, int y){
 Actor *ActorFactory::CreateBaseballBat(int x, int y){
 	try{
 		Actor *baseballBat = new Actor(x, y, TileCharacters::Default::EXCLAMATION, "tire iron",
-				TileColors::darkGrey);
+				TileColors::greyDark);
 		baseballBat->blocks = false;
 		baseballBat->item = new MeleeWeapon(36);
 		return baseballBat;

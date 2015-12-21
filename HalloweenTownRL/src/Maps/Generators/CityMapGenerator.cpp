@@ -48,7 +48,7 @@ TCODMap* CityMapGenerator::Generate(Map* map, bool generateActors){
 			for (int y = 0; y < height-1; y++) {
 				if(!map->TileHasBeenSet(x, y)){
 						cityMap->setProperties(x, y, true, true);
-						map->SetTileProperties(x, y, TileColors::lighterGrey, TileCharacters::Default::PERIOD);
+						map->SetTileProperties(x, y, TileColors::greyLighter, TileCharacters::Default::PERIOD);
 						if(tilesTillNextSpawn==0){
 							tilesTillNextSpawn =rng->getInt(5, 50);
 							Point spawn(x, y);
@@ -142,13 +142,13 @@ void CityMapGenerator::GenerateBuildingColor(TCODColor& visible){
 	try {
 		int color = rng->getInt(1, 3);
 		if(color == 1){
-			visible = TileColors::darkerGrey;
+			visible = TileColors::greyDarker;
 		}
 		else if(color == 2){
-			visible = TileColors::desaturatedCrimson;
+			visible = TileColors::crimsonDesaturated;
 		}
 		else{
-			visible = TileColors::darkerSepia;
+			visible = TileColors::sepiaDarker;
 		}
 	}
 	catch (...) {

@@ -4,6 +4,7 @@
  *  Created on: Dec 19, 2015
  */
 
+#include "../LoggerWrapper.hpp"
 #include "Map.hpp"
 #include "Rectangle.hpp"
 #include "../Tile/TileCharacters.hpp"
@@ -31,43 +32,112 @@ Rectangle::Rectangle(Point nwCorner, Point seCorner, TCODColor color, RectangleD
 		nwCorner(nwCorner), seCorner(seCorner), color(color), details(details) {
 }
 
-void Rectangle::Draw(Map* map) {
-	DrawNorthSide(map);
-	DrawEastSide(map);
-	DrawSouthSide(map);
-	DrawWestSide(map);
-}
+void Rectangle::Draw(Map* map, bool skipFilledTiles) {
+	try {
+		if(map == nullptr){
+			LoggerWrapper::Error("Map cannot be null");
+			throw 0;
+		}
 
-void Rectangle::DrawNorthSide(Map* map) {
-	map->SetTileProperties(nwCorner, color, details.nwCorner);
-	for(int i = nwCorner.getX() + 1; i < seCorner.getX(); i++){
-		map->SetTileProperties(Point(i, nwCorner.getY()), color, details.northSide);
+		DrawNorthSide(map, skipFilledTiles);
+		DrawEastSide(map, skipFilledTiles);
+		DrawSouthSide(map, skipFilledTiles);
+		DrawWestSide(map, skipFilledTiles);
 	}
-	map->SetTileProperties(Point(seCorner.getX(), nwCorner.getY()) , color, details.neCorner);
-}
-
-void Rectangle::DrawEastSide(Map* map) {
-	map->SetTileProperties(Point(seCorner.getX(), nwCorner.getY()), color, details.neCorner);
-	for(int i = nwCorner.getY() + 1; i < seCorner.getY(); i++){
-		map->SetTileProperties(Point( seCorner.getX(), i), color, details.eastSide);
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in Rectangle::Draw");
+		throw 0;
 	}
-	map->SetTileProperties(seCorner , color, details.seCorner);
 }
 
-void Rectangle::DrawSouthSide(Map* map) {
-	map->SetTileProperties(Point(nwCorner.getX(), seCorner.getY()), color, details.swCorner);
-	for(int i = nwCorner.getX() + 1; i < seCorner.getX(); i++){
-		map->SetTileProperties(Point(i, seCorner.getY()), color, details.southSide);
+void Rectangle::DrawNorthSide(Map* map, bool skipFilledTiles) {
+	try {
+		if(map == nullptr){
+			LoggerWrapper::Error("Map cannot be null");
+			throw 0;
+		}
+
+		map->SetTileProperties(nwCorner, color, details.nwCorner);
+		for(int i = nwCorner.getX() + 1; i < seCorner.getX(); i++){
+			Point temp = Point(i, nwCorner.getY());
+			if(skipFilledTiles && map->TileHasBeenSet(temp)){
+					continue;
+			}
+			map->SetTileProperties(temp, color, details.northSide);
+		}
+		map->SetTileProperties(Point(seCorner.getX(), nwCorner.getY()) , color, details.neCorner);
 	}
-	map->SetTileProperties(seCorner, color, details.seCorner);
-}
-
-void Rectangle::DrawWestSide(Map* map) {
-	map->SetTileProperties(nwCorner, color, details.nwCorner);
-	for(int i = nwCorner.getY() + 1; i < seCorner.getY(); i++){
-		map->SetTileProperties(Point( nwCorner.getX(), i), color, details.eastSide);
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in Rectangle::DrawNorthSide");
+		throw 0;
 	}
-	map->SetTileProperties(Point(nwCorner.getX(), seCorner.getY()) , color, details.swCorner);
 }
 
+void Rectangle::DrawEastSide(Map* map, bool skipFilledTiles) {
+	try {
+		if(map == nullptr){
+			LoggerWrapper::Error("Map cannot be null");
+			throw 0;
+		}
 
+		map->SetTileProperties(Point(seCorner.getX(), nwCorner.getY()), color, details.neCorner);
+		for(int i = nwCorner.getY() + 1; i < seCorner.getY(); i++){
+			Point temp = Point(seCorner.getX(), i);
+			if(skipFilledTiles && map->TileHasBeenSet(temp)){
+					continue;
+			}
+			map->SetTileProperties(temp, color, details.eastSide);
+		}
+		map->SetTileProperties(seCorner , color, details.seCorner);
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in Rectangle::DrawEastSide");
+		throw 0;
+	}
+}
+
+void Rectangle::DrawSouthSide(Map* map, bool skipFilledTiles) {
+	try {
+		if(map == nullptr){
+			LoggerWrapper::Error("Map cannot be null");
+			throw 0;
+		}
+
+		map->SetTileProperties(Point(nwCorner.getX(), seCorner.getY()), color, details.swCorner);
+		for(int i = nwCorner.getX() + 1; i < seCorner.getX(); i++){
+			Point temp = Point(i, seCorner.getY());
+			if(skipFilledTiles && map->TileHasBeenSet(temp)){
+					continue;
+			}
+			map->SetTileProperties(temp, color, details.southSide);
+		}
+		map->SetTileProperties(seCorner, color, details.seCorner);
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in Rectangle::DrawSouthSide");
+		throw 0;
+	}
+}
+
+void Rectangle::DrawWestSide(Map* map, bool skipFilledTiles) {
+	try {
+		if(map == nullptr){
+			LoggerWrapper::Error("Map cannot be null");
+			throw 0;
+		}
+
+		map->SetTileProperties(nwCorner, color, details.nwCorner);
+		for(int i = nwCorner.getY() + 1; i < seCorner.getY(); i++){
+			Point temp = Point(nwCorner.getX(), i);
+			if(skipFilledTiles && map->TileHasBeenSet(temp)){
+					continue;
+			}
+			map->SetTileProperties(temp, color, details.eastSide);
+		}
+		map->SetTileProperties(Point(nwCorner.getX(), seCorner.getY()) , color, details.swCorner);
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in Rectangle::DrawWestSide");
+		throw 0;
+	}
+}

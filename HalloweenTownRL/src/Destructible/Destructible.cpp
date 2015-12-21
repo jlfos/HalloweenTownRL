@@ -25,7 +25,7 @@ Destructible::Destructible(float maxHp, float defense, int experienceReward, std
 	maxHp(maxHp), hp(maxHp), defense(defense), experienceReward(experienceReward), corpseName(corpseName){
 
 	corpseCharacter = generateCorpseCharacter();
-	corpseColor = TileColors::darkRed;
+	corpseColor = TileColors::redDark;
 }
 
 int Destructible::generateCorpseCharacter() {

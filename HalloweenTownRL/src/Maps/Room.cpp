@@ -57,7 +57,7 @@ const Point& Room::getSWCorner() const {
 	return Point(nwCorner.getX(), seCorner.getY());
 }
 
-void Room::Draw(Map* map) {
+void Room::Draw(Map* map, bool skipFilledTiles) {
 	Point neCorner = Point(seCorner.getX(), nwCorner.getY());
 	DrawHorizontalLine(map, nwCorner, neCorner);
 	Point swCorner = Point(nwCorner.getX(), seCorner.getY());

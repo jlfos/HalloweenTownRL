@@ -119,7 +119,7 @@ void RoadMapGenerator::DrawGrass(int x, int y, TCODMap* roadMap){
 void RoadMapGenerator::DrawRoad(int x, int y, TCODMap* roadMap){
 	try {
 		roadMap->setProperties(x, y, true, true);
-		TCODColor visible = TileColors::lightGrey;
+		TCODColor visible = TileColors::greyLight;
 		int character = TileCharacters::Default::PERIOD;
 		map->SetTileProperties(x, y, visible, character);
 	}
