@@ -24,7 +24,7 @@ namespace TileColors{
 	static const TCODColor redDarkest = TCODColor::darkestRed;
 
 	static const TCODColor crimsonDesaturated = TCODColor::desaturatedCrimson;
-	static const TCODColor crimsonLighter = TCODColor::lightestCrimson;
+	static const TCODColor crimsonLightest = TCODColor::lightestCrimson;
 	static const TCODColor crimsonLighter = TCODColor::lighterCrimson;
 	static const TCODColor crimsonLight = TCODColor::lightCrimson;
 	static const TCODColor crimson = TCODColor::crimson;
@@ -68,7 +68,7 @@ namespace TileColors{
 	static const TCODColor peach = TCODColor::peach;
 
 	static const TCODColor greenDesaturated = TCODColor::desaturatedGreen;
-	static const TCODColor greenLighter = TCODColor::lightestGreen;
+	static const TCODColor greenLightest = TCODColor::lightestGreen;
 	static const TCODColor greenLighter = TCODColor::lighterGreen;
 	static const TCODColor greenLight = TCODColor::lightGreen;
 	static const TCODColor green = TCODColor::green;
@@ -96,7 +96,7 @@ namespace TileColors{
 	static const TCODColor black = TCODColor::black;
 
 	static const TCODColor yellowDesaturated = TCODColor::desaturatedYellow;
-	static const TCODColor yellowLighter = TCODColor::lightestYellow;
+	static const TCODColor yellowLightest = TCODColor::lightestYellow;
 	static const TCODColor yellowLighter = TCODColor::lighterYellow;
 	static const TCODColor yellowLight = TCODColor::lightYellow;
 	static const TCODColor yellow = TCODColor::yellow;
@@ -105,7 +105,7 @@ namespace TileColors{
 	static const TCODColor yellowDarkest = TCODColor::darkestYellow;
 
 	static const TCODColor blueDesaturated = TCODColor::desaturatedBlue;
-	static const TCODColor blueLighter = TCODColor::lightestBlue;
+	static const TCODColor blueLightest = TCODColor::lightestBlue;
 	static const TCODColor blueLighter = TCODColor::lighterBlue;
 	static const TCODColor blueLight = TCODColor::lightBlue;
 	static const TCODColor blue = TCODColor::blue;

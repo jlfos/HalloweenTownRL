@@ -93,7 +93,7 @@ TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 									DrawSidewalk(map, neighborhoodMap, x, y);
 								}
 							}
-							else if(y <= (height/2)+3  &&  y >= (height/2)-3){
+							else if(y <= (height/2)+2  &&  y >= (height/2)-3){
 								DrawRoad(map, neighborhoodMap, x, y);
 							}
 							else{
