@@ -58,21 +58,45 @@ const Point& Room::getSWCorner() const {
 }
 
 void Room::Draw(Map* map, bool skipFilledTiles) {
-	Point neCorner = Point(seCorner.getX(), nwCorner.getY());
-	DrawHorizontalLine(map, nwCorner, neCorner);
-	Point swCorner = Point(nwCorner.getX(), seCorner.getY());
-	DrawHorizontalLine(map, swCorner, seCorner);
-	DrawVerticalLine(map, neCorner, seCorner);
-	DrawVerticalLine(map, nwCorner, swCorner);
-	DrawNWCorner(map, nwCorner);
-	DrawNECorner(map, neCorner);
-	DrawSECorner(map, seCorner);
-	DrawSWCorner(map, swCorner);
+	try {
+		if(map == nullptr){
+			LoggerWrapper::Error("Map cannot be null");
+			throw 0;
+		}
+
+		Point neCorner = Point(seCorner.getX(), nwCorner.getY());
+		DrawHorizontalLine(map, nwCorner, neCorner);
+		Point swCorner = Point(nwCorner.getX(), seCorner.getY());
+		DrawHorizontalLine(map, swCorner, seCorner);
+		DrawVerticalLine(map, neCorner, seCorner);
+		DrawVerticalLine(map, nwCorner, swCorner);
+		DrawNWCorner(map, nwCorner);
+		DrawNECorner(map, neCorner);
+		DrawSECorner(map, seCorner);
+		DrawSWCorner(map, swCorner);
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in Room::Draw");
+		throw 0;
+	}
 }
 
 
 void Room::DrawHorizontalLine(Map* map, Point start, Point end) {
 	try {
+		if(map == nullptr){
+			LoggerWrapper::Error("Map cannot be null");
+			throw 0;
+		}
+
+
+		if(start.getX() > end.getX()){
+			LoggerWrapper::Error("Start X(" + std::to_string(start.getX()) + "), Y("+std::to_string(start.getY())+
+					")must be less than End X(" + std::to_string(end.getX()) + "), Y("+std::to_string(end.getY())+")");
+			throw 0;
+		}
+
+
 		int character = TileCharacters::Default::RAINBOW;
 		for(u_int i = start.getX(); i <= end.getX() && i < map->GetWidth(); i++){
 			Point temp = Point(i, end.getY());
@@ -91,7 +115,7 @@ void Room::DrawHorizontalLine(Map* map, Point start, Point end) {
 		}
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawHorizontalLine");
+		LoggerWrapper::Error("An error occurred in Room::DrawHorizontalLine");
 		throw 0;
 	}
 }
@@ -99,6 +123,17 @@ void Room::DrawHorizontalLine(Map* map, Point start, Point end) {
 
 void Room::DrawVerticalLine(Map* map, Point start, Point end) {
 	try {
+		if(map == nullptr){
+			LoggerWrapper::Error("Map cannot be null");
+			throw 0;
+		}
+
+		if(start.getY() > end.getY()){
+			LoggerWrapper::Error("Start X(" + std::to_string(start.getX()) + "), Y("+std::to_string(start.getY())+
+					")must be less than End X(" + std::to_string(end.getX()) + "), Y("+std::to_string(end.getY())+")");
+			throw 0;
+		}
+
 
 		int character;
 		for(u_int i = start.getY(); i <= end.getY() && i < map->GetHeight(); i++){
@@ -117,13 +152,18 @@ void Room::DrawVerticalLine(Map* map, Point start, Point end) {
 		}
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in RoadMapGenerator::DrawVerticalLine");
+		LoggerWrapper::Error("An error occurred in Room::DrawVerticalLine");
 		throw 0;
 	}
 }
 
 void Room::DrawNECorner(Map* map, Point point) {
 	try {
+		if(map == nullptr){
+			LoggerWrapper::Error("Map cannot be null");
+			throw 0;
+		}
+
 		int connectionsEast[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_RIGHT, TileCharacters::Default::DOUBLE_PIPE_CROSS, TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM, TileCharacters::Default::DOUBLE_PIPE_T_TOP};
 		int connectionsNorth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_LEFT, TileCharacters::Default::DOUBLE_PIPE_T_LEFT };
 
@@ -161,6 +201,11 @@ void Room::DrawNECorner(Map* map, Point point) {
 
 void Room::DrawSECorner(Map* map, Point point)  {
 	try {
+		if(map == nullptr){
+			LoggerWrapper::Error("Map cannot be null");
+			throw 0;
+		}
+
 		int connectionsEast[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_RIGHT, TileCharacters::Default::DOUBLE_PIPE_T_RIGHT, TileCharacters::Default::DOUBLE_PIPE_T_TOP};
 		int connectionsSouth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_LEFT , TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM, TileCharacters::Default::DOUBLE_PIPE_CROSS};
 
@@ -192,6 +237,11 @@ void Room::DrawSECorner(Map* map, Point point)  {
 
 void Room::DrawSWCorner(Map* map, Point point)  {
 	try {
+		if(map == nullptr){
+			LoggerWrapper::Error("Map cannot be null");
+			throw 0;
+		}
+
 		int connectionsWest[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_LEFT};
 		int connectionsSouth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_T_BOTTOM, TileCharacters::Default::DOUBLE_PIPE_T_RIGHT, TileCharacters::Default::DOUBLE_PIPE_T_LEFT, TileCharacters::Default::DOUBLE_PIPE_CORNER_LOWER_RIGHT, TileCharacters::Default::DOUBLE_PIPE_CROSS };
 		bool westConnect = false;
@@ -226,6 +276,11 @@ void Room::DrawSWCorner(Map* map, Point point)  {
 
 void Room::DrawNWCorner(Map* map, Point point)  {
 	try {
+		if(map == nullptr){
+			LoggerWrapper::Error("Map cannot be null");
+			throw 0;
+		}
+
 		int connectionsWest[] =  { TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL, TileCharacters::Default::DOUBLE_PIPE_T_LEFT, TileCharacters::Default::DOUBLE_PIPE_CROSS};
 		int connectionsNorth[] = { TileCharacters::Default::DOUBLE_PIPE_VERTICAL, TileCharacters::Default::DOUBLE_PIPE_T_TOP, TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_RIGHT, TileCharacters::Default::DOUBLE_PIPE_T_RIGHT};
 

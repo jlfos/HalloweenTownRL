@@ -16,6 +16,11 @@ void MapGenerator::DrawHorizontalLine(Map* map, Point start, Point end, TCODColo
 			LoggerWrapper::Error("Map cannot be null");
 			throw 0;
 		}
+		if(start.getX() > end.getX()){
+			LoggerWrapper::Error("Start X(" + std::to_string(start.getX()) + "), Y("+std::to_string(start.getY())+
+					")must be less than End X(" + std::to_string(end.getX()) + "), Y("+std::to_string(end.getY())+")");
+			throw 0;
+		}
 
 		for(u_int i = start.getX(); i <= end.getX() && i < map->GetWidth(); i++){
 			Point temp = Point(i, end.getY());
@@ -47,6 +52,11 @@ void MapGenerator::DrawVerticalLine(Map* map, Point start, Point end, TCODColor 
 	try {
 		if(map == nullptr){
 			LoggerWrapper::Error("Map cannot be null");
+			throw 0;
+		}
+		if(start.getY() > end.getY()){
+			LoggerWrapper::Error("Start X(" + std::to_string(start.getX()) + "), Y("+std::to_string(start.getY())+
+					")must be less than End X(" + std::to_string(end.getX()) + "), Y("+std::to_string(end.getY())+")");
 			throw 0;
 		}
 
@@ -82,6 +92,12 @@ void MapGenerator::DrawFilledArea(Map* map, Point start, Point end, TCODColor co
 			LoggerWrapper::Error("Map cannot be null");
 			throw 0;
 		}
+		if(start.getX() > end.getX() || start.getY() > end.getY()){
+			LoggerWrapper::Error("Start X(" + std::to_string(start.getX()) + "), Y("+std::to_string(start.getY())+
+					")must be less than End X(" + std::to_string(end.getX()) + "), Y("+std::to_string(end.getY())+")");
+			throw 0;
+		}
+
 
 		for(u_int i = start.getX(); i <= end.getX() && i < map->GetWidth(); i++){
 			for(u_int j = start.getY(); j <= end.getY() && j < map->GetHeight(); j++){
@@ -115,6 +131,11 @@ void MapGenerator::DrawRectangle(Map* map, Point start, Point end, TCODColor col
 			LoggerWrapper::Error("Map cannot be null");
 			throw 0;
 		}
+		if(start.getX() > end.getX() || start.getY() > end.getY()){
+			LoggerWrapper::Error("Start X(" + std::to_string(start.getX()) + "), Y("+std::to_string(start.getY())+
+					")must be less than End X(" + std::to_string(end.getX()) + "), Y("+std::to_string(end.getY())+")");
+			throw 0;
+		}
 
 		Rectangle rectangle(start, end, color, character);
 		rectangle.Draw(map, skipFilledTiles);
@@ -137,8 +158,8 @@ void MapGenerator::DrawRectangle(Map* map, Point start, Point end, TCODColor col
 
 void MapGenerator::DrawGrass(Map* map, TCODMap* roadMap, int x, int y){
 	try {
-		if(map == nullptr){
-			LoggerWrapper::Error("Map cannot be null");
+		if(map == nullptr || roadMap == nullptr){
+			LoggerWrapper::Error("Pointers cannot be null");
 			throw 0;
 		}
 
@@ -155,10 +176,12 @@ void MapGenerator::DrawGrass(Map* map, TCODMap* roadMap, int x, int y){
 
 void MapGenerator::DrawTree(Map* map, TCODMap* forestMap, int x, int y){
 	try {
-		if(map == nullptr){
-			LoggerWrapper::Error("Map cannot be null");
+		if(map == nullptr || forestMap == nullptr){
+			LoggerWrapper::Error("Pointers cannot be null");
 			throw 0;
 		}
+
+
 
 		forestMap->setProperties(x, y, false, false);
 		TCODColor visible = TileColors::brown;
@@ -166,7 +189,7 @@ void MapGenerator::DrawTree(Map* map, TCODMap* forestMap, int x, int y){
 		map->SetTileProperties(x, y, visible, character);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in MapGenerator::GenerateTree");
+		LoggerWrapper::Error("An error occurred in MapGenerator::DrawTree");
 		throw 0;
 	}
 }
@@ -174,6 +197,11 @@ void MapGenerator::DrawTree(Map* map, TCODMap* forestMap, int x, int y){
 
 void MapGenerator::DrawRoad(Map* map, TCODMap* roadMap, int x, int y){
 	try {
+		if(map == nullptr || roadMap == nullptr){
+			LoggerWrapper::Error("Pointers cannot be null");
+			throw 0;
+		}
+
 		roadMap->setProperties(x, y, true, true);
 		TCODColor visible = TileColors::grey;
 		int character = TileCharacters::Default::PERIOD;
@@ -187,6 +215,12 @@ void MapGenerator::DrawRoad(Map* map, TCODMap* roadMap, int x, int y){
 
 void MapGenerator::DrawSidewalk(Map* map, TCODMap* roadMap, int x, int y){
 	try {
+		if(map == nullptr || roadMap == nullptr){
+			LoggerWrapper::Error("Pointers cannot be null");
+			throw 0;
+		}
+
+
 		roadMap->setProperties(x, y, true, true);
 		TCODColor visible = TileColors::greyLighter;
 		int character = TileCharacters::Default::PERIOD;

@@ -39,6 +39,12 @@ void Rectangle::Draw(Map* map, bool skipFilledTiles) {
 			throw 0;
 		}
 
+		if(nwCorner.getX() > seCorner.getX() || nwCorner.getY() > seCorner.getY()){
+			LoggerWrapper::Error("Start X(" + std::to_string(nwCorner.getX()) + "), Y("+std::to_string(nwCorner.getY())+
+					")must be less than End X(" + std::to_string(seCorner.getX()) + "), Y("+std::to_string(seCorner.getY())+")");
+			throw 0;
+		}
+
 		DrawNorthSide(map, skipFilledTiles);
 		DrawEastSide(map, skipFilledTiles);
 		DrawSouthSide(map, skipFilledTiles);
