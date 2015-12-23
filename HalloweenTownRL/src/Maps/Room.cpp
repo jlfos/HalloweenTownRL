@@ -120,6 +120,21 @@ void Room::DrawHorizontalLine(Map* map, Point start, Point end) {
 	}
 }
 
+void Room::SetWindowsEast(bool windowsEast) {
+	this->windowsEast = windowsEast;
+}
+
+void Room::SetWindowsNorth(bool windowsNorth) {
+	this->windowsNorth = windowsNorth;
+}
+
+void Room::SetWindowsSouth(bool windowsSouth) {
+	this->windowsSouth = windowsSouth;
+}
+
+void Room::SetWindowsWest(bool windowsWest) {
+	this->windowsWest = windowsWest;
+}
 
 void Room::DrawVerticalLine(Map* map, Point start, Point end) {
 	try {
@@ -315,4 +330,20 @@ void Room::DrawNWCorner(Map* map, Point point)  {
 		LoggerWrapper::Error("An error occurred in Room::DrawNWCorner");
 		throw 0;
 	}
+}
+
+bool Room::GetWindowsEast() const {
+	return windowsEast;
+}
+
+bool Room::GetWindowsNorth() const {
+	return windowsNorth;
+}
+
+bool Room::GetWindowsSouth() const {
+	return windowsSouth;
+}
+
+bool Room::GetWindowsWest() const {
+	return windowsWest;
 }

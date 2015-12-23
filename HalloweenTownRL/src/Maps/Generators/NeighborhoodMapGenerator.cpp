@@ -25,6 +25,7 @@ NeighborhoodMapGenerator::NeighborhoodMapGenerator(int width, int height,
 	lotSizeX = 26;
 	lotSizeY = 14;
 	treeChance = 30;
+	lotDesignator = TileCharacters::Default::DOUBLE_EXCLAMATION;
 }
 
 void NeighborhoodMapGenerator::PopulateActors(Map* map) {
@@ -122,8 +123,10 @@ TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 }
 
 
-Room* NeighborhoodMapGenerator::FindNextDoor(Point start, Point end, Orientation potential) {
+Room* NeighborhoodMapGenerator::FindNextDoor(Room room, Orientation potential) {
 	try {
+		Point start = room.getNWCorner();
+		Point end = room.getSECorner();
 		switch(potential){
 		case MapGenerator::Orientation::NORTH:{
 			Point tempStart(end.getX() , start.getY());
@@ -203,13 +206,17 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Point start, Point end, Orientation
 			Point tempStart(end.getX(), start.getY());
 			bool xNeg = false;
 			bool yNeg = false;
-			Point tempEnd = CheckHorizontalRoom(tempStart, xNeg, yNeg);
+			Point tempEnd(0,0);
+			CheckHorizontalRoom(tempStart, tempEnd, xNeg, yNeg);
 
 			if(InvalidRoomCorners(tempStart, tempEnd)){
 				tempStart = Point(end);
 				yNeg = true;
-				tempEnd = CheckHorizontalRoom(tempStart, xNeg, yNeg);
+				NeighborhoodMapGenerator::RoomCheckResult result = CheckHorizontalRoom(tempStart, tempEnd, xNeg, yNeg);
 				if(InvalidRoomCorners(tempStart, tempEnd)){
+					if(result == RoomCheckResult::NO_SPACE_LOT){
+						GenerateWindows(room, MapGenerator::Orientation::EAST);
+					}
 					return nullptr;
 				}
 			}
@@ -240,13 +247,17 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Point start, Point end, Orientation
 			Point tempStart(start.getX(), end.getY());
 			bool xNeg = true;
 			bool yNeg = true;
-			Point tempEnd = CheckHorizontalRoom(tempStart, xNeg, yNeg);
+			Point tempEnd(0,0);
+			CheckHorizontalRoom(tempStart, tempEnd, xNeg, yNeg);
 
 			if(InvalidRoomCorners(tempStart, tempEnd)){
 				tempStart = Point(start);
 				yNeg = false;
-				tempEnd = CheckHorizontalRoom(tempStart, xNeg, yNeg);
+				NeighborhoodMapGenerator::RoomCheckResult result = CheckHorizontalRoom(tempStart, tempEnd, xNeg, yNeg);
 				if(InvalidRoomCorners(tempStart, tempEnd)){
+					if(result == RoomCheckResult::NO_SPACE_LOT){
+						GenerateWindows(room, MapGenerator::Orientation::WEST);
+					}
 					return nullptr;
 				}
 			}
@@ -378,7 +389,89 @@ void NeighborhoodMapGenerator::DrawSouthDoor(Point start, Point end) {
 }
 
 
-Room* NeighborhoodMapGenerator::FindNextDoor(Point start, Point end) {
+
+void NeighborhoodMapGenerator::DrawNorthWindow(Point start, Point end) {
+	try {
+		bool validDoor = false;
+		int x;
+		do{
+			x = randomWrap.getInt(start.getX() + 1, end.getX() - 1 );
+
+			if(ValidDoor(x, start.getY())){
+				validDoor = true;
+			}
+
+		} while(!validDoor);
+		Point door(x, start.getY());
+
+		DrawWindow(map, neighborhoodMap, door.getX(), door.getY());
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawNorthDoor");
+		throw 0;
+	}
+}
+
+void NeighborhoodMapGenerator::DrawEastWindow(Point start, Point end) {
+	try {
+		int y;
+		bool validDoor = false;
+		do{
+			y = randomWrap.getInt(start.getY() + 1, end.getY() - 1);
+			if(ValidDoor(end.getX(), y)){
+				validDoor = true;
+			}
+		} while(!validDoor);
+		Point door(end.getX(), y );
+		DrawWindow(map, neighborhoodMap, door.getX(), door.getY());
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawEastDoor");
+		throw 0;
+	}
+}
+
+void NeighborhoodMapGenerator::DrawWestWindow(Point start, Point end) {
+	try {
+		int y;
+		bool validDoor = false;
+		do{
+			y = randomWrap.getInt(start.getY() + 1, end.getY() - 1);
+			if(ValidDoor(start.getX(), y)){
+				validDoor = true;
+			}
+		} while(!validDoor);
+		Point door(start.getX(), y);
+		DrawWindow(map, neighborhoodMap, door.getX(), door.getY());
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawWestDoor");
+		throw 0;
+	}
+}
+
+void NeighborhoodMapGenerator::DrawSouthWindow(Point start, Point end) {
+	try {
+		int x;
+		bool validDoor = false;
+		do{
+			x = randomWrap.getInt(start.getX() + 1, end.getX() - 1);
+			if(ValidDoor(x, end.getY())){
+				validDoor = true;
+			}
+
+		}while(!validDoor);
+
+		Point door(x, end.getY());
+		DrawWindow(map, neighborhoodMap, door.getX(), door.getY());
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawSouthDoor");
+		throw 0;
+	}
+}
+
+Room* NeighborhoodMapGenerator::FindNextDoor(Room room) {
 	try{
 	bool notFound = true;
 	Room* r = nullptr;
@@ -393,7 +486,7 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Point start, Point end) {
 		if(search != orientationSet.end()){
 			orientationSet.erase(search);
 
-			r = FindNextDoor(start, end, side);
+			r = FindNextDoor(room, side);
 			if(r != nullptr){
 					break;
 			}
@@ -429,7 +522,7 @@ void NeighborhoodMapGenerator::DrawInterior(Point start, Point end, int characte
 		TCODColor visible = TCODColor::grey;
 		for(uint i = start.getX() + 1 ; i < end.getX(); i++){
 			for(uint j = start.getY() + 1 ; j < end.getY(); j++){
-				int character = TileCharacters::Default::PERIOD;
+//				int character = TileCharacters::Default::PERIOD;
 				map->SetTileProperties(Point(i, j), visible, character);
 			}
 		}
@@ -460,7 +553,7 @@ int NeighborhoodMapGenerator::GenerateRoom(Room room, TCODColor color, Orientati
 				Point start = room.getNWCorner();
 				Point end = room.getSECorner();
 
-				ra = FindNextDoor(start, end);
+				ra = FindNextDoor(room);
 				if(ra != nullptr){
 
 
@@ -557,7 +650,7 @@ void NeighborhoodMapGenerator::CreateHouse(int lotX, int lotY, MapGenerator::Ori
 
 		Point fenceStart(0,0);
 		Point fenceEnd(0,0);
-		DrawRectangle(map, lotStart, lotEnd, TileColors::white, TileCharacters::Default::DOUBLE_EXCLAMATION);
+		DrawRectangle(map, lotStart, lotEnd, TileColors::white, lotDesignator);
 
 		int xSectionCount = lotSizeX / (minRoomSizeX); //Break into sections based off the minimum room size
 		int xSection = randomWrap.getInt(0, xSectionCount - 1); //Randomly selects which X section will be used
@@ -603,8 +696,8 @@ void NeighborhoodMapGenerator::CreateHouse(int lotX, int lotY, MapGenerator::Ori
 
 		Room initialRoom(buildingStart, buildingEnd, side);
 		GenerateRoom(initialRoom, visible, side, roomsLeft);
-		DrawRectangle(map, lotStart, lotEnd, TileColors::white, TileCharacters::Default::RAINBOW);
-		DrawRectangle(map, fenceStart, fenceEnd, TileColors::brownLight, TileCharacters::Default::HASH, true);
+//		DrawRectangle(map, lotStart, lotEnd, TileColors::white, TileCharacters::Default::RAINBOW);
+//		DrawRectangle(map, fenceStart, fenceEnd, TileColors::brownLight, TileCharacters::Default::HASH, true);
 	}
 	catch (...) {
 		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::CreateHouse");
@@ -612,10 +705,10 @@ void NeighborhoodMapGenerator::CreateHouse(int lotX, int lotY, MapGenerator::Ori
 	}
 }
 
-Point NeighborhoodMapGenerator::CheckHorizontalRoom(Point start, bool xNegFlag, bool yNegFlag) {
+NeighborhoodMapGenerator::RoomCheckResult NeighborhoodMapGenerator::CheckHorizontalRoom(Point start, Point &end, bool xNegFlag, bool yNegFlag) {
 	try {
 		int xCof,yCof;
-
+		bool lotHit = false;
 		if(xNegFlag)
 			xCof = -1;
 		else
@@ -627,37 +720,67 @@ Point NeighborhoodMapGenerator::CheckHorizontalRoom(Point start, bool xNegFlag, 
 			yCof = 1;
 
 		int x = 1;
-		for(; x <= maxRoomSizeX; x++){ //Check east
-			if(map->TileHasBeenSet(start.getX() + (x * xCof), start.getY()) ||
+		for (; x <= maxRoomSizeX; x++) {
+			Point currentPoint = Point(start.getX() + (x * xCof), start.getY());
+			//Check east
+			if (map->TileHasBeenSet(currentPoint) ||
 					start.getX() + (x * xCof) == 0 ||
 					start.getX() + (x * xCof) == mapWidth - 1){
+				if(map->GetCharacter(currentPoint) == lotDesignator){
+					lotHit = true;
+				}
 				break;
 			}
 		}
 		x--;
 		LoggerWrapper::Debug(" CVH, east/west check complete");
-		if(x < minRoomSizeX)
-			return start;
+		if(x < minRoomSizeX){
+			end = start;
+			if(lotHit)
+				return RoomCheckResult::NO_SPACE_LOT;
+			else
+				return RoomCheckResult::NO_SPACE_ROOM;
+		}
 
 		int y = 1;
-		for(; y <= maxRoomSizeY; y++){  //Check southeast
-			if(map->TileHasBeenSet(start.getX() + (x * xCof) , start.getY() + (y * yCof)) ||
+		for (; y <= maxRoomSizeY; y++) {
+			Point curentPoint = Point(start.getX() + (x * xCof), start.getY() + (y * yCof));
+			//Check southeast
+
+			if (map->TileHasBeenSet(curentPoint) ||
 					start.getY() + (y * yCof) == 0 ||
 					start.getY() + (y * yCof) == mapHeight - 2){
+				if(map->GetCharacter(curentPoint) == lotDesignator){
+					lotHit = true;
+				}
 				break;
 			}
 		}
 		y--;
 		LoggerWrapper::Debug(" CVH, north/south check complete");
-		if(y < minRoomSizeY)
-			return start;
+		if(y < minRoomSizeY){
+			end =  start;
+			if(lotHit)
+				return RoomCheckResult::NO_SPACE_LOT;
+			else
+				return RoomCheckResult::NO_SPACE_ROOM;
+		}
 
 		int tempY = 0;
 		for(; tempY < y; tempY++ ){
-			if(map->TileHasBeenSet(start.getX() + (1 * xCof), start.getY() + (tempY * yCof))){
+			Point currentPoint = Point(start.getX() + (1 * xCof), start.getY() + (tempY * yCof));
+			if (map->TileHasBeenSet(currentPoint)) {
+
+				if(map->GetCharacter(currentPoint) == lotDesignator)
+					lotHit = true;
+
 				tempY--;
 				if(tempY < minRoomSizeY){
-					return start;
+					end =  start;
+					if(lotHit)
+						return RoomCheckResult::NO_SPACE_LOT;
+					else
+						return RoomCheckResult::NO_SPACE_ROOM;
 				}
 				else{
 					break;
@@ -666,7 +789,8 @@ Point NeighborhoodMapGenerator::CheckHorizontalRoom(Point start, bool xNegFlag, 
 		}
 		y = tempY;
 		LoggerWrapper::Debug(" CVH complete");
-		return Point(start.getX() + (x * xCof) , start.getY() + (y * yCof));
+		end = Point(start.getX() + (x * xCof) , start.getY() + (y * yCof));
+		return RoomCheckResult::SPACE;
 	}
 	catch (...) {
 		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::CheckHorizontalRoom");
@@ -769,5 +893,36 @@ bool NeighborhoodMapGenerator::InvalidRoomCorners(Point start, Point end) {
 	catch (...) {
 		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::InvalidRoomCorners");
 		throw 0;
+	}
+}
+
+void NeighborhoodMapGenerator::GenerateWindows(Room& room, MapGenerator::Orientation side) {
+	switch(side){
+	case NORTH:
+		if(!room.GetWindowsNorth()){
+			DrawNorthWindow(room.getNWCorner(), room.getSECorner());
+			room.SetWindowsNorth(true);
+		}
+		break;
+	case SOUTH:
+		if(!room.GetWindowsSouth()){
+			DrawSouthWindow(room.getNWCorner(), room.getSECorner());
+			room.SetWindowsSouth(true);
+		}
+		break;
+	case EAST:
+		if(!room.GetWindowsEast()){
+			DrawEastWindow(room.getNWCorner(), room.getSECorner());
+			room.SetWindowsEast(true);
+		}
+		break;
+	case WEST:
+		if(!room.GetWindowsWest()){
+			DrawWestWindow(room.getNWCorner(), room.getSECorner());
+			room.SetWindowsWest(true);
+		}
+		break;
+	default:
+		break;
 	}
 }

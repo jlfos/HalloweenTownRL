@@ -231,3 +231,22 @@ void MapGenerator::DrawSidewalk(Map* map, TCODMap* roadMap, int x, int y){
 		throw 0;
 	}
 }
+
+void MapGenerator::DrawWindow(Map* map, TCODMap* roadMap, int x, int y) {
+	try {
+		if(map == nullptr || roadMap == nullptr){
+			LoggerWrapper::Error("Pointers cannot be null");
+			throw 0;
+		}
+
+
+		roadMap->setProperties(x, y, true, true);
+		TCODColor visible = TileColors::blueLight;
+		int character = TileCharacters::Default::W_UPPERCASE;
+		map->SetTileProperties(x, y, visible, character);
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in MapGenerator::DrawWindow");
+		throw 0;
+	}
+}

@@ -22,6 +22,7 @@ private:
 	int maxRoomSizeY;
 	int lotSizeX;
 	int lotSizeY;
+	int lotDesignator;
 	MapGenerator::Orientation mapOri;
 	Map* map;
 	TCODMap* neighborhoodMap;
@@ -32,6 +33,7 @@ public:
 	TCODMap* Generate(Map* map, bool generateActors);
 
 private:
+	enum class RoomCheckResult {NO_SPACE_ROOM, NO_SPACE_LOT, SPACE  };
 	RandomWrapper randomWrap;
 	int GenerateRoom(Room room, TCODColor color, Orientation previousOrientation, int roomsLeft);
 	void GenerateRoom(Point start, Point end, TCODColor color, Orientation orientation, int roomsLeft);
@@ -41,16 +43,21 @@ private:
 	void DrawEastDoor(Point start, Point end);
 	void DrawSouthDoor(Point start, Point end);
 	void DrawWestDoor(Point start, Point end);
-	Room* FindNextDoor(Point start, Point end);
-	Room* FindNextDoor(Point start, Point end, Orientation potential);
+	void DrawNorthWindow(Point start, Point end);
+	void DrawEastWindow(Point start, Point end);
+	void DrawSouthWindow(Point start, Point end);
+	void DrawWestWindow(Point start, Point end);
+	Room* FindNextDoor(Room room);
+	Room* FindNextDoor(Room room, Orientation potential);
 	void GenerateRoom(const Room& room, TCODColor color, int roomsLeft);
 	void DrawNextDoor(Room* ra);
 	void DrawWalls(Orientation previousOrientation, Room& room, TCODColor color);
 	void CreateHouse(int lotX, int lotY, MapGenerator::Orientation side,TCODColor visible);
 	bool InvalidRoomCorners(Point start, Point end);
 	bool ValidDoor(const int x, const int y);
-	Point CheckHorizontalRoom(Point start, bool xNegFlag, bool yNegFlag);
+	NeighborhoodMapGenerator::RoomCheckResult CheckHorizontalRoom(Point start, Point &end, bool xNegFlag, bool yNegFlag);
 	Point CheckVerticalRoom(Point start, bool xNegFlag, bool yNegFlag);
+	void GenerateWindows(Room &room, MapGenerator::Orientation side);
 
 };
 

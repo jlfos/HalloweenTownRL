@@ -23,7 +23,20 @@ public:
 	const Point& getSWCorner() const;
 	void Draw(Map* map, bool skipFilledTiles);
 
+	void SetWindowsEast(bool windowsEast);
+	void SetWindowsNorth(bool windowsNorth);
+	void SetWindowsSouth(bool windowsSouth);
+	void SetWindowsWest(bool windowsWest);
+	bool GetWindowsEast() const;
+	bool GetWindowsNorth() const;
+	bool GetWindowsSouth() const;
+	bool GetWindowsWest() const;
+
 private:
+	bool windowsWest;
+	bool windowsEast;
+	bool windowsNorth;
+	bool windowsSouth;
 	Point nwCorner;
 	Point seCorner;
 	MapGenerator::Orientation orientation;

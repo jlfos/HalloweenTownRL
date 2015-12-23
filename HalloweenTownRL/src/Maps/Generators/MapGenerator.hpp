@@ -26,6 +26,7 @@ class MapGenerator{
 		void DrawFilledArea(Map* map, Point start, Point end, TCODColor color, int character, bool skipFilledTiles);
 		void DrawTree(Map* map, TCODMap* roadMap, int x, int y);
 		void DrawRoad(Map* map, TCODMap* roadMap, int x, int y);
+		void DrawWindow(Map* map, TCODMap* roadMap, int x, int y);
 		void DrawSidewalk(Map* map, TCODMap* roadMap, int x, int y);
 		void DrawGrass(Map* map, TCODMap* roadMap, int x, int y);
 
