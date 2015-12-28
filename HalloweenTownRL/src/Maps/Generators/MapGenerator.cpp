@@ -232,7 +232,7 @@ void MapGenerator::DrawSidewalk(Map* map, TCODMap* roadMap, int x, int y){
 	}
 }
 
-void MapGenerator::DrawWindow(Map* map, TCODMap* roadMap, int x, int y) {
+void MapGenerator::DrawHorizontalWindow(Map* map, TCODMap* roadMap, int x, int y) {
 	try {
 		if(map == nullptr || roadMap == nullptr){
 			LoggerWrapper::Error("Pointers cannot be null");
@@ -241,12 +241,32 @@ void MapGenerator::DrawWindow(Map* map, TCODMap* roadMap, int x, int y) {
 
 
 		roadMap->setProperties(x, y, true, true);
-		TCODColor visible = TileColors::blueLight;
-		int character = TileCharacters::Default::W_UPPERCASE;
+		TCODColor visible = TileColors::blueLightest;
+		int character = TileCharacters::Default::WINDOW_HORIZONTAL;
 		map->SetTileProperties(x, y, visible, character);
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in MapGenerator::DrawWindow");
+		LoggerWrapper::Error("An error occurred in MapGenerator::DrawHorizontalWindow");
+		throw 0;
+	}
+}
+
+
+void MapGenerator::DrawVerticalWindow(Map* map, TCODMap* roadMap, int x, int y) {
+	try {
+		if(map == nullptr || roadMap == nullptr){
+			LoggerWrapper::Error("Pointers cannot be null");
+			throw 0;
+		}
+
+
+		roadMap->setProperties(x, y, true, true);
+		TCODColor visible = TileColors::blueLightest;
+		int character = TileCharacters::Default::WINDOW_VERTICAL;
+		map->SetTileProperties(x, y, visible, character);
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in MapGenerator::DrawVerticalWindow");
 		throw 0;
 	}
 }

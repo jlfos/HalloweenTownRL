@@ -20,7 +20,7 @@
 const int LEVEL_UP_BASE=1;
 const int LEVEL_UP_INCREASE=20;
 
-PlayerAi::PlayerAi() :experienceLevel(1), currentExperience(0), currentLevelGoal(LEVEL_UP_BASE) {
+PlayerAi::PlayerAi() : Ai(Ai::AiType::PLAYER), experienceLevel(1), currentExperience(0), currentLevelGoal(LEVEL_UP_BASE) {
 
 }
 
@@ -102,7 +102,7 @@ void PlayerAi::MoveRight(Actor *owner){
 void PlayerAi::MoveUp(Actor *owner){
 	try{
 		engine.gameStatus=Engine::NEW_TURN;
-		if (MoveOrAttack(owner, owner->x,owner->y-1)) {
+		if (MoveOrAttack(owner, owner->x, owner->y-1)) {
 			engine.currentMap->ComputeFov();
 		}
 	}
@@ -122,6 +122,44 @@ void PlayerAi::LoadMenu(){
 		throw 0;
 	}
 }
+
+PlayerAi::InteractResult PlayerAi::Interact(Actor *owner, Actor* target){
+	if(owner && target){
+		if(target->destructible && !target->destructible->IsDead() && target->ai){
+			switch(target->ai->GetAiType()){
+			case MONSTER:
+				owner->attacker->Attack(owner, target);
+				if(target->destructible->IsDead()){
+					currentExperience += target->destructible->ExperienceReward();
+					if(LevelUpOccurred()){
+						LevelUpPlayer(owner);
+					}
+				}
+				return InteractResult::SUCCESS;
+				break;
+			case DOOR:
+				return InteractResult::SUCCESS;
+				break;
+			default:
+				LoggerWrapper::Error("The AI type '" + std::to_string(target->ai->GetAiType()) +"' is not supported");
+				throw 0;
+			}
+		}
+		else {
+			if(target->blocks){
+				return InteractResult::FAILURE;
+			}
+			else
+				return InteractResult::PASSIVE_ACTOR;
+		}
+	}
+	else{
+		LoggerWrapper::Error("Null pointers are not allowed");
+		throw 0;
+	}
+
+}
+
 bool PlayerAi::MoveOrAttack(Actor *owner, int targetX, int targetY){
 	try{
 		Map::TileType type = engine.currentMap->GetTileType(targetX, targetY);
@@ -134,16 +172,10 @@ bool PlayerAi::MoveOrAttack(Actor *owner, int targetX, int targetY){
 				return false;
 		}
 		for(Actor* actor : engine.actors){
-			if(actor->destructible && !actor->destructible->IsDead() &&
-					actor->x == targetX && actor->y == targetY){
-				owner->attacker->Attack(owner, actor);
-				if(actor->destructible->IsDead()){
-					currentExperience += actor->destructible->ExperienceReward();
-					if(LevelUpOccurred()){
-						LevelUpPlayer(owner);
-					}
-				}
-				return false;
+			if(actor->x == targetX && actor->y == targetY){
+				PlayerAi::InteractResult result = Interact(owner, actor);
+				if(result == InteractResult::SUCCESS || result == InteractResult::FAILURE)
+					return false;
 			}
 		}
 

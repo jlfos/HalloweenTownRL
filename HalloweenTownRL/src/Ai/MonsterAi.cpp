@@ -12,7 +12,7 @@
 
 static const int TRACKING_TURNS=3;
 
-MonsterAi::MonsterAi(int trackingDistance) : moveCount(0), trackingDistance(trackingDistance) {
+MonsterAi::MonsterAi(int trackingDistance) : Ai(Ai::AiType::MONSTER), moveCount(0), trackingDistance(trackingDistance) {
 
 }
 
@@ -39,6 +39,33 @@ void MonsterAi::Update(Actor *owner){
 		LoggerWrapper::Error("An error occurred in MonsterAi::update");
 		throw 0;
 	}
+}
+
+void MonsterAi::Interact(Actor *owner, Actor* target){
+	if(owner && target){
+		if(owner->ai && target->ai){
+			switch(owner->ai->GetAiType()){
+			case PLAYER:
+				owner->attacker->Attack(owner, target);
+				break;
+			case DOOR:
+			case MONSTER:
+				break;
+			default:
+				LoggerWrapper::Error("The AI Type '" + std::to_string(owner->ai->GetAiType()) + "' is not supported.");
+				throw 0;
+			}
+		}
+		else{
+			LoggerWrapper::Error("No null AI pointers allowed.");
+			throw 0;
+		}
+	}
+	else{
+		LoggerWrapper::Error("No null pointers allowed.");
+		throw 0;
+	}
+
 }
 
 void MonsterAi::MoveOrAttack(Actor *owner, int targetX, int targetY){
@@ -71,7 +98,7 @@ void MonsterAi::MoveOrAttack(Actor *owner, int targetX, int targetY){
 			}
 		}
 		else if ( owner->attacker ) { //within striking distance
-				owner->attacker->Attack(owner,engine.player);
+			Interact(owner, engine.player);
 		}
 	}
 	catch(...){

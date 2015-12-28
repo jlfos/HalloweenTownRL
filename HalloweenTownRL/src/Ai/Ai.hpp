@@ -7,12 +7,21 @@
 class Actor;
 
 class Ai : public Persistent {
+protected:
+	enum  AiType{
+		MONSTER, PLAYER, DOOR
+	};
+
 public:
+	Ai(AiType type);
+
 	virtual void Update(Actor *owner)=0;
 	static Ai *Create(TCODZip &zip);
-protected:
-	enum AiType{
-		MONSTER, PLAYER
-	};
+	AiType GetAiType();
+
+
+private:
+	AiType type;
+
 };
 #endif

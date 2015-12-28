@@ -5,6 +5,10 @@
 #include "../LoggerWrapper.hpp"
 #include "MonsterAi.hpp"
 
+Ai::Ai(AiType type) :type(type) {
+}
+
+
 Ai *Ai::Create(TCODZip &zip){
 	try{
 		AiType type = (AiType)zip.getInt();
@@ -22,3 +26,8 @@ Ai *Ai::Create(TCODZip &zip){
 	}
 }
 
+
+
+Ai::AiType Ai::GetAiType() {
+	return type;
+}

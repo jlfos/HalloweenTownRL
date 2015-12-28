@@ -412,10 +412,9 @@ void NeighborhoodMapGenerator::DrawNorthWindow(Point start, Point end) {
 		} while(!validDoor);
 		Point door(x, start.getY());
 
-		DrawWindow(map, neighborhoodMap, door.getX(), door.getY());
+		DrawHorizontalWindow(map, neighborhoodMap, door.getX(), door.getY());
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawNorthDoor");
 		throw 0;
 	}
 }
@@ -431,10 +430,10 @@ void NeighborhoodMapGenerator::DrawEastWindow(Point start, Point end) {
 			}
 		} while(!validDoor);
 		Point door(end.getX(), y );
-		DrawWindow(map, neighborhoodMap, door.getX(), door.getY());
+		DrawVerticalWindow(map, neighborhoodMap, door.getX(), door.getY());
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawEastDoor");
+		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawEastWindow");
 		throw 0;
 	}
 }
@@ -450,10 +449,10 @@ void NeighborhoodMapGenerator::DrawWestWindow(Point start, Point end) {
 			}
 		} while(!validDoor);
 		Point door(start.getX(), y);
-		DrawWindow(map, neighborhoodMap, door.getX(), door.getY());
+		DrawVerticalWindow(map, neighborhoodMap, door.getX(), door.getY());
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawWestDoor");
+		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawWestWindow");
 		throw 0;
 	}
 }
@@ -471,10 +470,10 @@ void NeighborhoodMapGenerator::DrawSouthWindow(Point start, Point end) {
 		}while(!validDoor);
 
 		Point door(x, end.getY());
-		DrawWindow(map, neighborhoodMap, door.getX(), door.getY());
+		DrawHorizontalWindow(map, neighborhoodMap, door.getX(), door.getY());
 	}
 	catch (...) {
-		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawSouthDoor");
+		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawSouthWindow");
 		throw 0;
 	}
 }
@@ -953,32 +952,38 @@ bool NeighborhoodMapGenerator::InvalidRoomCorners(Point start, Point end) {
 }
 
 void NeighborhoodMapGenerator::GenerateWindows(Room& room, MapGenerator::Orientation side) {
-	switch(side){
-	case NORTH:
-		if(!room.GetWindowsNorth()){
-			DrawNorthWindow(room.getNWCorner(), room.getSECorner());
-			room.SetWindowsNorth(true);
+	try {
+		switch(side){
+		case NORTH:
+			if(!room.GetWindowsNorth()){
+				DrawNorthWindow(room.getNWCorner(), room.getSECorner());
+				room.SetWindowsNorth(true);
+			}
+			break;
+		case SOUTH:
+			if(!room.GetWindowsSouth()){
+				DrawSouthWindow(room.getNWCorner(), room.getSECorner());
+				room.SetWindowsSouth(true);
+			}
+			break;
+		case EAST:
+			if(!room.GetWindowsEast()){
+				DrawEastWindow(room.getNWCorner(), room.getSECorner());
+				room.SetWindowsEast(true);
+			}
+			break;
+		case WEST:
+			if(!room.GetWindowsWest()){
+				DrawWestWindow(room.getNWCorner(), room.getSECorner());
+				room.SetWindowsWest(true);
+			}
+			break;
+		default:
+			break;
 		}
-		break;
-	case SOUTH:
-		if(!room.GetWindowsSouth()){
-			DrawSouthWindow(room.getNWCorner(), room.getSECorner());
-			room.SetWindowsSouth(true);
-		}
-		break;
-	case EAST:
-		if(!room.GetWindowsEast()){
-			DrawEastWindow(room.getNWCorner(), room.getSECorner());
-			room.SetWindowsEast(true);
-		}
-		break;
-	case WEST:
-		if(!room.GetWindowsWest()){
-			DrawWestWindow(room.getNWCorner(), room.getSECorner());
-			room.SetWindowsWest(true);
-		}
-		break;
-	default:
-		break;
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::GenerateWindows");
+		throw 0;
 	}
 }

@@ -13,6 +13,7 @@ public:
 	void Load(TCODZip &zip);
 	void Save(TCODZip &zip);
 	int GetLevel();
+
 protected:
 	bool MoveOrAttack(Actor *owner, int targetX, int targetY);
 	void HandleActionKey(Actor *owner, int ascii);
@@ -22,11 +23,14 @@ protected:
 	void MoveUp(Actor *owner);
 	void LoadMenu();
 private:
+	enum class InteractResult {SUCCESS, PASSIVE_ACTOR, FAILURE};
+
 	void PlayerLook(Actor* player);
 	void LevelUpPlayer(Actor* player);
 	bool LevelUpOccurred();
 	void viewLog();
 	void ShowHelp();
+	InteractResult Interact(Actor *owner, Actor* target);
 	int experienceLevel;
 	int currentExperience;
 	int currentLevelGoal;
