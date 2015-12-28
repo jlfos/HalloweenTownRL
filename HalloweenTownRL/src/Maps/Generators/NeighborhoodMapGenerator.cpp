@@ -133,13 +133,17 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Room room, Orientation potential) {
 			bool xNeg = true;
 			bool yNeg = true;
 
-			Point tempEnd = CheckVerticalRoom(tempStart, xNeg, yNeg);
+			Point tempEnd(0, 0);
+			CheckVerticalRoom(tempStart, tempEnd, xNeg, yNeg);
 
 			if(InvalidRoomCorners(tempStart, tempEnd)){
 				tempStart = Point(start);
 				xNeg = false;
-				tempEnd = CheckVerticalRoom(tempStart, xNeg, yNeg);
+				NeighborhoodMapGenerator::RoomCheckResult result = CheckVerticalRoom(tempStart, tempEnd, xNeg, yNeg);
 				if(InvalidRoomCorners(tempStart, tempEnd)){
+					if(result == NeighborhoodMapGenerator::RoomCheckResult::NO_SPACE_LOT){
+						GenerateWindows(room, Orientation::NORTH);
+					}
 					return nullptr;
 				}
 			}
@@ -169,13 +173,17 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Room room, Orientation potential) {
 			bool xNeg = false;
 			bool yNeg = false;
 
-			Point tempEnd = CheckVerticalRoom(tempStart, xNeg, yNeg);
+			Point tempEnd(0, 0);
+			CheckVerticalRoom(tempStart, tempEnd, xNeg, yNeg);
 
 			if(InvalidRoomCorners(tempStart, tempEnd)){
 				tempStart = Point(end);
 				xNeg = true;
-				tempEnd = CheckVerticalRoom(tempStart, xNeg, yNeg);
+				NeighborhoodMapGenerator::RoomCheckResult result = CheckVerticalRoom(tempStart, tempEnd, xNeg, yNeg);
 				if(InvalidRoomCorners(tempStart, tempEnd)){
+					if(result == RoomCheckResult::NO_SPACE_LOT){
+						GenerateWindows(room, Orientation::SOUTH);
+					}
 					return nullptr;
 				}
 			}
@@ -741,6 +749,9 @@ NeighborhoodMapGenerator::RoomCheckResult NeighborhoodMapGenerator::CheckHorizon
 			else
 				return RoomCheckResult::NO_SPACE_ROOM;
 		}
+		else{
+			lotHit = false;
+		}
 
 		int y = 1;
 		for (; y <= maxRoomSizeY; y++) {
@@ -765,7 +776,9 @@ NeighborhoodMapGenerator::RoomCheckResult NeighborhoodMapGenerator::CheckHorizon
 			else
 				return RoomCheckResult::NO_SPACE_ROOM;
 		}
-
+		else{
+			lotHit = false;
+		}
 		int tempY = 0;
 		for(; tempY < y; tempY++ ){
 			Point currentPoint = Point(start.getX() + (1 * xCof), start.getY() + (tempY * yCof));
@@ -816,10 +829,12 @@ bool NeighborhoodMapGenerator::ValidDoor(const int x, const int y) {
 }
 
 
-Point NeighborhoodMapGenerator::CheckVerticalRoom(Point start, bool xNegFlag, bool yNegFlag) {
+NeighborhoodMapGenerator::RoomCheckResult NeighborhoodMapGenerator::CheckVerticalRoom(Point start, Point &end, bool xNegFlag, bool yNegFlag) {
 	try {
 		LoggerWrapper::Debug("CVR start: " + start.ToString());
 		int xCof,yCof;
+
+		bool lotHit = false;
 
 		if(xNegFlag)
 			xCof = -1;
@@ -832,36 +847,76 @@ Point NeighborhoodMapGenerator::CheckVerticalRoom(Point start, bool xNegFlag, bo
 			yCof = 1;
 
 		int y = 1;
-		for(; y <= maxRoomSizeY; y++){ //Check east
-			if(map->TileHasBeenSet(start.getX(), start.getY() + (y * yCof)) ||
+		for (; y <= maxRoomSizeY; y++) {
+			Point currentPoint = Point(start.getX(), start.getY() + (y * yCof));
+			//Check east
+			if (map->TileHasBeenSet(currentPoint) ||
 					start.getY() + (y * yCof) == 0 || start.getY() + (y * yCof) == mapHeight - 2){
+				if(map->GetCharacter(currentPoint) == lotDesignator)
+					lotHit = true;
+
 				break;
 			}
 		}
 		y--;
 		LoggerWrapper::Debug("CVR, north/south check complete " + std::to_string(y));
-		if(y < minRoomSizeY)
-			return start;
+		if(y < minRoomSizeY){
+			end = start;
+			if(lotHit){
+				return RoomCheckResult::NO_SPACE_LOT;
+			}
+			else{
+				return RoomCheckResult::NO_SPACE_ROOM;
+			}
+		}
+		else{
+			lotHit = false;
+		}
+
 
 		int x = 1;
-		for(; x <= maxRoomSizeX; x++){  //Check southeast
-			if(map->TileHasBeenSet(start.getX() + (x * xCof) , start.getY() + (y * yCof))  ||
+		for (; x <= maxRoomSizeX; x++) {
+			Point currentPoint = Point(start.getX() + (x * xCof), start.getY() + (y * yCof));
+			//Check southeast
+			if (map->TileHasBeenSet(currentPoint) ||
 					start.getX() + (x * xCof) == 0 || start.getX() + (x * xCof) == mapWidth - 1){
+				if(map->GetCharacter(currentPoint) == lotDesignator){
+					lotHit = true;
+				}
 				break;
 			}
 		}
 		x--;
 
-		if(x < minRoomSizeX)
-			return start;
+		if(x < minRoomSizeX){
+			end = start;
+			if(lotHit){
+				return RoomCheckResult::NO_SPACE_LOT;
+			}
+			else{
+				return RoomCheckResult::NO_SPACE_ROOM;
+			}
+		}
+		else{
+			lotHit = false;
+		}
+
 
 		LoggerWrapper::Debug("CVR, east/west check complete " + std::to_string(x));
 		int tempX = 0;
 		for(; tempX < x; tempX++ ){
-			if(map->TileHasBeenSet(start.getX() + (tempX * xCof), start.getY() + (1 * yCof))){
+			Point currentPoint = Point(start.getX() + (tempX * xCof), start.getY() + (1 * yCof));
+			if (map->TileHasBeenSet(currentPoint)) {
 				tempX--;
 				if(tempX < minRoomSizeX){
-					return start;
+					end = start;
+					if(map->GetCharacter(currentPoint) == lotDesignator){
+						return RoomCheckResult::NO_SPACE_LOT;
+					}
+					else{
+						return RoomCheckResult::NO_SPACE_ROOM;
+					}
+
 				}
 				else{
 					break;
@@ -872,7 +927,8 @@ Point NeighborhoodMapGenerator::CheckVerticalRoom(Point start, bool xNegFlag, bo
 		x = tempX;
 		Point tempEnd = Point(start.getX() + (x * xCof), start.getY() + (y * yCof));
 		LoggerWrapper::Debug(" CVR complete: " + tempEnd.ToString());
-		return tempEnd;
+		end = tempEnd;
+		return RoomCheckResult::SPACE;
 	}
 	catch (...) {
 		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::CheckVerticalRoom");

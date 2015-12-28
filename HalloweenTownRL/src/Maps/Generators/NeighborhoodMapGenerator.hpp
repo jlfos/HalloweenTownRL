@@ -56,7 +56,7 @@ private:
 	bool InvalidRoomCorners(Point start, Point end);
 	bool ValidDoor(const int x, const int y);
 	NeighborhoodMapGenerator::RoomCheckResult CheckHorizontalRoom(Point start, Point &end, bool xNegFlag, bool yNegFlag);
-	Point CheckVerticalRoom(Point start, bool xNegFlag, bool yNegFlag);
+	NeighborhoodMapGenerator::RoomCheckResult CheckVerticalRoom(Point start, Point &end, bool xNegFlag, bool yNegFlag);
 	void GenerateWindows(Room &room, MapGenerator::Orientation side);
 
 };
