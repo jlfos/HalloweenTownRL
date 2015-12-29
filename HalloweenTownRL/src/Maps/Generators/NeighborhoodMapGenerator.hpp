@@ -23,6 +23,7 @@ private:
 	int lotSizeX;
 	int lotSizeY;
 	int lotDesignator;
+	bool backDoor;
 	MapGenerator::Orientation mapOri;
 	Map* map;
 	TCODMap* neighborhoodMap;
@@ -33,7 +34,7 @@ public:
 	TCODMap* Generate(Map* map, bool generateActors);
 
 private:
-	enum class RoomCheckResult {NO_SPACE_ROOM, NO_SPACE_LOT, SPACE  };
+	enum class RoomCheckResult {NO_SPACE_ROOM, NO_SPACE_LOT_0, NO_SPACE_LOT_1 ,SPACE  };
 	RandomWrapper randomWrap;
 	int GenerateRoom(Room room, TCODColor color, Orientation previousOrientation, int roomsLeft);
 	void GenerateRoom(Point start, Point end, TCODColor color, Orientation orientation, int roomsLeft);

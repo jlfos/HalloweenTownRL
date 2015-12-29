@@ -22,6 +22,7 @@ class ActorFactory {
 		static Actor *CreateItem(int x, int y, EnemyDifficulty difficulty);
 		static Actor *CreateMachete(int x, int y);
 		static Actor *CreateLampPost(int x, int y);
+		static Actor *CreateDoor(int x, int y);
 	private:
 		static Actor *CreateMonsterForCity(int x, int y, EnemyDifficulty difficulty);
 		static Actor *CreateMonsterForWoods(int x, int y, EnemyDifficulty difficulty);

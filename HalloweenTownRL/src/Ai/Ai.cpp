@@ -31,3 +31,4 @@ Ai *Ai::Create(TCODZip &zip){
 Ai::AiType Ai::GetAiType() {
 	return type;
 }
+

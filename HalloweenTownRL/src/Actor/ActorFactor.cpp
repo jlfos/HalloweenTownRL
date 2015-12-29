@@ -4,6 +4,7 @@
 #include "ActorFactory.hpp"
 #include "../Ai/Ai.hpp"
 #include "../Destructible/BossDestructible.hpp"
+#include "../Interactable/DoorInteractable.hpp"
 #include "../Ai/MonsterAi.hpp"
 #include "../Ai/PlayerAi.hpp"
 #include "../Attacker.hpp"
@@ -550,4 +551,10 @@ std::map<ActorFactory::EnemyDifficulty, int>  ActorFactory::GenerateSpawnChances
 		LoggerWrapper::Error("An error occurred in GenerateChances");
 		throw 0;
 	}
+}
+
+Actor* ActorFactory::CreateDoor(int x, int y) {
+	Actor *door = new Actor(x, y, TileCharacters::Default::PLUS, "door", TileColors::brownDarker);
+	door->interactable = new DoorInteractable(door);
+	return door;
 }

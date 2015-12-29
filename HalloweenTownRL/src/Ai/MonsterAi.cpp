@@ -41,7 +41,7 @@ void MonsterAi::Update(Actor *owner){
 	}
 }
 
-void MonsterAi::Interact(Actor *owner, Actor* target){
+void MonsterAi::Interact(Actor *owner, Actor *target){
 	if(owner && target){
 		if(owner->ai && target->ai){
 			switch(owner->ai->GetAiType()){

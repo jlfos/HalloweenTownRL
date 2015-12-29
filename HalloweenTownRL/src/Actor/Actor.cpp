@@ -13,7 +13,7 @@
 Actor::Actor(int x, int y, int ch, std::string name, const TCODColor &col) :
     x(x),y(y),ch(ch),col(col), name(name),
     blocks(true), attacker(nullptr), destructible(nullptr), ai(nullptr),
-    item(nullptr), container(nullptr), lightsource(nullptr){
+    item(nullptr), container(nullptr), lightsource(nullptr), interactable(nullptr){
 }
  
 Actor::~Actor(){

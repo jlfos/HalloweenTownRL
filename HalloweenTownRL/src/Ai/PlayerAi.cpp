@@ -2,12 +2,14 @@
 #include <chrono>
 #include <thread>
 #include "../Actor/Actor.hpp"
+#include "../Interactable/DoorInteractable.hpp"
 #include "../UI/Gui.hpp"
 #include "../Attacker.hpp"
 #include "../Container.hpp"
 #include "../Destructible/Destructible.hpp"
 #include "../Engine.hpp"
 #include "../UI/HelpScreen.hpp"
+#include "../Interactable/Interactable.hpp"
 #include "../UI/LevelUpMenu.hpp"
 #include "../LoggerWrapper.hpp"
 #include "../UI/MonsterLogMenu.hpp"
@@ -123,11 +125,17 @@ void PlayerAi::LoadMenu(){
 	}
 }
 
-PlayerAi::InteractResult PlayerAi::Interact(Actor *owner, Actor* target){
-	if(owner && target){
-		if(target->destructible && !target->destructible->IsDead() && target->ai){
-			switch(target->ai->GetAiType()){
-			case MONSTER:
+Interactable::Result PlayerAi::Interact(Actor *owner, Actor* target){
+	try {
+		if(owner && target){
+
+			if(target->interactable){ //Interact
+				LastAction action;
+				action.virtualKey = engine.lastKey.vk;
+				action.key = engine.lastKey.c;
+				return target->interactable->Interact(owner, action);
+			}
+			else if(target->destructible && !target->destructible->IsDead()) { //Attack
 				owner->attacker->Attack(owner, target);
 				if(target->destructible->IsDead()){
 					currentExperience += target->destructible->ExperienceReward();
@@ -135,26 +143,23 @@ PlayerAi::InteractResult PlayerAi::Interact(Actor *owner, Actor* target){
 						LevelUpPlayer(owner);
 					}
 				}
-				return InteractResult::SUCCESS;
-				break;
-			case DOOR:
-				return InteractResult::SUCCESS;
-				break;
-			default:
-				LoggerWrapper::Error("The AI type '" + std::to_string(target->ai->GetAiType()) +"' is not supported");
-				throw 0;
+				return Interactable::Result::SUCCESS;
+			}
+			else{
+				if(target->blocks){
+					return Interactable::Result::FAILURE;
+				}
+				else
+					return Interactable::Result::NOTHING_HAPPENS;
 			}
 		}
-		else {
-			if(target->blocks){
-				return InteractResult::FAILURE;
-			}
-			else
-				return InteractResult::PASSIVE_ACTOR;
+		else{
+			LoggerWrapper::Error("Null pointers are not allowed");
+			throw 0;
 		}
 	}
-	else{
-		LoggerWrapper::Error("Null pointers are not allowed");
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in PlayerAi::Interact");
 		throw 0;
 	}
 
@@ -162,6 +167,7 @@ PlayerAi::InteractResult PlayerAi::Interact(Actor *owner, Actor* target){
 
 bool PlayerAi::MoveOrAttack(Actor *owner, int targetX, int targetY){
 	try{
+		LoggerWrapper::Info("Door " + std::to_string(engine.lastKey.vk));
 		Map::TileType type = engine.currentMap->GetTileType(targetX, targetY);
 		if(type == Map::TileType::WALL)  return false;
 		else if(type == Map::TileType::TOP_EDGE ||
@@ -173,8 +179,8 @@ bool PlayerAi::MoveOrAttack(Actor *owner, int targetX, int targetY){
 		}
 		for(Actor* actor : engine.actors){
 			if(actor->x == targetX && actor->y == targetY){
-				PlayerAi::InteractResult result = Interact(owner, actor);
-				if(result == InteractResult::SUCCESS || result == InteractResult::FAILURE)
+				Interactable::Result result = Interact(owner, actor);
+				if(result == Interactable::Result::SUCCESS || result == Interactable::Result::FAILURE)
 					return false;
 			}
 		}
@@ -300,6 +306,23 @@ void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 
 			}
 			break;
+			case 'o':
+			{
+
+				for(Actor* actor : engine.actors){
+					if(actor != owner && actor->interactable && actor->x >= owner->x - 1 && actor->x <= owner->x + 1 &&
+							actor->y >= owner->y - 1 && actor->y <= owner->y + 1){
+						LastAction action;
+						action.key = 'o';
+						action.virtualKey = TCODK_CHAR;
+						actor->interactable->Interact(owner, action);
+						return;
+					}
+				}
+				engine.gui->PushMessage(TileColors::greyLight,"There are no doors around for you to open.");
+
+			}
+			break;
 		}
 	}
 	catch(...){
@@ -401,4 +424,7 @@ void PlayerAi::Save(TCODZip &zip){
 		LoggerWrapper::Error("An error occurred in PlayerAi::save");
 		throw 0;
 	}
+}
+
+void PlayerAi::Interact(Actor* owner) {
 }

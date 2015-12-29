@@ -4,13 +4,13 @@
  *  Created on: Jul 10, 2015
  */
 
-#ifndef RECTANGLE_HPP
-#define RECTANGLE_HPP
+#ifndef CONSOLE_RECTANGLE_HPP
+#define CONSOLE_RECTANGLE_HPP
 #include "libtcod.hpp"
 
-class Rectangle{
+class ConsoleRectangle{
 public:
-	Rectangle(int width, int height, TCODColor color);
+	ConsoleRectangle(int width, int height, TCODColor color);
 	int getWidth();
 	int getHeight();
 	TCODColor getColor();
@@ -22,4 +22,4 @@ private:
 
 
 
-#endif /* RECTANGLE_HPP */
+#endif /* CONSOLE_RECTANGLE_HPP */

@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include "libtcod.hpp"
+#include "../Interactable/Interactable.hpp"
 #include "../Persistent.hpp"
 #include "../Lightsource.hpp"
 
@@ -27,6 +28,7 @@ public:
 	Item* item; //something that can be picked up
 	Container* container; //something that contains
 	Lightsource*  lightsource;//something that emits light
+	Interactable* interactable;//something that cn be interacted with
 	Actor(int x, int y, int ch, std::string name, const TCODColor &col);
 	~Actor();
 	void Update();

@@ -9,20 +9,20 @@
 #include <vector>
 #include "libtcod.hpp"
 #include "Message.hpp"
-#include "Rectangle.hpp"
+#include "ConsoleRectangle.hpp"
 
 class ConsoleLine{
 
 public:
 	ConsoleLine(Message message);
-	ConsoleLine(Message message, std::vector<Rectangle> rectangle);
+	ConsoleLine(Message message, std::vector<ConsoleRectangle> rectangles);
 	Message getMessage();
-	std::vector<Rectangle> getRectangle();
+	std::vector<ConsoleRectangle> getConsoleRectangle();
 	static std::vector<ConsoleLine*> CreateConsoleLines(std::vector<Message> messages);
 	static std::vector<ConsoleLine*> CreateConsoleLines(std::string text, unsigned int lineWidth);
 private:
 	Message message;
-	std::vector<Rectangle> rectangles;
+	std::vector<ConsoleRectangle> rectangles;
 };
 
 

@@ -13,7 +13,7 @@
 #include "../../LoggerWrapper.hpp"
 
 #ifndef NMG_LOGGER
-#define NMG_LOGGER
+//#define NMG_LOGGER
 #endif
 
 NeighborhoodMapGenerator::NeighborhoodMapGenerator(int width, int height,
@@ -34,6 +34,7 @@ void NeighborhoodMapGenerator::PopulateActors(Map* map) {
 
 TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 	try{
+		//TODO this method is really ugly. Its the biggest obstacle to this being an easy to use class.
 		int width = map->GetWidth();
 		int height = map->GetHeight();
 		neighborhoodMap = new TCODMap(width, height);
@@ -49,12 +50,12 @@ TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 		CreateHouse(lotX, lotY + lotSizeY + yStreetSize, MapGenerator::Orientation::SOUTH, visible);
 		CreateHouse(lotX + lotSizeX, lotY + lotSizeY + yStreetSize, MapGenerator::Orientation::SOUTH, visible);
 		CreateHouse(lotX + lotSizeX * 2, lotY + lotSizeY + yStreetSize, MapGenerator::Orientation::SOUTH, visible);
-		bool isTransparent = false;
-		bool isWalkable = false;
+		bool isTransparent = true;
+		bool isWalkable = true;
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height-1; y++) {
-				//TODO this needs to be set properly for the demo and lightsource needs to be fixed
+
 
 				if(map->TileHasBeenSet(x, y)){
 					if(map->GetCharacter(x, y) != TileCharacters::PERIOD){
@@ -141,8 +142,12 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Room room, Orientation potential) {
 				xNeg = false;
 				NeighborhoodMapGenerator::RoomCheckResult result = CheckVerticalRoom(tempStart, tempEnd, xNeg, yNeg);
 				if(InvalidRoomCorners(tempStart, tempEnd)){
-					if(result == NeighborhoodMapGenerator::RoomCheckResult::NO_SPACE_LOT){
+					if(result == NeighborhoodMapGenerator::RoomCheckResult::NO_SPACE_LOT_0 || result == RoomCheckResult::NO_SPACE_LOT_1){
 						GenerateWindows(room, Orientation::NORTH);
+					}
+					if(result == RoomCheckResult::NO_SPACE_LOT_1 && !backDoor){
+						DrawNorthDoor(room.getNWCorner(), room.getSECorner());
+						backDoor = true;
 					}
 					return nullptr;
 				}
@@ -181,7 +186,7 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Room room, Orientation potential) {
 				xNeg = true;
 				NeighborhoodMapGenerator::RoomCheckResult result = CheckVerticalRoom(tempStart, tempEnd, xNeg, yNeg);
 				if(InvalidRoomCorners(tempStart, tempEnd)){
-					if(result == RoomCheckResult::NO_SPACE_LOT){
+					if(result == RoomCheckResult::NO_SPACE_LOT_0 || result == RoomCheckResult::NO_SPACE_LOT_1){
 						GenerateWindows(room, Orientation::SOUTH);
 					}
 					return nullptr;
@@ -222,7 +227,7 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Room room, Orientation potential) {
 				yNeg = true;
 				NeighborhoodMapGenerator::RoomCheckResult result = CheckHorizontalRoom(tempStart, tempEnd, xNeg, yNeg);
 				if(InvalidRoomCorners(tempStart, tempEnd)){
-					if(result == RoomCheckResult::NO_SPACE_LOT){
+					if(result == RoomCheckResult::NO_SPACE_LOT_0 || result == RoomCheckResult::NO_SPACE_LOT_1){
 						GenerateWindows(room, MapGenerator::Orientation::EAST);
 					}
 					return nullptr;
@@ -263,7 +268,7 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Room room, Orientation potential) {
 				yNeg = false;
 				NeighborhoodMapGenerator::RoomCheckResult result = CheckHorizontalRoom(tempStart, tempEnd, xNeg, yNeg);
 				if(InvalidRoomCorners(tempStart, tempEnd)){
-					if(result == RoomCheckResult::NO_SPACE_LOT){
+					if(result == RoomCheckResult::NO_SPACE_LOT_0 || result == RoomCheckResult::NO_SPACE_LOT_1){
 						GenerateWindows(room, MapGenerator::Orientation::WEST);
 					}
 					return nullptr;
@@ -305,9 +310,8 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Room room, Orientation potential) {
 
 void NeighborhoodMapGenerator::DrawDoor(const Point& door) {
 	try {
-		TCODColor color = TCODColor::grey;
-		int character = TileCharacters::Default::PERIOD;
-		map->SetTileProperties(door, color, character);
+		map->actors.push(ActorFactory::CreateDoor(door.getX(), door.getY()));
+
 	}
 	catch (...) {
 		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawDoor");
@@ -654,7 +658,7 @@ void NeighborhoodMapGenerator::CreateHouse(int lotX, int lotY, MapGenerator::Ori
 #endif
 		Point lotStart(lotX, lotY);
 		Point lotEnd(lotX + lotSizeX, lotY + lotSizeY);
-
+		backDoor = false;
 		Point fenceStart(0,0);
 		Point fenceEnd(0,0);
 		DrawRectangle(map, lotStart, lotEnd, TileColors::white, lotDesignator);
@@ -744,7 +748,7 @@ NeighborhoodMapGenerator::RoomCheckResult NeighborhoodMapGenerator::CheckHorizon
 		if(x < minRoomSizeX){
 			end = start;
 			if(lotHit)
-				return RoomCheckResult::NO_SPACE_LOT;
+				return RoomCheckResult::NO_SPACE_LOT_0;
 			else
 				return RoomCheckResult::NO_SPACE_ROOM;
 		}
@@ -771,7 +775,7 @@ NeighborhoodMapGenerator::RoomCheckResult NeighborhoodMapGenerator::CheckHorizon
 		if(y < minRoomSizeY){
 			end =  start;
 			if(lotHit)
-				return RoomCheckResult::NO_SPACE_LOT;
+				return RoomCheckResult::NO_SPACE_LOT_0;
 			else
 				return RoomCheckResult::NO_SPACE_ROOM;
 		}
@@ -790,7 +794,7 @@ NeighborhoodMapGenerator::RoomCheckResult NeighborhoodMapGenerator::CheckHorizon
 				if(tempY < minRoomSizeY){
 					end =  start;
 					if(lotHit)
-						return RoomCheckResult::NO_SPACE_LOT;
+						return RoomCheckResult::NO_SPACE_LOT_0;
 					else
 						return RoomCheckResult::NO_SPACE_ROOM;
 				}
@@ -862,7 +866,13 @@ NeighborhoodMapGenerator::RoomCheckResult NeighborhoodMapGenerator::CheckVertica
 		if(y < minRoomSizeY){
 			end = start;
 			if(lotHit){
-				return RoomCheckResult::NO_SPACE_LOT;
+				if(y >= 1){
+					return RoomCheckResult::NO_SPACE_LOT_1;
+				}
+				else{
+					return RoomCheckResult::NO_SPACE_LOT_0;
+				}
+
 			}
 			else{
 				return RoomCheckResult::NO_SPACE_ROOM;
@@ -890,7 +900,12 @@ NeighborhoodMapGenerator::RoomCheckResult NeighborhoodMapGenerator::CheckVertica
 		if(x < minRoomSizeX){
 			end = start;
 			if(lotHit){
-				return RoomCheckResult::NO_SPACE_LOT;
+				if(x >= 1){
+					return RoomCheckResult::NO_SPACE_LOT_1;
+				}
+				else{
+					return RoomCheckResult::NO_SPACE_LOT_0;
+				}
 			}
 			else{
 				return RoomCheckResult::NO_SPACE_ROOM;
@@ -910,7 +925,12 @@ NeighborhoodMapGenerator::RoomCheckResult NeighborhoodMapGenerator::CheckVertica
 				if(tempX < minRoomSizeX){
 					end = start;
 					if(map->GetCharacter(currentPoint) == lotDesignator){
-						return RoomCheckResult::NO_SPACE_LOT;
+						if(tempX >= 1){
+							return RoomCheckResult::NO_SPACE_LOT_1;
+						}
+						else{
+							return RoomCheckResult::NO_SPACE_LOT_0;
+						}
 					}
 					else{
 						return RoomCheckResult::NO_SPACE_ROOM;

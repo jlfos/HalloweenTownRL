@@ -8,7 +8,7 @@
 #define POINT_HPP
 #include <string>
 
-
+//TODO the 'get' for X and Y need to be capitalized OR removed (look into why they are a convention)
 class Point {
 public:
 	Point(uint x, uint y);

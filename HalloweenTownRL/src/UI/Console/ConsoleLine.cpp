@@ -7,21 +7,21 @@
 #include "ConsoleLine.hpp"
 #include "../../LoggerWrapper.hpp"
 #include "Message.hpp"
-#include "Rectangle.hpp"
+#include "ConsoleRectangle.hpp"
 
-ConsoleLine::ConsoleLine(Message message, std::vector<Rectangle> rectangles): message(message), rectangles(rectangles){
+ConsoleLine::ConsoleLine(Message message, std::vector<ConsoleRectangle> rectangles): message(message), rectangles(rectangles){
 
 }
 
 ConsoleLine::ConsoleLine(Message message): message(message) {
-	this->rectangles = std::vector<Rectangle>();
+	this->rectangles = std::vector<ConsoleRectangle>();
 }
 
 Message ConsoleLine::getMessage(){
 	return message;
 }
 
-std::vector<Rectangle> ConsoleLine::getRectangle(){
+std::vector<ConsoleRectangle> ConsoleLine::getConsoleRectangle(){
 	return rectangles;
 }
 

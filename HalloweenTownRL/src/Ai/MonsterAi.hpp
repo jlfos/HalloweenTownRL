@@ -13,7 +13,7 @@ public:
 	void Update(Actor *owner);
 	void Load(TCODZip &zip);
 	void Save(TCODZip &zip);
-	void Interact(Actor *owner, Actor* target);
+	void Interact(Actor *owner, Actor *target);
 protected:
 	void MoveOrAttack(Actor *owner, int targetX, int targetY);
 	int moveCount;

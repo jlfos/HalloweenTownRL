@@ -11,7 +11,7 @@
 #include "ConsoleLine.hpp"
 #include "ConsoleUI.hpp"
 #include "../../LoggerWrapper.hpp"
-#include "Rectangle.hpp"
+#include "ConsoleRectangle.hpp"
 #include "../../Tile/TileColors.hpp"
 
 ConsoleUI::ConsoleUI(int width, int height, int startX, int startY):
@@ -65,7 +65,7 @@ void ConsoleUI::Display(){
 
 
 		for(ConsoleLine* consoleLine : consoleLines ){
-			for(Rectangle rectangle : consoleLine->getRectangle()){
+			for(ConsoleRectangle rectangle : consoleLine->getConsoleRectangle()){
 				console->setDefaultBackground(rectangle.getColor());
 				console->rect(x, y, rectangle.getWidth(), rectangle.getHeight(), false, TCOD_BKGND_SET);
 			}
