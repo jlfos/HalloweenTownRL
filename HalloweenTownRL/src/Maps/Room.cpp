@@ -9,7 +9,7 @@
 #include "../Tile/TileColors.hpp"
 #include "Rectangle.hpp"
 Room::Room(Point nwCorner, Point seCorner, MapGenerator::Orientation orientation) :
-Rectangle(nwCorner, seCorner, TileColors::white), nwCorner(nwCorner), seCorner(seCorner), orientation(orientation)
+Rectangle(nwCorner, seCorner, TileColors::white), nwCorner(nwCorner), seCorner(seCorner), orientation(orientation), windowsEast(false), windowsSouth(false), windowsNorth(false), windowsWest(false)
 {
 	details.nwCorner = TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_LEFT;
 	details.northSide = TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL;
@@ -22,7 +22,7 @@ Rectangle(nwCorner, seCorner, TileColors::white), nwCorner(nwCorner), seCorner(s
 }
 
 Room::Room(Point nwCorner, int offsetX, int offsetY, MapGenerator::Orientation orientation)
-: Rectangle(nwCorner, seCorner, TileColors::white),  nwCorner(nwCorner), seCorner(nwCorner.getX() + offsetX, nwCorner.getY() + offsetY), orientation(orientation){
+: Rectangle(nwCorner, seCorner, TileColors::white),  nwCorner(nwCorner), seCorner(nwCorner.getX() + offsetX, nwCorner.getY() + offsetY), orientation(orientation) , windowsEast(false), windowsSouth(false), windowsNorth(false), windowsWest(false){
 
 	details.nwCorner = TileCharacters::Default::DOUBLE_PIPE_CORNER_UPPER_LEFT;
 	details.northSide = TileCharacters::Default::DOUBLE_PIPE_HORIZONTAL;

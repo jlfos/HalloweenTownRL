@@ -18,7 +18,13 @@ Actor::Actor(int x, int y, int ch, std::string name, const TCODColor &col) :
  
 Actor::~Actor(){
 	try{
-
+		delete attacker;
+		delete destructible;
+		delete ai;
+		delete item;
+		delete container;
+		delete lightsource;
+		delete interactable;
 	}
 	catch(...){
 		LoggerWrapper::Error("An error occurred with Actor::~Actor");

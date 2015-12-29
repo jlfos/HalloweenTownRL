@@ -147,3 +147,6 @@ void Rectangle::DrawWestSide(Map* map, bool skipFilledTiles) {
 		throw 0;
 	}
 }
+
+Rectangle::~Rectangle() {
+}

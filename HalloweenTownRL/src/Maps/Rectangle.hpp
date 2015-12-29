@@ -26,7 +26,7 @@ public:
 	Rectangle(Point nwCorner, Point seCorner, TCODColor color, int character);
 	Rectangle(Point nwCorner, Point seCorner, TCODColor color, RectangleDetails details);
 	virtual void Draw(Map* map, bool skipFilledTiles);
-
+	virtual ~Rectangle();
 private:
 	void DrawNorthSide(Map* map, bool skipFilledTiles);
 	void DrawEastSide(Map* map, bool skipFilledTiles);

@@ -40,7 +40,7 @@ private:
 
 public :
     Map(int width, int height, MapGenerator* generator);
-    ~Map();
+    virtual ~Map();
 
     enum class TileType {GROUND, WALL, LEFT_EDGE, RIGHT_EDGE, TOP_EDGE, BOTTOM_EDGE};
     TileType GetTileType(int x, int y) const;

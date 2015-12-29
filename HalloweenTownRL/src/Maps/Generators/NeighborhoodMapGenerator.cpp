@@ -30,6 +30,9 @@ NeighborhoodMapGenerator::NeighborhoodMapGenerator(int width, int height,
 	furniture.push_back(TileCharacters::Default::TV);
 	furniture.push_back(TileCharacters::Default::TABLE);
 	furniture.push_back(TileCharacters::Default::CHAIR);
+	backDoor = false;
+	neighborhoodMap = nullptr;
+	map = nullptr;
 }
 
 void NeighborhoodMapGenerator::PopulateActors(Map* map) {
@@ -532,7 +535,12 @@ void NeighborhoodMapGenerator::DrawInterior(Point start, Point end, int characte
 		 * bedroom (bed, chair, table, dresser, desk)
 		 * */
 		int furnitureRoom = 2;
-
+		//TODO Move this into the Room class so that the interior can be filled prior to deletion but after all doors have been created
+		//TODO Make a toilet
+		//TODO Try to make a tub
+		//TODO try to make a desk
+		//TODO Try to make a sink
+		//TODO Get colors for individual furniture types & add potted plants (music note)
 #ifdef NMG_LOGGER
 		LoggerWrapper::Debug("Interior is " +  std::to_string(character) );
 #endif
@@ -540,14 +548,20 @@ void NeighborhoodMapGenerator::DrawInterior(Point start, Point end, int characte
 		for(uint i = start.getX() + 1 ; i < end.getX(); i++){
 			for(uint j = start.getY() + 1 ; j < end.getY(); j++){
 				int character;
-				int tempChar = randomWrap.getInt(i, end.getX());
-				if (furnitureRoom != 0 && tempChar == end.getX()){
+
+				int tempChar = randomWrap.getInt(i + j, end.getX() + end.getY());
+				if(map->GetCharacter(i - 1, j) != TileCharacters::Default::PLUS &&
+						map->GetCharacter(i + 1, j) != TileCharacters::Default::PLUS &&
+						map->GetCharacter(i, j + 1) != TileCharacters::Default::PLUS &&
+						map->GetCharacter(i, j - 1) != TileCharacters::Default::PLUS &&
+						furnitureRoom != 0 && tempChar == end.getX() + end.getY()){
 					furnitureRoom--;
 					character = furniture.at(randomWrap.getInt(0, 3));
+					visible = TileColors::brownLighter;
 				}
 				else{
 					character = TileCharacters::Default::PERIOD;
-
+					visible = TileColors::grey;
 				}
 				map->SetTileProperties(Point(i, j), visible, character);
 			}
@@ -587,7 +601,7 @@ int NeighborhoodMapGenerator::GenerateRoom(Room room, TCODColor color, int rooms
 					roomsLeft = GenerateRoom((*ra), color, roomsLeft);
 				}
 			}while(roomsLeft != 0 && ra != nullptr);
-
+			delete ra;
 			return roomsLeft;
 		}
 	}
@@ -599,29 +613,28 @@ int NeighborhoodMapGenerator::GenerateRoom(Room room, TCODColor color, int rooms
 
 void NeighborhoodMapGenerator::DrawNextDoor(Room* ra) {
 	try {
-		//TODO this documentation needs to reflect the fact that its directional to the previous room
 		switch (ra->getOrientation()) {
 		case MapGenerator::Orientation::NORTH:
 			#ifdef NMG_LOGGER
-			LoggerWrapper::Info( "Next door is north" );
+			LoggerWrapper::Info( "Next door is north of the previous room" );
 			#endif
 			DrawSouthDoor(ra->getNWCorner(), ra->getSECorner());
 			break;
 		case MapGenerator::Orientation::EAST:
 			#ifdef NMG_LOGGER
-			LoggerWrapper::Info("Next door is east");
+			LoggerWrapper::Info("Next door is east of the previous room");
 			#endif
 			DrawWestDoor(ra->getNWCorner(), ra->getSECorner());
 			break;
 		case MapGenerator::Orientation::SOUTH:
 			#ifdef NMG_LOGGER
-			LoggerWrapper::Info("Next door is south");
+			LoggerWrapper::Info("Next door is south of the previous room");
 			#endif
 			DrawNorthDoor(ra->getNWCorner(), ra->getSECorner());
 			break;
 		case MapGenerator::Orientation::WEST:
 			#ifdef NMG_LOGGER
-			LoggerWrapper::Info("Next door is west");
+			LoggerWrapper::Info("Next door is west of the previous room");
 			#endif
 			DrawEastDoor(ra->getNWCorner(), ra->getSECorner());
 			break;
