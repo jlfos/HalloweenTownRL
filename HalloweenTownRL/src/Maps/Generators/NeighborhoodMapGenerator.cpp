@@ -13,7 +13,7 @@
 #include "../../LoggerWrapper.hpp"
 
 #ifndef NMG_LOGGER
-//#define NMG_LOGGER
+#define NMG_LOGGER
 #endif
 
 NeighborhoodMapGenerator::NeighborhoodMapGenerator(int width, int height,
@@ -545,9 +545,9 @@ void NeighborhoodMapGenerator::DrawInterior(Point start, Point end, int characte
 }
 
 
-int NeighborhoodMapGenerator::GenerateRoom(Room room, TCODColor color, Orientation previousOrientation, int roomsLeft) {
+int NeighborhoodMapGenerator::GenerateRoom(Room room, TCODColor color, int roomsLeft) {
 	try{
-		DrawWalls(previousOrientation, room, color);
+		room.Draw(map, false);
 		DrawNextDoor(&room);
 		DrawInterior(room.getNWCorner(), room.getSECorner(), roomsLeft);
 
@@ -569,7 +569,7 @@ int NeighborhoodMapGenerator::GenerateRoom(Room room, TCODColor color, Orientati
 
 
 
-					roomsLeft = GenerateRoom((*ra), color, ra->getOrientation(), roomsLeft);
+					roomsLeft = GenerateRoom((*ra), color, roomsLeft);
 				}
 			}while(roomsLeft != 0 && ra != nullptr);
 
@@ -584,6 +584,7 @@ int NeighborhoodMapGenerator::GenerateRoom(Room room, TCODColor color, Orientati
 
 void NeighborhoodMapGenerator::DrawNextDoor(Room* ra) {
 	try {
+		//TODO this documentation needs to reflect the fact that its directional to the previous room
 		switch (ra->getOrientation()) {
 		case MapGenerator::Orientation::NORTH:
 			#ifdef NMG_LOGGER
@@ -620,37 +621,6 @@ void NeighborhoodMapGenerator::DrawNextDoor(Room* ra) {
 	}
 }
 
-void NeighborhoodMapGenerator::DrawWalls(Orientation previousOrientation, Room& room,
-		TCODColor color) {
-	try {
-		room.Draw(map, false);
-		if (previousOrientation != MapGenerator::Orientation::SOUTH) {
-
-			if (previousOrientation == MapGenerator::Orientation::NONE)
-				DrawNorthDoor(room.getNWCorner(), room.getSECorner());
-
-		}
-		if (previousOrientation != MapGenerator::Orientation::NORTH) {
-			if (previousOrientation == MapGenerator::Orientation::NONE)
-				DrawNorthDoor(room.getNWCorner(), room.getSECorner());
-		}
-		if (previousOrientation != MapGenerator::Orientation::WEST) {
-
-			if (previousOrientation == MapGenerator::Orientation::NONE)
-				DrawWestDoor(room.getNWCorner(), room.getSECorner());
-		}
-		if (previousOrientation != MapGenerator::Orientation::EAST) {
-
-			if (previousOrientation == MapGenerator::Orientation::NONE)
-				DrawEastDoor(room.getNWCorner(), room.getSECorner());
-		}
-	}
-	catch (...) {
-		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawWalls");
-		throw 0;
-	}
-}
-
 void NeighborhoodMapGenerator::CreateHouse(int lotX, int lotY, MapGenerator::Orientation side, TCODColor visible) {
 	try {
 #ifdef NMG_LOGGER
@@ -671,12 +641,12 @@ void NeighborhoodMapGenerator::CreateHouse(int lotX, int lotY, MapGenerator::Ori
 		int ySectionCount = lotSizeY / (minRoomSizeY);
 		int ySection;
 		switch(side){
-		case Orientation::SOUTH:
+		case Orientation::SOUTH: //South side of the road
 			ySection = 0;
 			fenceStart = Point(lotStart, 0, lotSizeY/2);
 			fenceEnd = Point(lotEnd, 0, 3);
 			break;
-		case Orientation::NORTH:
+		case Orientation::NORTH: //North side of the road
 			ySection = ySectionCount - 1;
 			fenceStart = Point(lotStart, 0, -3);
 			fenceEnd = Point(lotEnd, 0, -lotSizeY/2);
@@ -706,9 +676,9 @@ void NeighborhoodMapGenerator::CreateHouse(int lotX, int lotY, MapGenerator::Ori
 		}while(map->TileHasBeenSet(buildingEnd));
 
 		Room initialRoom(buildingStart, buildingEnd, side);
-		GenerateRoom(initialRoom, visible, side, roomsLeft);
-//		DrawRectangle(map, lotStart, lotEnd, TileColors::white, TileCharacters::Default::RAINBOW);
-//		DrawRectangle(map, fenceStart, fenceEnd, TileColors::brownLight, TileCharacters::Default::HASH, true);
+		GenerateRoom(initialRoom, visible, roomsLeft);
+		DrawRectangle(map, lotStart, lotEnd, TileColors::white, TileCharacters::Default::RAINBOW);
+		DrawRectangle(map, fenceStart, fenceEnd, TileColors::brownLight, TileCharacters::Default::HASH, true);
 	}
 	catch (...) {
 		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::CreateHouse");

@@ -167,7 +167,6 @@ Interactable::Result PlayerAi::Interact(Actor *owner, Actor* target){
 
 bool PlayerAi::MoveOrAttack(Actor *owner, int targetX, int targetY){
 	try{
-		LoggerWrapper::Info("Door " + std::to_string(engine.lastKey.vk));
 		Map::TileType type = engine.currentMap->GetTileType(targetX, targetY);
 		if(type == Map::TileType::WALL)  return false;
 		else if(type == Map::TileType::TOP_EDGE ||
@@ -308,7 +307,7 @@ void PlayerAi::HandleActionKey(Actor *owner, int ascii) {
 			break;
 			case 'o':
 			{
-
+				//TODO this does not work well for the case of having more then on door around you.
 				for(Actor* actor : engine.actors){
 					if(actor != owner && actor->interactable && actor->x >= owner->x - 1 && actor->x <= owner->x + 1 &&
 							actor->y >= owner->y - 1 && actor->y <= owner->y + 1){
@@ -424,7 +423,4 @@ void PlayerAi::Save(TCODZip &zip){
 		LoggerWrapper::Error("An error occurred in PlayerAi::save");
 		throw 0;
 	}
-}
-
-void PlayerAi::Interact(Actor* owner) {
 }

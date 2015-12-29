@@ -13,7 +13,6 @@ public:
 	void Load(TCODZip &zip);
 	void Save(TCODZip &zip);
 	int GetLevel();
-	void Interact(Actor* owner);
 protected:
 	bool MoveOrAttack(Actor *owner, int targetX, int targetY);
 	void HandleActionKey(Actor *owner, int ascii);

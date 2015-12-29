@@ -36,8 +36,7 @@ public:
 private:
 	enum class RoomCheckResult {NO_SPACE_ROOM, NO_SPACE_LOT_0, NO_SPACE_LOT_1 ,SPACE  };
 	RandomWrapper randomWrap;
-	int GenerateRoom(Room room, TCODColor color, Orientation previousOrientation, int roomsLeft);
-	void GenerateRoom(Point start, Point end, TCODColor color, Orientation orientation, int roomsLeft);
+	int GenerateRoom(Room room, TCODColor color, int roomsLeft);
 	void DrawInterior(Point start, Point end, int character);
 	void DrawDoor(const Point& door);
 	void DrawNorthDoor(Point start, Point end);
@@ -50,9 +49,7 @@ private:
 	void DrawWestWindow(Point start, Point end);
 	Room* FindNextDoor(Room room);
 	Room* FindNextDoor(Room room, Orientation potential);
-	void GenerateRoom(const Room& room, TCODColor color, int roomsLeft);
 	void DrawNextDoor(Room* ra);
-	void DrawWalls(Orientation previousOrientation, Room& room, TCODColor color);
 	void CreateHouse(int lotX, int lotY, MapGenerator::Orientation side,TCODColor visible);
 	bool InvalidRoomCorners(Point start, Point end);
 	bool ValidDoor(const int x, const int y);

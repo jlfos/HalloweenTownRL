@@ -14,7 +14,6 @@ protected:
 
 public:
 	Ai(AiType type);
-	virtual void Interact(Actor *owner) = 0;
 	virtual void Update(Actor *owner) = 0;
 	static Ai *Create(TCODZip &zip);
 	AiType GetAiType();
