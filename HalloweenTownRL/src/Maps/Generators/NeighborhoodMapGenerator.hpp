@@ -23,6 +23,7 @@ private:
 	int lotSizeX;
 	int lotSizeY;
 	int lotDesignator;
+	std::vector<int> furniture;
 	bool backDoor;
 	MapGenerator::Orientation mapOri;
 	Map* map;

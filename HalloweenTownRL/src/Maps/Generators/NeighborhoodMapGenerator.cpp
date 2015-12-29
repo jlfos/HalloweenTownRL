@@ -26,6 +26,10 @@ NeighborhoodMapGenerator::NeighborhoodMapGenerator(int width, int height,
 	lotSizeY = 14;
 	treeChance = 30;
 	lotDesignator = TileCharacters::Default::DOUBLE_EXCLAMATION;
+	furniture.push_back(TileCharacters::Default::BED);
+	furniture.push_back(TileCharacters::Default::TV);
+	furniture.push_back(TileCharacters::Default::TABLE);
+	furniture.push_back(TileCharacters::Default::CHAIR);
 }
 
 void NeighborhoodMapGenerator::PopulateActors(Map* map) {
@@ -527,13 +531,24 @@ void NeighborhoodMapGenerator::DrawInterior(Point start, Point end, int characte
 		 * bathroom (toilet?, bathtub? )
 		 * bedroom (bed, chair, table, dresser, desk)
 		 * */
+		int furnitureRoom = 2;
+
 #ifdef NMG_LOGGER
 		LoggerWrapper::Debug("Interior is " +  std::to_string(character) );
 #endif
 		TCODColor visible = TCODColor::grey;
 		for(uint i = start.getX() + 1 ; i < end.getX(); i++){
 			for(uint j = start.getY() + 1 ; j < end.getY(); j++){
-//				int character = TileCharacters::Default::PERIOD;
+				int character;
+				int tempChar = randomWrap.getInt(i, end.getX());
+				if (furnitureRoom != 0 && tempChar == end.getX()){
+					furnitureRoom--;
+					character = furniture.at(randomWrap.getInt(0, 3));
+				}
+				else{
+					character = TileCharacters::Default::PERIOD;
+
+				}
 				map->SetTileProperties(Point(i, j), visible, character);
 			}
 		}
