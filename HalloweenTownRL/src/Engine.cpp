@@ -104,11 +104,16 @@ std::vector<std::vector<Map*>> *Engine::CreateMaps(
 					generator = new ForestMapGenerator(MapGenerator::Orientation::SOUTH);
 					break;
 				case Engine::MapType::ROAD_EW:
+				{
+					NeighborhoodDetails details;
+					details.eastRoad = true;
+					details.westRoad = true;
 					firstMapFlag = true;
 					playerMapX = j;
 					playerMapY = i;
 					generator = new NeighborhoodMapGenerator(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT,
-							MapGenerator::Orientation::EAST);
+							MapGenerator::Orientation::EAST, details);
+				}
 					break;
 				case Engine::MapType::CITY:
 					generator = new CityMapGenerator(false);

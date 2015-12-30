@@ -1,8 +1,8 @@
 #include <algorithm>
-#include <string>
 #include <iostream>
 #include <memory>
 #include <set>
+#include <string>
 
 #include "libtcod.hpp"
 
@@ -16,14 +16,20 @@
 #define NMG_LOGGER
 #endif
 
+//TODO move these into their own functions
+auto xWestVerticalRoad = [](int width){return (width / 2) - 2;};
+auto xEastVerticalRoad = [](int width ) {return (width / 2) + 1;};
+
+
 NeighborhoodMapGenerator::NeighborhoodMapGenerator(int width, int height,
-		MapGenerator::Orientation orientation): mapWidth(width), mapHeight(height), mapOri(orientation) {
+		MapGenerator::Orientation orientation, NeighborhoodDetails details): mapWidth(width), mapHeight(height), mapOri(orientation) {
 	minRoomSizeX = 4;
 	minRoomSizeY = 4;
 	maxRoomSizeX = 7;
 	maxRoomSizeY = 7;
 	lotSizeX = 26;
 	lotSizeY = 14;
+	lampPostRate = 17;
 	treeChance = 30;
 	lotDesignator = TileCharacters::Default::DOUBLE_EXCLAMATION;
 	furniture.push_back(TileCharacters::Default::BED);
@@ -33,6 +39,7 @@ NeighborhoodMapGenerator::NeighborhoodMapGenerator(int width, int height,
 	backDoor = false;
 	neighborhoodMap = nullptr;
 	map = nullptr;
+	this->details = details;
 }
 
 void NeighborhoodMapGenerator::PopulateActors(Map* map) {
@@ -42,9 +49,7 @@ void NeighborhoodMapGenerator::PopulateActors(Map* map) {
 TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 	try{
 		//TODO this method is really ugly. Its the biggest obstacle to this being an easy to use class.
-		int width = map->GetWidth();
-		int height = map->GetHeight();
-		neighborhoodMap = new TCODMap(width, height);
+		neighborhoodMap = new TCODMap(mapWidth, mapHeight);
 		this->map = map;
 		TCODColor visible = TCODColor::grey;
 
@@ -57,67 +62,39 @@ TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 		CreateHouse(lotX, lotY + lotSizeY + yStreetSize, MapGenerator::Orientation::SOUTH, visible);
 		CreateHouse(lotX + lotSizeX, lotY + lotSizeY + yStreetSize, MapGenerator::Orientation::SOUTH, visible);
 		CreateHouse(lotX + lotSizeX * 2, lotY + lotSizeY + yStreetSize, MapGenerator::Orientation::SOUTH, visible);
+		DrawHorizontalSidewalk(Point(0, 18) , Point(79, 18), false);
+		DrawHorizontalSidewalk(Point(0, 23) , Point(79, 23), true);
 		bool isTransparent = true;
 		bool isWalkable = true;
 
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height-1; y++) {
+		DrawRoads();
 
 
+		for (int x = 0; x < mapWidth; x++) {
+			for (int y = 0; y < mapHeight-1; y++) {
 				if(map->TileHasBeenSet(x, y)){
-					if(map->GetCharacter(x, y) != TileCharacters::PERIOD){
+					if(map->GetCharacter(x, y) != TileCharacters::PERIOD){ //Set not period
 						isTransparent = true;
 						isWalkable = true;
 						neighborhoodMap->setProperties(x, y, isTransparent, isWalkable);
 						continue;
 					}
-					else{
+					else{ //Set period
 						isTransparent = true;
 						isWalkable = true;
 						neighborhoodMap->setProperties(x, y, isTransparent, isWalkable);
 					}
 				}
-				else{
-					isTransparent = false;
-					isWalkable = false;
+				else{ //Not set
+					isTransparent = true;
+					isWalkable = true;
 					neighborhoodMap->setProperties(x, y, isTransparent, isWalkable);
-
-					bool roadFlag = false;
-					int lampPostRate = 17;
-					switch(mapOri){
-						case MapGenerator::Orientation::NORTH:
-						case MapGenerator::Orientation::SOUTH:
-							roadFlag = (x <= (width/2)+3  &&  x >= (width/2)-3);
-							break;
-						case MapGenerator::Orientation::EAST:
-						case MapGenerator::Orientation::WEST:
-							if(y == (height / 2 ) + 2  ||  y == (height / 2) - 3){
-								if(y == (height / 2) + 2 && x % lampPostRate==0 && (x / lampPostRate) % 2 != 0 ) {
-									map->actors.push(ActorFactory::CreateLampPost(x, y));
-								}
-								else if(y == (height / 2) - 3 && x % lampPostRate==0 && (x / lampPostRate) % 2 == 0 ){
-									map->actors.push(ActorFactory::CreateLampPost(x, y));
-								}
-								else{
-									DrawSidewalk(map, neighborhoodMap, x, y);
-								}
-							}
-							else if(y <= (height/2)+2  &&  y >= (height/2)-3){
-								DrawRoad(map, neighborhoodMap, x, y);
-							}
-							else{
-								int tree = randomWrap.getInt(treeChance, 100);
-								if(tree%100==0){
-									DrawTree(map, neighborhoodMap, x, y);
-								}
-								else{
-									DrawGrass(map, neighborhoodMap, x, y);
-								}
-							}
-							break;
-						default:
-							LoggerWrapper::Error("Case " + std::to_string(mapOri) + " is not currently supported");
-							break;
+					int tree = randomWrap.getInt(treeChance, 100);
+					if(tree%100==0){
+						DrawTree(map, neighborhoodMap, x, y);
+					}
+					else{
+						DrawGrass(map, neighborhoodMap, x, y);
 					}
 				}
 			}
@@ -318,7 +295,6 @@ Room* NeighborhoodMapGenerator::FindNextDoor(Room room, Orientation potential) {
 void NeighborhoodMapGenerator::DrawDoor(const Point& door) {
 	try {
 		map->actors.push(ActorFactory::CreateDoor(door.getX(), door.getY()));
-
 	}
 	catch (...) {
 		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawDoor");
@@ -649,6 +625,7 @@ void NeighborhoodMapGenerator::DrawNextDoor(Room* ra) {
 	}
 }
 
+//TODO move this into its own (Lot) class
 void NeighborhoodMapGenerator::CreateHouse(int lotX, int lotY, MapGenerator::Orientation side, TCODColor visible) {
 	try {
 #ifdef NMG_LOGGER
@@ -679,6 +656,9 @@ void NeighborhoodMapGenerator::CreateHouse(int lotX, int lotY, MapGenerator::Ori
 			fenceStart = Point(lotStart, 0, -3);
 			fenceEnd = Point(lotEnd, 0, -lotSizeY/2);
 			break;
+		case Orientation::WEST: //West side of the road
+
+			break;
 		default:
 			LoggerWrapper::Error("An incorrect orientation was used in CreateHouse " + std::to_string(mapOri));
 			throw 0;
@@ -705,8 +685,8 @@ void NeighborhoodMapGenerator::CreateHouse(int lotX, int lotY, MapGenerator::Ori
 
 		Room initialRoom(buildingStart, buildingEnd, side);
 		GenerateRoom(initialRoom, visible, roomsLeft);
-		DrawRectangle(map, lotStart, lotEnd, TileColors::white, TileCharacters::Default::RAINBOW);
-		DrawRectangle(map, fenceStart, fenceEnd, TileColors::brownLight, TileCharacters::Default::HASH, true);
+//		DrawRectangle(map, lotStart, lotEnd, TileColors::white, TileCharacters::Default::RAINBOW);
+//		DrawRectangle(map, fenceStart, fenceEnd, TileColors::brownLight, TileCharacters::Default::HASH, true);
 	}
 	catch (...) {
 		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::CreateHouse");
@@ -966,6 +946,105 @@ bool NeighborhoodMapGenerator::InvalidRoomCorners(Point start, Point end) {
 	catch (...) {
 		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::InvalidRoomCorners");
 		throw 0;
+	}
+}
+
+void NeighborhoodMapGenerator::DrawVerticalSidewalk(Point start, Point end, bool evenLampposts) {
+	try {
+		if(start.getX() != end.getX()){
+			LoggerWrapper::Error("Start and End points must be horizontally aligned.");
+			throw 0;
+		}
+
+
+
+		for(u_int y = start.getY(); y < end.getY(); y++){
+			if(evenLampposts){
+				if(y % lampPostRate== 0 && (y / lampPostRate) % 2 == 0)
+					map->actors.push(ActorFactory::CreateLampPost(start.getX(), y));
+			}
+			else{
+				if (y % lampPostRate == 0 && (y / lampPostRate) % 2 != 0)
+					map->actors.push(ActorFactory::CreateLampPost(start.getX(), y));
+			}
+		}
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawVerticalSidewalk");
+		throw 0;
+	}
+}
+
+void NeighborhoodMapGenerator::DrawHorizontalSidewalk(Point start, Point end, bool evenLampposts) {
+	try {
+		if(start.getY() != end.getY()){
+			LoggerWrapper::Error("Start and End points must be vertically aligned.");
+			throw 0;
+		}
+
+		for(u_int x = start.getX(); x <= end.getX(); x++){
+			if(evenLampposts){
+				if(x % lampPostRate== 0 && (x / lampPostRate) % 2 == 0)
+					map->actors.push(ActorFactory::CreateLampPost(x, start.getY()));
+				else
+					DrawSidewalk(map, neighborhoodMap, x, start.getY());
+			}
+			else{
+				if (x % lampPostRate == 0 && (x / lampPostRate) % 2 != 0)
+					map->actors.push(ActorFactory::CreateLampPost(x, start.getY()));
+				else
+					DrawSidewalk(map, neighborhoodMap, x, start.getY());
+			}
+		}
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawHorizontalSidewalk");
+		throw 0;
+	}
+}
+
+//TODO continue to move these up to the lambda section (or their own functions)
+void NeighborhoodMapGenerator::DrawRoads() {
+	if(details.eastRoad){
+		Point roadStart(mapWidth / 2, (mapHeight / 2) - 2);
+		Point roadEnd(mapWidth - 1, (mapHeight / 2) + 1);
+		DrawFilledArea(map, roadStart, roadEnd, TileColors::grey, TileCharacters::Default::PERIOD);
+	}
+	if(details.westRoad){
+		Point roadStart = Point(0, (mapHeight / 2) - 2);
+		Point roadEnd = Point(mapWidth / 2, xEastVerticalRoad(mapWidth));
+		DrawFilledArea(map, roadStart, roadEnd, TileColors::grey, TileCharacters::Default::PERIOD);
+	}
+	if(details.northRoad){
+		Point roadStart = Point( xWestVerticalRoad(mapWidth), 0);
+		Point roadEnd = Point( xEastVerticalRoad(mapWidth), (mapHeight / 2));
+		DrawFilledArea(map, roadStart, roadEnd, TileColors::grey, TileCharacters::Default::PERIOD);
+	}
+	if(details.southRoad){
+		Point roadStart = Point( xWestVerticalRoad(mapWidth), (mapHeight / 2));
+		Point roadEnd = Point( xEastVerticalRoad(mapWidth), mapHeight - 1);
+		DrawFilledArea(map, roadStart, roadEnd, TileColors::grey, TileCharacters::Default::PERIOD);
+	}
+
+}
+
+void NeighborhoodMapGenerator::DrawSidewalks() {
+	if(details.eastRoad){
+		Point sideWalkStart(0, (mapHeight / 2) - 1);
+		Point sideWalkEnd( (mapWidth / 2) - 2, (mapHeight / 2));
+		DrawHorizontalSidewalk(sideWalkStart, sideWalkEnd,true);
+	}
+	else{
+
+	}
+
+	if(details.westRoad){
+		Point sideWalkStart((mapWidth / 2) + 1, (mapHeight / 2) - 1));
+		Point sideWalkEnd( (mapWidth / 2) - 5);
+		DrawHorizontalSidewalk(sideWalkStart, sideWalkEnd,true);
+	}
+	else{
+
 	}
 }
 

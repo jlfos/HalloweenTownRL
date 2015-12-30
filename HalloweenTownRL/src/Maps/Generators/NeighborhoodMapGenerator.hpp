@@ -6,11 +6,21 @@
 
 #ifndef NEIGHBORHOODMAPGENERATOR_HPP
 #define NEIGHBORHOODMAPGENERATOR_HPP
+
 #include "libtcod.hpp"
 #include "MapGenerator.hpp"
 #include "../Point.hpp"
 #include "../Room.hpp"
 #include "../../RandomWrapper.hpp"
+struct NeighborhoodDetails{
+	bool westRoad = false;
+	bool eastRoad = false;
+	bool northRoad = false;
+	bool southRoad = false;
+};
+
+
+
 class NeighborhoodMapGenerator : public MapGenerator {
 
 private:
@@ -24,13 +34,17 @@ private:
 	int lotSizeY;
 	int lotDesignator;
 	std::vector<int> furniture;
+	int lampPostRate;
 	bool backDoor;
 	MapGenerator::Orientation mapOri;
 	Map* map;
 	TCODMap* neighborhoodMap;
 	int treeChance;
+	NeighborhoodDetails details;
+
+
 public:
-	NeighborhoodMapGenerator(int width, int height, MapGenerator::Orientation orientation);
+	NeighborhoodMapGenerator(int width, int height, MapGenerator::Orientation orientation, NeighborhoodDetails details);
 	void PopulateActors(Map* map);
 	TCODMap* Generate(Map* map, bool generateActors);
 
@@ -47,7 +61,11 @@ private:
 	void DrawNorthWindow(Point start, Point end);
 	void DrawEastWindow(Point start, Point end);
 	void DrawSouthWindow(Point start, Point end);
+	void DrawVerticalSidewalk(Point start, Point end, bool evenLampposts);
+	void DrawHorizontalSidewalk(Point start, Point end, bool evenLampposts);
 	void DrawWestWindow(Point start, Point end);
+	void DrawRoads();
+	void DrawSidewalks();
 	Room* FindNextDoor(Room room);
 	Room* FindNextDoor(Room room, Orientation potential);
 	void DrawNextDoor(Room* ra);

@@ -213,6 +213,7 @@ void MapGenerator::DrawRoad(Map* map, TCODMap* roadMap, int x, int y){
 	}
 }
 
+
 void MapGenerator::DrawSidewalk(Map* map, TCODMap* roadMap, int x, int y){
 	try {
 		if(map == nullptr || roadMap == nullptr){

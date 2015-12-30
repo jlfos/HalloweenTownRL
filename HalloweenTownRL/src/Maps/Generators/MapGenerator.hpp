@@ -31,6 +31,7 @@ class MapGenerator{
 		void DrawSidewalk(Map* map, TCODMap* roadMap, int x, int y);
 		void DrawGrass(Map* map, TCODMap* roadMap, int x, int y);
 
+
 };
 
 
