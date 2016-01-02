@@ -108,6 +108,8 @@ std::vector<std::vector<Map*>> *Engine::CreateMaps(
 					NeighborhoodDetails details;
 					details.eastRoad = true;
 					details.westRoad = true;
+					details.southRoad = false;
+					details.northRoad = false;
 					firstMapFlag = true;
 					playerMapX = j;
 					playerMapY = i;

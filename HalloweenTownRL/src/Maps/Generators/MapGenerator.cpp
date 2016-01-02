@@ -223,7 +223,7 @@ void MapGenerator::DrawSidewalk(Map* map, TCODMap* roadMap, int x, int y){
 
 
 		roadMap->setProperties(x, y, true, true);
-		TCODColor visible = TileColors::greyLighter;
+		TCODColor visible = TileColors::blue;
 		int character = TileCharacters::Default::PERIOD;
 		map->SetTileProperties(x, y, visible, character);
 	}

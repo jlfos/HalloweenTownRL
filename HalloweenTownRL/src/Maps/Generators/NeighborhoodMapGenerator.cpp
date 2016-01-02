@@ -19,6 +19,8 @@
 //TODO move these into their own functions
 auto xWestVerticalRoad = [](int width){return (width / 2) - 2;};
 auto xEastVerticalRoad = [](int width ) {return (width / 2) + 1;};
+auto ySouthHorizontalRoad = [](int height) {return (height / 2) + 1;};
+auto yNorthHorizontalRoad = [](int height) {return (height / 2) - 2;};
 
 
 NeighborhoodMapGenerator::NeighborhoodMapGenerator(int width, int height,
@@ -62,13 +64,11 @@ TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 		CreateHouse(lotX, lotY + lotSizeY + yStreetSize, MapGenerator::Orientation::SOUTH, visible);
 		CreateHouse(lotX + lotSizeX, lotY + lotSizeY + yStreetSize, MapGenerator::Orientation::SOUTH, visible);
 		CreateHouse(lotX + lotSizeX * 2, lotY + lotSizeY + yStreetSize, MapGenerator::Orientation::SOUTH, visible);
-		DrawHorizontalSidewalk(Point(0, 18) , Point(79, 18), false);
-		DrawHorizontalSidewalk(Point(0, 23) , Point(79, 23), true);
 		bool isTransparent = true;
 		bool isWalkable = true;
 
 		DrawRoads();
-
+		DrawSidewalks();
 
 		for (int x = 0; x < mapWidth; x++) {
 			for (int y = 0; y < mapHeight-1; y++) {
@@ -956,16 +956,23 @@ void NeighborhoodMapGenerator::DrawVerticalSidewalk(Point start, Point end, bool
 			throw 0;
 		}
 
+		if(start.getY() > end.getY()){
+			LoggerWrapper::Error("Start point must come before End point.");
+			throw 0;
+		}
 
-
-		for(u_int y = start.getY(); y < end.getY(); y++){
+		for(u_int y = start.getY(); y <= end.getY(); y++){
 			if(evenLampposts){
 				if(y % lampPostRate== 0 && (y / lampPostRate) % 2 == 0)
 					map->actors.push(ActorFactory::CreateLampPost(start.getX(), y));
+				else
+					DrawSidewalk(map, neighborhoodMap, start.getX(), y);
 			}
 			else{
 				if (y % lampPostRate == 0 && (y / lampPostRate) % 2 != 0)
 					map->actors.push(ActorFactory::CreateLampPost(start.getX(), y));
+				else
+					DrawSidewalk(map, neighborhoodMap, start.getX(), y);
 			}
 		}
 	}
@@ -979,6 +986,11 @@ void NeighborhoodMapGenerator::DrawHorizontalSidewalk(Point start, Point end, bo
 	try {
 		if(start.getY() != end.getY()){
 			LoggerWrapper::Error("Start and End points must be vertically aligned.");
+			throw 0;
+		}
+
+		if(start.getX() > end.getX()){
+			LoggerWrapper::Error("Start point must come before End point.");
 			throw 0;
 		}
 
@@ -1006,22 +1018,22 @@ void NeighborhoodMapGenerator::DrawHorizontalSidewalk(Point start, Point end, bo
 //TODO continue to move these up to the lambda section (or their own functions)
 void NeighborhoodMapGenerator::DrawRoads() {
 	if(details.eastRoad){
-		Point roadStart(mapWidth / 2, (mapHeight / 2) - 2);
-		Point roadEnd(mapWidth - 1, (mapHeight / 2) + 1);
+		Point roadStart(mapWidth / 2, yNorthHorizontalRoad(mapHeight));
+		Point roadEnd(mapWidth - 1, ySouthHorizontalRoad(mapHeight));
 		DrawFilledArea(map, roadStart, roadEnd, TileColors::grey, TileCharacters::Default::PERIOD);
 	}
 	if(details.westRoad){
-		Point roadStart = Point(0, (mapHeight / 2) - 2);
-		Point roadEnd = Point(mapWidth / 2, xEastVerticalRoad(mapWidth));
+		Point roadStart = Point(0, yNorthHorizontalRoad(mapHeight));
+		Point roadEnd = Point(mapWidth / 2, ySouthHorizontalRoad(mapHeight));
 		DrawFilledArea(map, roadStart, roadEnd, TileColors::grey, TileCharacters::Default::PERIOD);
 	}
 	if(details.northRoad){
 		Point roadStart = Point( xWestVerticalRoad(mapWidth), 0);
-		Point roadEnd = Point( xEastVerticalRoad(mapWidth), (mapHeight / 2));
+		Point roadEnd = Point( xEastVerticalRoad(mapWidth), ySouthHorizontalRoad(mapHeight));
 		DrawFilledArea(map, roadStart, roadEnd, TileColors::grey, TileCharacters::Default::PERIOD);
 	}
 	if(details.southRoad){
-		Point roadStart = Point( xWestVerticalRoad(mapWidth), (mapHeight / 2));
+		Point roadStart = Point( xWestVerticalRoad(mapWidth), yNorthHorizontalRoad(mapHeight));
 		Point roadEnd = Point( xEastVerticalRoad(mapWidth), mapHeight - 1);
 		DrawFilledArea(map, roadStart, roadEnd, TileColors::grey, TileCharacters::Default::PERIOD);
 	}
@@ -1029,22 +1041,71 @@ void NeighborhoodMapGenerator::DrawRoads() {
 }
 
 void NeighborhoodMapGenerator::DrawSidewalks() {
-	if(details.eastRoad){
-		Point sideWalkStart(0, (mapHeight / 2) - 1);
-		Point sideWalkEnd( (mapWidth / 2) - 2, (mapHeight / 2));
-		DrawHorizontalSidewalk(sideWalkStart, sideWalkEnd,true);
-	}
-	else{
+	try {
+		if(details.eastRoad){
+			Point sideWalkStart(xEastVerticalRoad(mapWidth) + 1, yNorthHorizontalRoad(mapHeight) - 1);
+			Point sideWalkEnd( mapWidth - 1, yNorthHorizontalRoad(mapHeight) - 1);
+			DrawHorizontalSidewalk(sideWalkStart, sideWalkEnd, true);
 
-	}
+			sideWalkStart = Point(xEastVerticalRoad(mapWidth) + 1, ySouthHorizontalRoad(mapHeight) + 1);
+			sideWalkEnd = Point( mapWidth - 1, ySouthHorizontalRoad(mapHeight) + 1);
+			DrawHorizontalSidewalk(sideWalkStart, sideWalkEnd, false);
+		}
+		else{
+			Point sideWalkStart(xEastVerticalRoad(mapWidth) + 1, yNorthHorizontalRoad(mapHeight) - 1);
+			Point sideWalkEnd( xEastVerticalRoad(mapWidth) + 1, ySouthHorizontalRoad(mapHeight) + 1);
+			DrawVerticalSidewalk(sideWalkStart, sideWalkEnd, true);
+		}
 
-	if(details.westRoad){
-		Point sideWalkStart((mapWidth / 2) + 1, (mapHeight / 2) - 1));
-		Point sideWalkEnd( (mapWidth / 2) - 5);
-		DrawHorizontalSidewalk(sideWalkStart, sideWalkEnd,true);
-	}
-	else{
+		if(details.westRoad){
+			Point sideWalkStart(0, yNorthHorizontalRoad(mapHeight) - 1);
+			Point sideWalkEnd( xWestVerticalRoad(mapWidth) - 1, yNorthHorizontalRoad(mapHeight) - 1);
+			DrawHorizontalSidewalk(sideWalkStart, sideWalkEnd, true);
 
+			sideWalkStart = Point(0, ySouthHorizontalRoad(mapHeight) + 1);
+			sideWalkEnd = Point(  xWestVerticalRoad(mapWidth) - 1, ySouthHorizontalRoad(mapHeight) + 1);
+			DrawHorizontalSidewalk(sideWalkStart, sideWalkEnd, false);
+		}
+		else{
+			Point sideWalkStart(xWestVerticalRoad(mapWidth) - 1, yNorthHorizontalRoad(mapHeight) - 1);
+			Point sideWalkEnd( xWestVerticalRoad(mapWidth) - 1, ySouthHorizontalRoad(mapHeight) + 1);
+			DrawVerticalSidewalk(sideWalkStart, sideWalkEnd, true);
+		}
+
+		if(details.northRoad){
+			Point sideWalkStart(xWestVerticalRoad(mapWidth) - 1, 0);
+			Point sideWalkEnd( xWestVerticalRoad(mapWidth) - 1, yNorthHorizontalRoad(mapHeight) - 1 );
+			DrawVerticalSidewalk(sideWalkStart, sideWalkEnd, true);
+
+			sideWalkStart = Point(xEastVerticalRoad(mapWidth) + 1, 0);
+			sideWalkEnd = Point(  xEastVerticalRoad(mapWidth) + 1, yNorthHorizontalRoad(mapHeight) - 1);
+			DrawVerticalSidewalk(sideWalkStart, sideWalkEnd, false);
+		}
+		else{
+			Point sideWalkStart(xWestVerticalRoad(mapWidth), yNorthHorizontalRoad(mapHeight) - 1);
+			Point sideWalkEnd( xEastVerticalRoad(mapWidth), yNorthHorizontalRoad(mapHeight) - 1);
+			DrawHorizontalSidewalk(sideWalkStart, sideWalkEnd, true);
+		}
+
+
+		if(details.southRoad){
+			Point sideWalkStart(xWestVerticalRoad(mapWidth) - 1, ySouthHorizontalRoad(mapHeight) + 1);
+			Point sideWalkEnd( xWestVerticalRoad(mapWidth) - 1, mapHeight - 1);
+			DrawVerticalSidewalk(sideWalkStart, sideWalkEnd, true);
+
+			sideWalkStart = Point(xEastVerticalRoad(mapWidth) + 1, ySouthHorizontalRoad(mapHeight) + 1);
+			sideWalkEnd = Point(  xEastVerticalRoad(mapWidth) + 1, mapHeight - 1);
+			DrawVerticalSidewalk(sideWalkStart, sideWalkEnd, false);
+		}
+		else{
+			Point sideWalkStart(xWestVerticalRoad(mapWidth), ySouthHorizontalRoad(mapHeight) + 1);
+			Point sideWalkEnd(xEastVerticalRoad(mapWidth), ySouthHorizontalRoad(mapHeight) + 1);
+			DrawHorizontalSidewalk(sideWalkStart, sideWalkEnd, false);
+		}
+	}
+	catch (...) {
+		LoggerWrapper::Error("An error occurred in NeighborhoodMapGenerator::DrawSidewalks");
+		throw 0;
 	}
 }
 
