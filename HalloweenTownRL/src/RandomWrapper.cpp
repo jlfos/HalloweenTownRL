@@ -15,7 +15,8 @@
 //#define RW_LOGGER
 #endif
 
-RandomWrapper::RandomWrapper() {
+RandomWrapper::RandomWrapper()  {
+
 
 	rng = std::unique_ptr<TCODRandom>(TCODRandom::getInstance());
 	data = {MapGenerator::Orientation::NORTH,

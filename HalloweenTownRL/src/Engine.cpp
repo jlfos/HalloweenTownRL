@@ -56,18 +56,15 @@ void Engine::Init() {
 		LoggerWrapper::Debug("Initializing Engine");
 #endif
 		player = ActorFactory::CreateHero(DEFAULT_PLAYER_START_X, DEFAULT_PLAYER_START_Y);
-		std::vector<std::vector<Engine::MapType>> mapTypes { { Engine::MapType::FOREST_NORTH,
-				Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH,
-				Engine::MapType::FOREST_NORTH }, { Engine::MapType::CITY_BOSS,
-				Engine::MapType::CITY, Engine::MapType::CITY, Engine::MapType::FOREST_NORTH }, {
-				Engine::MapType::CITY, Engine::MapType::CITY, Engine::MapType::CITY,
-				Engine::MapType::FOREST_NORTH }, { Engine::MapType::CITY, Engine::MapType::CITY,
-				Engine::MapType::CITY, Engine::MapType::ROAD_EW }, { Engine::MapType::CITY,
-				Engine::MapType::CITY, Engine::MapType::CITY, Engine::MapType::FOREST_SOUTH }, {
-				Engine::MapType::CITY, Engine::MapType::CITY, Engine::MapType::CITY,
-				Engine::MapType::FOREST_SOUTH }, { Engine::MapType::FOREST_SOUTH,
-				Engine::MapType::FOREST_SOUTH, Engine::MapType::FOREST_SOUTH,
-				Engine::MapType::FOREST_SOUTH } };
+		std::vector<std::vector<Engine::MapType>> mapTypes {
+//			{ Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH, Engine::MapType::FOREST_NORTH },
+//			{ Engine::MapType::CITY_BOSS, Engine::MapType::CITY, Engine::MapType::CITY, Engine::MapType::FOREST_NORTH },
+//			{ Engine::MapType::CITY, Engine::MapType::CITY, Engine::MapType::CITY,Engine::MapType::FOREST_NORTH },
+			{ Engine::MapType::CITY, Engine::MapType::CITY, Engine::MapType::CITY, Engine::MapType::ROAD_EW },
+//			{ Engine::MapType::CITY, Engine::MapType::CITY, Engine::MapType::CITY, Engine::MapType::FOREST_SOUTH },
+//			{Engine::MapType::CITY, Engine::MapType::CITY, Engine::MapType::CITY, Engine::MapType::FOREST_SOUTH },
+//			{ Engine::MapType::FOREST_SOUTH, Engine::MapType::FOREST_SOUTH, Engine::MapType::FOREST_SOUTH,Engine::MapType::FOREST_SOUTH }
+		};
 		maps = CreateMaps(mapTypes);
 		WORLD_SIZE_LATITUDE = mapTypes.size();
 		WORLD_SIZE_LONGITUDE = mapTypes.front().size();

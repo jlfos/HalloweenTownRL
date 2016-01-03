@@ -159,11 +159,6 @@ void Map::Load(TCODZip &zip) {
 
 Map::~Map() {
 	try{
-		if(map != nullptr){
-			delete map;
-			map = nullptr;
-		}
-
 		if(rng != nullptr){
 			delete rng;
 			rng = nullptr;

@@ -8,14 +8,7 @@
 #define MONSTERENTRY_HPP
 #include <string>
 #include "libtcod.hpp"
-//struct MonsterEntry_compare compare{
-//	bool operator() (const MonsterEntry &left, const MonsterEntry &right) const{
-//		if(left.name!=right.name)
-//				return true;
-//			else
-//				return false;
-//	}
-//};
+
 
 class MonsterEntry {
 public:
