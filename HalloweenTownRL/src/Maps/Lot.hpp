@@ -17,8 +17,8 @@ class Room;
 class Lot {
 public:
 	enum class LotPosition{ NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST};
-
-	Lot(TCODMap *neighborhoodMap, Map *map, RandomWrapper *randomWrap, LotPosition position);
+	enum class LotOrientation {NS, EW, EMPTY};
+	Lot(TCODMap *neighborhoodMap, Map *map, RandomWrapper *randomWrap, LotPosition position, LotOrientation orientation);
 	~Lot();
 	virtual void PopulateLot();
 private:
@@ -33,6 +33,7 @@ private:
 	int mapHeight;
 	TCODMap *neighborhoodMap;
 	bool backDoor;
+	LotOrientation orientation;
 
 	int GenerateRoom(Room room, TCODColor color, int roomsLeft);
 	void DrawNextDoor(Room* ra);

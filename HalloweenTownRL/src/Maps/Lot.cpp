@@ -23,8 +23,8 @@ const int MAX_ROOM_SIZE_Y = 7;
 const int LOT_DESIGNATOR = TileCharacters::Default::DOUBLE_EXCLAMATION;
 
 
-Lot::Lot(TCODMap *neighborhoodMap, Map *map, RandomWrapper *randomWrap, LotPosition position):
-		randomWrap(randomWrap), position(position), lotStart(0,0), lotEnd(0,0), map(map), mapWidth(map->GetWidth()), mapHeight(map->GetHeight()),neighborhoodMap(neighborhoodMap), backDoor(false) {
+Lot::Lot(TCODMap *neighborhoodMap, Map *map, RandomWrapper *randomWrap, LotPosition position, Lot::LotOrientation orientation):
+		randomWrap(randomWrap), position(position), lotStart(0,0), lotEnd(0,0), map(map), mapWidth(map->GetWidth()), mapHeight(map->GetHeight()),neighborhoodMap(neighborhoodMap), backDoor(false), orientation(orientation) {
 	Point tempStart(0, 3);
 
 	furniture.push_back(TileCharacters::Default::BED);
@@ -86,19 +86,73 @@ void Lot::PopulateLot() {
 		xOffset = std::max(1, xOffset); //Calculates the offset and makes sure that it is at least 1
 		int ySectionCount = LOT_SIZE_Y / (MIN_ROOM_SIZE_X);
 		MapGenerator::Orientation side;
+		Point fenceStart(0,0);
+		Point fenceEnd(0,0);
 		switch(position){
 		case LotPosition::NORTHWEST:
-		case LotPosition::NORTH:
-		case LotPosition::NORTHEAST:{
-			ySection = 0;
-			side = MapGenerator::Orientation::SOUTH;
+		case LotPosition::NORTH:{
+			if(orientation == LotOrientation::NS){
+				ySection = 0;
+				side = MapGenerator::Orientation::SOUTH;
+				fenceStart = Point(lotStart, 0, -3);
+				fenceEnd = Point(lotEnd, 0, -LOT_SIZE_Y/2);
+			}
+			else if (orientation == LotOrientation::EMPTY){
+				fenceStart = Point(lotStart);//, 0, -3);
+				fenceEnd = Point(lotEnd, 0, -3);//, 1, 0);
+			}
+			else{
+
+			}
 			break;
 		}
-		case LotPosition::SOUTHEAST:
-		case LotPosition::SOUTH:
-		case LotPosition::SOUTHWEST:{
-			ySection = ySectionCount - 1;
-			side = MapGenerator::Orientation::NORTH;
+		case LotPosition::NORTHEAST:{
+			if(orientation == LotOrientation::NS){
+				ySection = 0;
+				side = MapGenerator::Orientation::SOUTH;
+				fenceStart = Point(lotStart, 0, -3);
+				fenceEnd = Point(lotEnd, 1, -LOT_SIZE_Y/2);
+			}
+			else if (orientation == LotOrientation::EMPTY){
+				fenceStart = Point(lotStart);//, 0, -3);
+				fenceEnd = Point(lotEnd, 1, -3);//, 1, 0);
+			}
+			else{
+
+			}
+			break;
+		}
+		case LotPosition::SOUTHWEST:
+		case LotPosition::SOUTH:{
+			if(orientation == LotOrientation::NS){
+				ySection = ySectionCount - 1;
+				side = MapGenerator::Orientation::NORTH;
+				fenceStart = Point(lotStart, 0, LOT_SIZE_Y/2);
+				fenceEnd = Point(lotEnd, 0, 3);
+			}
+			else if(orientation == LotOrientation::EMPTY){
+				fenceStart = Point(lotStart);
+				fenceEnd = Point(lotEnd, 0, 3);
+			}
+			else{
+
+			}
+			break;
+		}
+		case LotPosition::SOUTHEAST:{
+			if(orientation == LotOrientation::NS){
+				ySection = ySectionCount - 1;
+				side = MapGenerator::Orientation::NORTH;
+				fenceStart = Point(lotStart, 0, LOT_SIZE_Y/2);
+				fenceEnd = Point(lotEnd, 1, 3);
+			}
+			else if(orientation == LotOrientation::EMPTY){
+				fenceStart = Point(lotStart);
+				fenceEnd = Point(lotEnd, 0, 3);
+			}
+			else{
+
+			}
 			break;
 		}
 		case LotPosition::WEST:
@@ -109,30 +163,35 @@ void Lot::PopulateLot() {
 
 		};
 
-		int yOffset = MIN_ROOM_SIZE_X * ySection;
-		yOffset = std::max(1, yOffset);
 
-		Point buildingStart(lotStart, xOffset, yOffset);
+		if(orientation != Lot::LotOrientation::EMPTY){
+			int yOffset = MIN_ROOM_SIZE_X * ySection;
+			yOffset = std::max(1, yOffset);
 
-		LoggerWrapper::Debug("StartX: " + std::to_string(buildingStart.getX()) + " StartY: " + std::to_string(buildingStart.getY()));
+			Point buildingStart(lotStart, xOffset, yOffset);
 
-		int roomsLeft = 6;
+			LoggerWrapper::Debug("StartX: " + std::to_string(buildingStart.getX()) + " StartY: " + std::to_string(buildingStart.getY()));
 
-		//lot start + lot size (aka end of lot)
-		int maxXSize = std::min( (int)((lotStart.getX() + LOT_SIZE_X) - (lotStart.getX()  + xOffset)), MAX_ROOM_SIZE_X);
-		int maxYSize = std::min( (int)((lotStart.getY() + LOT_SIZE_Y) - (lotStart.getY() + yOffset)), MAX_ROOM_SIZE_Y);
-		//	int maxXSize = std::min( (lotStart.getX() + LOT_SIZE_X) - (lotStart.getX()  + xOffset), MAX_ROOM_SIZE_X);
-		//	int maxYSize = std::min( (lotStart.getY() + LOT_SIZE_Y) - (lotStart.getY() + yOffset), MAX_ROOM_SIZE_Y);
-		Point buildingEnd(lotStart);
-		do{
-			int sizeX = randomWrap->getInt(MIN_ROOM_SIZE_X, maxXSize);
-			int sizeY = randomWrap->getInt(MIN_ROOM_SIZE_X, maxYSize);
-			buildingEnd = Point(buildingStart, sizeX, sizeY);
-		}while(map->TileHasBeenSet(buildingEnd));
+			int roomsLeft = 6;
 
-		Room initialRoom(buildingStart, buildingEnd, side);
+			//lot start + lot size (aka end of lot)
+			int maxXSize = std::min( (int)((lotStart.getX() + LOT_SIZE_X) - (lotStart.getX()  + xOffset)), MAX_ROOM_SIZE_X);
+			int maxYSize = std::min( (int)((lotStart.getY() + LOT_SIZE_Y) - (lotStart.getY() + yOffset)), MAX_ROOM_SIZE_Y);
+			//	int maxXSize = std::min( (lotStart.getX() + LOT_SIZE_X) - (lotStart.getX()  + xOffset), MAX_ROOM_SIZE_X);
+			//	int maxYSize = std::min( (lotStart.getY() + LOT_SIZE_Y) - (lotStart.getY() + yOffset), MAX_ROOM_SIZE_Y);
+			Point buildingEnd(lotStart);
+			do{
+				int sizeX = randomWrap->getInt(MIN_ROOM_SIZE_X, maxXSize);
+				int sizeY = randomWrap->getInt(MIN_ROOM_SIZE_X, maxYSize);
+				buildingEnd = Point(buildingStart, sizeX, sizeY);
+			}while(map->TileHasBeenSet(buildingEnd));
 
-		GenerateRoom(initialRoom, TileColors::white, roomsLeft);
+			Room initialRoom(buildingStart, buildingEnd, side);
+
+			GenerateRoom(initialRoom, TileColors::white, roomsLeft);
+		}
+		MapGenerator::DrawRectangle(map, lotStart, lotEnd, TileColors::white, TileCharacters::Default::RAINBOW);
+		MapGenerator::DrawRectangle(map, fenceStart, fenceEnd, TileColors::brownLight, TileCharacters::Default::HASH, true);
 	}
 	catch (...) {
 		LoggerWrapper::Error("An error occurred in Lot::PopulateLot");

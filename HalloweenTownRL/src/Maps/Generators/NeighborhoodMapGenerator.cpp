@@ -59,24 +59,13 @@ TCODMap* NeighborhoodMapGenerator::Generate(Map* map, bool generateActors) {
 		neighborhoodMap = new TCODMap(mapWidth, mapHeight);
 		this->map = map;
 
-		Lot nw(neighborhoodMap, map, &randomWrap, Lot::LotPosition::NORTHWEST);
-		nw.PopulateLot();
- 		Lot n(neighborhoodMap,map, &randomWrap, Lot::LotPosition::NORTH);
-		n.PopulateLot();
-		Lot ne(neighborhoodMap,map, &randomWrap, Lot::LotPosition::NORTHEAST);
-		ne.PopulateLot();
-		Lot se(neighborhoodMap,map, &randomWrap, Lot::LotPosition::SOUTHEAST);
-		se.PopulateLot();
-		Lot s(neighborhoodMap,map, &randomWrap, Lot::LotPosition::SOUTH);
-		s.PopulateLot();
-		Lot sw(neighborhoodMap,map, &randomWrap, Lot::LotPosition::SOUTHWEST);
-		sw.PopulateLot();
 
 		bool isTransparent = true;
 		bool isWalkable = true;
 
 		DrawRoads();
 		DrawSidewalks();
+		DrawLots();
 
 		for (int x = 0; x < mapWidth; x++) {
 			for (int y = 0; y < mapHeight-1; y++) {
@@ -283,33 +272,49 @@ void NeighborhoodMapGenerator::DrawSidewalks() {
 	}
 }
 
-void NeighborhoodMapGenerator::DrawHouses() {
+void NeighborhoodMapGenerator::DrawLots() {
 	if(details.eastRoad){
+		Lot ne(neighborhoodMap, map, &randomWrap, Lot::LotPosition::NORTHEAST, Lot::LotOrientation::NS);
+		ne.PopulateLot();
 
+		Lot se(neighborhoodMap, map, &randomWrap, Lot::LotPosition::SOUTHEAST, Lot::LotOrientation::NS);
+		se.PopulateLot();
 	}
-	else{
+	if(!details.eastRoad && !details.southRoad){
+		Lot se(neighborhoodMap, map, &randomWrap, Lot::LotPosition::SOUTHEAST, Lot::LotOrientation::EMPTY);
+		se.PopulateLot();
+	}
+	if(!details.eastRoad && !details.northRoad){
+		Lot ne(neighborhoodMap, map, &randomWrap, Lot::LotPosition::NORTHEAST, Lot::LotOrientation::EMPTY);
+		ne.PopulateLot();
+	}
 
-	}
 
 	if(details.westRoad){
+		Lot nw(neighborhoodMap, map, &randomWrap, Lot::LotPosition::NORTHWEST, Lot::LotOrientation::NS);
+		nw.PopulateLot();
 
+		Lot sw(neighborhoodMap, map, &randomWrap, Lot::LotPosition::SOUTHWEST, Lot::LotOrientation::NS);
+		sw.PopulateLot();
 	}
 	else{
 
 	}
 
 	if(details.northRoad){
-
+		//blank
 	}
 	else{
-
+		Lot n(neighborhoodMap, map, &randomWrap, Lot::LotPosition::NORTH, Lot::LotOrientation::NS);
+		n.PopulateLot();
 	}
 
 	if(details.southRoad){
-
+		//blank
 	}
 	else{
-
+		Lot s(neighborhoodMap, map, &randomWrap, Lot::LotPosition::SOUTH, Lot::LotOrientation::NS);
+		s.PopulateLot();
 	}
 }
 

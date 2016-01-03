@@ -57,7 +57,7 @@ private:
 	void DrawHorizontalSidewalk(Point start, Point end, bool evenLampposts);
 	void DrawRoads();
 	void DrawSidewalks();
-	void DrawHouses();
+	void DrawLots();
 	void DrawNextDoor(Room* ra);
 	void CreateHouse(int lotX, int lotY, MapGenerator::Orientation side,TCODColor visible);
 

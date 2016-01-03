@@ -19,11 +19,7 @@ RandomWrapper::RandomWrapper()  {
 
 
 	rng = std::unique_ptr<TCODRandom>(TCODRandom::getInstance());
-	data = {MapGenerator::Orientation::NORTH,
-			MapGenerator::Orientation::SOUTH,
-			MapGenerator::Orientation::SOUTH,
-			MapGenerator::Orientation::EAST,
-			MapGenerator::Orientation::WEST };
+
 
 	indexO = 0;//data.size();
 	indexI = 0;
@@ -33,22 +29,8 @@ RandomWrapper::RandomWrapper()  {
 }
 
 MapGenerator::Orientation RandomWrapper::GetOrientation() {
-	if(indexO > data.size()){
-
-		MapGenerator::Orientation  orientation = data.at(indexO);
-#ifdef RW_LOGGER
-		LoggerWrapper::Debug ("not rand ori " + std::to_string(orientation));
-#endif
-		indexO++;
-		return orientation;
-	}
-	else{
-		MapGenerator::Orientation  orientation = (MapGenerator::Orientation)rng->getInt(0,3);
-#ifdef RW_LOGGER
-		LoggerWrapper::Debug ("ori rand" + std::to_string(orientation));
-#endif
-		return orientation;
-	}
+	MapGenerator::Orientation  orientation = (MapGenerator::Orientation)rng->getInt(0,3);
+	return orientation;
 }
 
 RandomWrapper::~RandomWrapper() {
