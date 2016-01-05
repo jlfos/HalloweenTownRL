@@ -103,9 +103,9 @@ std::vector<std::vector<Map*>> *Engine::CreateMaps(
 				case Engine::MapType::ROAD_EW:
 				{
 					NeighborhoodDetails details;
-					details.eastRoad = true;
+					details.eastRoad = false;
 					details.westRoad = true;
-					details.southRoad = false;
+					details.southRoad = true;
 					details.northRoad = false;
 					firstMapFlag = true;
 					playerMapX = j;
@@ -331,7 +331,8 @@ void Engine::BossUpdate() {
 			} else {
 				engine.gui->PushMessage(TileColors::greyLight, "Fate pulls you to the West");
 			}
-		} else {
+		}
+		else {
 			if (bossMapY < playerMapY) {
 				engine.gui->PushMessage(TileColors::greyLight, "Fate pulls you to the North");
 			} else {

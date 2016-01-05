@@ -54,7 +54,12 @@ private:
 	Room* FindNextDoor(Room room, MapGenerator::Orientation potential);
 	Lot::RoomCheckResult CheckHorizontalRoom(Point start, Point &end, bool xNegFlag, bool yNegFlag);
 	Lot::RoomCheckResult CheckVerticalRoom(Point start, Point &end, bool xNegFlag, bool yNegFlag);
-
+	int xOffsetNS();
+	int xOffsetE();
+	int xOffsetW();
+	int yOffSetS();
+	int yOffSetN();
+	int yOffsetEW();
 };
 
 

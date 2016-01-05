@@ -287,6 +287,10 @@ void NeighborhoodMapGenerator::DrawLots() {
 	if(!details.eastRoad && !details.northRoad){
 		Lot ne(neighborhoodMap, map, &randomWrap, Lot::LotPosition::NORTHEAST, Lot::LotOrientation::EMPTY);
 		ne.PopulateLot();
+		Lot e(neighborhoodMap, map, &randomWrap, Lot::LotPosition::EAST, Lot::LotOrientation::EW);
+		e.PopulateLot();
+//		Lot se(neighborhoodMap, map, &randomWrap, Lot::LotPosition::SOUTHEAST, Lot::LotOrientation::EW);
+//		se.PopulateLot();
 	}
 
 
