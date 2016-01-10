@@ -284,14 +284,6 @@ void NeighborhoodMapGenerator::DrawLots() {
 		Lot se(neighborhoodMap, map, &randomWrap, Lot::LotPosition::SOUTHEAST, Lot::LotOrientation::EMPTY);
 		se.PopulateLot();
 	}
-	if(!details.eastRoad && !details.northRoad){
-		Lot ne(neighborhoodMap, map, &randomWrap, Lot::LotPosition::NORTHEAST, Lot::LotOrientation::EMPTY);
-		ne.PopulateLot();
-		Lot e(neighborhoodMap, map, &randomWrap, Lot::LotPosition::EAST, Lot::LotOrientation::EW);
-		e.PopulateLot();
-//		Lot se(neighborhoodMap, map, &randomWrap, Lot::LotPosition::SOUTHEAST, Lot::LotOrientation::EW);
-//		se.PopulateLot();
-	}
 
 
 	if(details.westRoad){
@@ -311,6 +303,13 @@ void NeighborhoodMapGenerator::DrawLots() {
 	else{
 		Lot n(neighborhoodMap, map, &randomWrap, Lot::LotPosition::NORTH, Lot::LotOrientation::NS);
 		n.PopulateLot();
+	}
+
+	if(!details.eastRoad && !details.northRoad){
+		Lot ne(neighborhoodMap, map, &randomWrap, Lot::LotPosition::NORTHEAST, Lot::LotOrientation::EMPTY);
+		ne.PopulateLot();
+		Lot e(neighborhoodMap, map, &randomWrap, Lot::LotPosition::EAST, Lot::LotOrientation::EW);
+		e.PopulateLot();
 	}
 
 	if(details.southRoad){

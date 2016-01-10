@@ -85,8 +85,9 @@ Lot::~Lot() {
 void Lot::PopulateLot() {
 	try {
 		MapGenerator::DrawRectangle(map, lotStart, lotEnd, TileColors::white, LOT_DESIGNATOR);
-		int xOffset;// = xOffsetNS();
+		int xOffset;
 		int yOffset;
+		int roomsLeft;
 		int ySectionCount = LOT_SIZE_Y / (MIN_ROOM_SIZE_X);
 		MapGenerator::Orientation side;
 		Point fenceStart(0,0);
@@ -94,8 +95,9 @@ void Lot::PopulateLot() {
 		switch(position){
 		case LotPosition::NORTHWEST:
 		case LotPosition::NORTH:{
+			roomsLeft = 6;
 			if(orientation == LotOrientation::NS){
-				side = MapGenerator::Orientation::NORTH; //TODO this does not seem to always work
+				side = MapGenerator::Orientation::NORTH;
 				xOffset = xOffsetNS();
 				yOffset = yOffSetN();
 				fenceStart = Point(lotStart, 0, -3);
@@ -111,10 +113,11 @@ void Lot::PopulateLot() {
 			break;
 		}
 		case LotPosition::NORTHEAST:{
+			roomsLeft = 6;
 			if(orientation == LotOrientation::NS){
 				xOffset = xOffsetNS();
 				yOffset = yOffSetN();
-				side = MapGenerator::Orientation::NORTH; //TODO this does not seem to always work
+				side = MapGenerator::Orientation::NORTH;
 
 				fenceStart = Point(lotStart, 0, -3);
 				fenceEnd = Point(lotEnd, 1, -LOT_SIZE_Y/2);
@@ -130,10 +133,11 @@ void Lot::PopulateLot() {
 		}
 		case LotPosition::SOUTHWEST:
 		case LotPosition::SOUTH:{
+			roomsLeft = 6;
 			if(orientation == LotOrientation::NS){
 				xOffset = xOffsetNS();
 				yOffset = yOffSetS();
-				side = MapGenerator::Orientation::SOUTH; //TODO this does not seem to always work
+				side = MapGenerator::Orientation::SOUTH;
 
 				fenceStart = Point(lotStart, 0, LOT_SIZE_Y/2);
 				fenceEnd = Point(lotEnd, 0, 3);
@@ -148,10 +152,11 @@ void Lot::PopulateLot() {
 			break;
 		}
 		case LotPosition::SOUTHEAST:{
+			roomsLeft = 6;
 			if(orientation == LotOrientation::NS){
 				xOffset = xOffsetNS();
 				yOffset = yOffSetS();
-				side = MapGenerator::Orientation::SOUTH; //TODO this does not seem to always work
+				side = MapGenerator::Orientation::SOUTH;
 
 				fenceStart = Point(lotStart, 0, LOT_SIZE_Y/2);
 				fenceEnd = Point(lotEnd, 1, 3);
@@ -165,14 +170,15 @@ void Lot::PopulateLot() {
 			}
 			break;
 		}
-		case LotPosition::EAST:{ //TODO The fence isn't quite in the right spot for this one.
+		case LotPosition::EAST:{
+			roomsLeft = 12;
 			if(orientation == LotOrientation::EW){
 				xOffset = xOffsetE();
 				yOffset = yOffsetEW();
 				side = MapGenerator::Orientation::EAST;
 
 				fenceStart = Point(lotStart, (LOT_SIZE_X/2) - 4, -3);
-				fenceEnd = Point(lotEnd, 2, 0);
+				fenceEnd = Point(lotEnd, 10, 3);
 			}
 			break;
 		}
@@ -190,8 +196,6 @@ void Lot::PopulateLot() {
 			Point buildingStart(lotStart, xOffset, yOffset);
 
 			LoggerWrapper::Debug("StartX: " + std::to_string(buildingStart.getX()) + " StartY: " + std::to_string(buildingStart.getY()));
-
-			int roomsLeft = 6; //TODO this needs to increase in the case of an East or West lot
 
 			//lot start + lot size (aka end of lot)
 			int maxXSize = std::min( (int)((lotStart.getX() + LOT_SIZE_X) - (lotStart.getX()  + xOffset)), MAX_ROOM_SIZE_X);
@@ -1048,14 +1052,14 @@ int Lot::xOffsetW() {
 }
 
 int Lot::yOffSetS() {
-	int ySectionCount = LOT_SIZE_Y / (MIN_ROOM_SIZE_Y);
-	int ySection = ySectionCount - 1;
+	int ySection = 0;
 	int yOffset = MIN_ROOM_SIZE_Y * ySection;
 	return yOffset = std::max(1, yOffset);
 }
 
 int Lot::yOffSetN() {
-	int ySection = 0;
+	int ySectionCount = LOT_SIZE_Y / (MIN_ROOM_SIZE_Y);
+	int ySection = ySectionCount - 1;
 	int yOffset = MIN_ROOM_SIZE_Y * ySection;
 	return yOffset = std::max(1, yOffset);
 }
